@@ -1,0 +1,144 @@
+"use client";
+
+import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { BellIcon, CheckCircle2Icon, ClockIcon, SparklesIcon, UsersIcon } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { VoicePlayer } from "@/components/shared/voice-player";
+import { useSystemText } from "@/components/shared/system-text";
+import { formatLongDate, formatTime, relativeDay, sameDay } from "@/lib/format";
+import type { Attachment, Locale, Message } from "@/lib/types";
+import { cn } from "@/lib/utils";
+
+export function fileUrl(urls: Record<string, string>, a: { bucket: string; path: string }) {
+  return urls[`${a.bucket}/${a.path}`];
+}
+
+export function ImageGrid({
+  attachments,
+  urls,
+  className,
+}: {
+  attachments: Attachment[];
+  urls: Record<string, string>;
+  className?: string;
+}) {
+  const t = useTranslations("common");
+  const [open, setOpen] = useState<string | null>(null);
+  const images = attachments.filter((a) => a.type === "image");
+  if (!images.length) return null;
+  return (
+    <>
+      <div className={cn("grid gap-1.5", images.length === 1 ? "grid-cols-1" : "grid-cols-2", className)}>
+        {images.map((a) => {
+          const url = fileUrl(urls, a);
+          return (
+            <button
+              key={a.path}
+              type="button"
+              onClick={() => url && setOpen(url)}
+              className="overflow-hidden rounded-xl bg-muted"
+            >
+              {url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={url} alt="" loading="lazy" className="aspect-square w-full object-cover" />
+              ) : (
+                <div className="aspect-square w-full" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+      <Dialog open={!!open} onOpenChange={(o) => !o && setOpen(null)}>
+        <DialogContent className="max-w-3xl p-2 pt-14" closeLabel={t("close")}>
+          <DialogTitle className="sr-only">{t("photo")}</DialogTitle>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          {open && <img src={open} alt="" className="max-h-[80dvh] w-full rounded-xl object-contain" />}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
+/** Text / photos / voice bubbles and system status lines. Options and suggestion cards are rendered by the caller. */
+export function MessageBubble({
+  message,
+  urls,
+  viewer,
+  requestLabel,
+}: {
+  message: Message;
+  urls: Record<string, string>;
+  viewer: "client" | "expert";
+  requestLabel?: string | null;
+}) {
+  const t = useTranslations("chat");
+  const tChips = useTranslations("chips");
+  const locale = useLocale() as Locale;
+  const systemText = useSystemText();
+
+  if (message.sender === "system") {
+    const key = message.payload?.i18nKey ?? "";
+    const Icon = key.startsWith("ack") || key === "added" ? CheckCircle2Icon : key === "ready" ? SparklesIcon : key === "planReminder" ? BellIcon : ClockIcon;
+    return (
+      <div className="flex justify-center px-2">
+        <div
+          className={cn(
+            "flex max-w-[90%] items-start gap-2 rounded-2xl px-4 py-2.5 text-[15px] font-medium",
+            key === "ready" ? "bg-success/10 text-success" : "bg-secondary text-secondary-foreground",
+          )}
+        >
+          <Icon className="mt-0.5 size-5 shrink-0" />
+          <span>{systemText(message.payload)}</span>
+        </div>
+      </div>
+    );
+  }
+
+  const mine = viewer === "client" ? message.sender === "client" : message.sender === "expert";
+  const voice = message.attachments.find((a) => a.type === "audio");
+  const chipKey = message.payload?.i18nKey?.startsWith("chips.") ? message.payload.i18nKey.slice(6) : null;
+
+  return (
+    <div className={cn("flex px-2", mine ? "justify-end" : "justify-start")}>
+      <div
+        className={cn(
+          "max-w-[85%] space-y-2 rounded-2xl px-3.5 py-2.5 shadow-sm",
+          message.sender === "client" ? "bg-bubble-client" : "border bg-bubble-team",
+          mine ? "rounded-br-md" : "rounded-bl-md",
+        )}
+      >
+        {message.sender === "expert" && (
+          <div className="flex items-center gap-1 text-xs font-bold text-primary">
+            <UsersIcon className="size-3.5" /> {t("teamName")}
+          </div>
+        )}
+        {viewer === "expert" && requestLabel && (
+          <div className="text-xs font-semibold text-muted-foreground">↳ {requestLabel}</div>
+        )}
+        {voice && <VoicePlayer src={fileUrl(urls, voice)} duration={voice.duration} />}
+        <ImageGrid attachments={message.attachments} urls={urls} />
+        {chipKey && <p className="font-semibold">{tChips(chipKey as never)}</p>}
+        {message.body && <p className="text-[17px] leading-snug whitespace-pre-wrap">{message.body}</p>}
+        <div className="text-right text-xs text-muted-foreground">{formatTime(message.created_at, locale)}</div>
+      </div>
+    </div>
+  );
+}
+
+export function DateDivider({ iso }: { iso: string }) {
+  const t = useTranslations("chat");
+  const locale = useLocale() as Locale;
+  const rel = relativeDay(iso);
+  const label = rel ? t(rel) : formatLongDate(iso, locale);
+  return (
+    <div className="flex justify-center py-1">
+      <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">{label}</span>
+    </div>
+  );
+}
+
+export function isNewDay(prev: Message | undefined, cur: Message) {
+  if (!prev) return true;
+  return !sameDay(prev.created_at, cur.created_at);
+}
