@@ -157,7 +157,15 @@
   },
   "week": {
     "title": "This week",
-    "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    "days": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ],
     "done": "Done",
     "waiting": "Waiting for your photo",
     "upcoming": "Coming up"
@@ -201,7 +209,11 @@
     "photosHelp": "Add photos of your shop, food or work. Our team will use them in your posts.",
     "addPhotos": "Add photos",
     "look": "Your look",
-    "colors": { "primary": "Main", "secondary": "Second", "accent": "Highlight" },
+    "colors": {
+      "primary": "Main",
+      "secondary": "Second",
+      "accent": "Highlight"
+    },
     "tone": "Style of writing",
     "signature": "Special items",
     "offers": "Current offers",
@@ -218,7 +230,12 @@
     "changePrice": "Change price"
   },
   "brandOptions": {
-    "tone": { "friendly": "Friendly", "premium": "Premium", "fun": "Fun", "traditional": "Traditional" },
+    "tone": {
+      "friendly": "Friendly",
+      "premium": "Premium",
+      "fun": "Fun",
+      "traditional": "Traditional"
+    },
     "font": {
       "modern": "Modern",
       "classic": "Classic",
@@ -227,8 +244,16 @@
       "elegant": "Elegant",
       "traditional": "Traditional (Devanagari-friendly)"
     },
-    "lang": { "en": "English", "hi": "Hindi", "hinglish": "Hinglish" },
-    "emoji": { "none": "No emoji", "some": "Some emoji", "lots": "Lots of emoji" },
+    "lang": {
+      "en": "English",
+      "hi": "Hindi",
+      "hinglish": "Hinglish"
+    },
+    "emoji": {
+      "none": "No emoji",
+      "some": "Some emoji",
+      "lots": "Lots of emoji"
+    },
     "audience": {
       "college_students": "College students",
       "families": "Families",
@@ -256,11 +281,26 @@
   },
   "help": {
     "title": "How SocialGrid works",
-    "ask": { "title": "1. Ask for a post", "text": "Tap an idea card, or type what you need in the chat." },
-    "voice": { "title": "2. Or send a voice note", "text": "Tap Voice, speak, then tap Send. Up to 2 minutes." },
-    "photos": { "title": "3. Add photos", "text": "Tap Photo to send pictures of your food, shop or work." },
-    "download": { "title": "4. Choose and download", "text": "When it's ready, tap \"Choose this one\", then Download and Copy caption. Post it on Instagram or WhatsApp." },
-    "changes": { "title": "5. Want changes?", "text": "Tap \"Make changes\" and tell us what to change. We'll send a new version." },
+    "ask": {
+      "title": "1. Ask for a post",
+      "text": "Tap an idea card, or type what you need in the chat."
+    },
+    "voice": {
+      "title": "2. Or send a voice note",
+      "text": "Tap Voice, speak, then tap Send. Up to 2 minutes."
+    },
+    "photos": {
+      "title": "3. Add photos",
+      "text": "Tap Photo to send pictures of your food, shop or work."
+    },
+    "download": {
+      "title": "4. Choose and download",
+      "text": "When it's ready, tap \"Choose this one\", then Download and Copy caption. Post it on Instagram or WhatsApp."
+    },
+    "changes": {
+      "title": "5. Want changes?",
+      "text": "Tap \"Make changes\" and tell us what to change. We'll send a new version."
+    },
     "whatsappUs": "WhatsApp us",
     "callUs": "Call us"
   },
@@ -323,7 +363,12 @@
       "voiceNote": "Voice note",
       "photosOnly": "Photos only",
       "noText": "(see chat)",
-      "tiles": { "new": "New", "inProgress": "In progress", "overdue": "Overdue", "deliveredToday": "Delivered today" },
+      "tiles": {
+        "new": "New",
+        "inProgress": "In progress",
+        "overdue": "Overdue",
+        "deliveredToday": "Delivered today"
+      },
       "filters": {
         "client": "Client",
         "allClients": "All clients",
@@ -335,7 +380,13 @@
         "clear": "Clear filters"
       },
       "empty": "Nothing waiting. Nice work!",
-      "cols": { "client": "Client", "request": "Request", "type": "Type", "status": "Status", "timeLeft": "Time left" },
+      "cols": {
+        "client": "Client",
+        "request": "Request",
+        "type": "Type",
+        "status": "Status",
+        "timeLeft": "Time left"
+      },
       "unread": "New message from client",
       "urgent": "Urgent",
       "revision": "Revision {n}",
@@ -385,7 +436,11 @@
       "avoid": "Things to avoid",
       "noPhotoConsent": "Customer photos do NOT have consent.",
       "rules": "Rules",
-      "scope": { "client": "Client", "industry": "Industry", "global": "All" },
+      "scope": {
+        "client": "Client",
+        "industry": "Industry",
+        "global": "All"
+      },
       "checklist": "Photo checklist",
       "services": "Services",
       "menu": "Menu",
@@ -450,7 +505,11 @@
       "hashtags": "Hashtags",
       "learning": "Learning fields",
       "learningHint": "required before delivery, used to train future AI",
-      "tags": { "occasion": "Occasion", "style": "Style", "goal": "Content goal" },
+      "tags": {
+        "occasion": "Occasion",
+        "style": "Style",
+        "goal": "Content goal"
+      },
       "tagPlaceholder": "Type a tag and press Enter",
       "whyItWorks": "Why this works (optional)",
       "internalNotes": "Internal notes",
@@ -486,7 +545,13 @@
     },
     "client": {
       "allClients": "All clients",
-      "tabs": { "brand": "Brand profile", "offerings": "Menu / services", "plan": "Weekly plan", "account": "Plan & settings", "history": "History" },
+      "tabs": {
+        "brand": "Brand profile",
+        "offerings": "Menu / services",
+        "plan": "Weekly plan",
+        "account": "Plan & settings",
+        "history": "History"
+      },
       "noHistory": "No requests yet."
     },
     "plan": {
@@ -499,7 +564,12 @@
       "saved": "Plan saved",
       "thisWeek": "This week",
       "noSlots": "No plan set yet.",
-      "status": { "planned": "Coming up", "waiting_photo": "Waiting for photo", "in_progress": "In progress", "done": "Done" },
+      "status": {
+        "planned": "Coming up",
+        "waiting_photo": "Waiting for photo",
+        "in_progress": "In progress",
+        "done": "Done"
+      },
       "open": "Open",
       "start": "Start",
       "askPhoto": "Ask for photo",
@@ -530,9 +600,18 @@
       "photoConsentHint": "If off, the workspace warns to blur or crop faces",
       "autonomy": "Who makes the content",
       "modes": {
-        "manual": { "title": "Experts make everything", "text": "V1 default" },
-        "ai_draft_review": { "title": "AI drafts, experts review", "text": "AI suggests, you edit and approve" },
-        "auto": { "title": "AI delivers directly", "text": "Content goes straight to the client" }
+        "manual": {
+          "title": "Experts make everything",
+          "text": "V1 default"
+        },
+        "ai_draft_review": {
+          "title": "AI drafts, experts review",
+          "text": "AI suggests, you edit and approve"
+        },
+        "auto": {
+          "title": "AI delivers directly",
+          "text": "Content goes straight to the client"
+        }
       },
       "comingSoon": "Coming soon",
       "customSuggestion": "Custom suggestion",
@@ -542,15 +621,30 @@
       "showAt": "Show at",
       "suggestionAdded": "Suggestion added",
       "addSuggestion": "Add suggestion",
-      "kinds": { "festival": "Festival", "inactivity": "Idea", "plan_reminder": "Plan", "custom": "Custom" },
-      "suggestionStatus": { "pending": "Waiting", "accepted": "Accepted", "dismissed": "Skipped" },
+      "kinds": {
+        "festival": "Festival",
+        "inactivity": "Idea",
+        "plan_reminder": "Plan",
+        "custom": "Custom"
+      },
+      "suggestionStatus": {
+        "pending": "Waiting",
+        "accepted": "Accepted",
+        "dismissed": "Skipped"
+      },
       "resetPassword": "Reset password",
       "newPassword": "New password",
       "passwordChanged": "Password changed"
     },
     "brand": {
       "saved": "Saved",
-      "steps": { "basics": "Basics", "look": "Look", "voice": "Voice", "audience": "Audience", "avoid": "Things to avoid" },
+      "steps": {
+        "basics": "Basics",
+        "look": "Look",
+        "voice": "Voice",
+        "audience": "Audience",
+        "avoid": "Things to avoid"
+      },
       "businessName": "Business name",
       "ownerName": "Owner's name",
       "address": "Address",
@@ -559,7 +653,11 @@
       "timingsPlaceholder": "10 AM – 10 PM, closed Tuesday",
       "contactPhone": "Phone to show on posts",
       "logo": "Logo",
-      "colors": { "primary": "Primary colour", "secondary": "Secondary colour", "accent": "Accent colour" },
+      "colors": {
+        "primary": "Primary colour",
+        "secondary": "Secondary colour",
+        "accent": "Accent colour"
+      },
       "font": "Font style",
       "examples": "Example posts they like",
       "tone": "Tone",
@@ -605,7 +703,11 @@
       "rules": "Rules",
       "examples": "Examples",
       "addRule": "Add a rule",
-      "scope": { "client": "One client", "industry": "Industry", "global": "Everyone" },
+      "scope": {
+        "client": "One client",
+        "industry": "Industry",
+        "global": "Everyone"
+      },
       "rulePlaceholder": "e.g. Always show the dish close-up with steam.",
       "add": "Add rule",
       "noRules": "No rules yet.",
@@ -617,7 +719,10 @@
       "goldOnly": "Gold standard only",
       "addExample": "Add example",
       "noExamples": "No examples yet. Every delivered option is saved here automatically.",
-      "source": { "delivered": "Delivered", "manual": "Added" },
+      "source": {
+        "delivered": "Delivered",
+        "manual": "Added"
+      },
       "chosen": "Chosen",
       "gold": "Gold standard",
       "markGold": "Mark gold standard",
@@ -628,12 +733,21 @@
       "caption": "Caption",
       "notes": "Why it's great",
       "notesPlaceholder": "What should we learn from this?",
-      "tags": { "occasion": "Occasion", "style": "Style", "goal": "Goal" },
+      "tags": {
+        "occasion": "Occasion",
+        "style": "Style",
+        "goal": "Goal"
+      },
       "save": "Save example"
     },
     "settings": {
       "title": "Settings",
-      "tabs": { "turnaround": "Turnaround", "festivals": "Festival calendar", "plans": "Plans", "quickStart": "Quick-start cards" },
+      "tabs": {
+        "turnaround": "Turnaround",
+        "festivals": "Festival calendar",
+        "plans": "Plans",
+        "quickStart": "Quick-start cards"
+      },
       "standardHours": "Standard (working hours)",
       "urgentHours": "Urgent (working hours)",
       "revisionHours": "Revision (working hours)",
@@ -674,7 +788,11 @@
       "contentType": "Content type",
       "icon": "Icon",
       "questions": "Guided questions (up to 3)",
-      "qTypes": { "choice": "Tap answers", "text": "Typed answer", "photo": "Photo" },
+      "qTypes": {
+        "choice": "Tap answers",
+        "text": "Typed answer",
+        "photo": "Photo"
+      },
       "remove": "Remove",
       "qEn": "Question in English",
       "qHi": "Question in Hindi",
@@ -682,6 +800,34 @@
       "allowText": "Also allow typing an answer",
       "addQuestion": "Add question",
       "sort": "Order"
+    }
+  },
+  "setup": {
+    "title": "Set up SocialGrid",
+    "noSupabaseTitle": "Database not connected yet",
+    "noSupabaseText": "Connect Supabase to this Vercel project (Vercel → your project → Storage → Supabase), then redeploy and reload this page.",
+    "doneText": "Setup is complete.",
+    "goToLogin": "Go to login",
+    "intro": "This creates the database tables, the founder logins and (optionally) two sample clients. It can only be done once.",
+    "introSchemaReady": "The database is ready. Create the founder logins below. This can only be done once.",
+    "founder": "Founder {n}",
+    "optional": "optional",
+    "name": "Name",
+    "email": "Email (used to log in)",
+    "password": "Password (at least 8 characters)",
+    "samples": "Add 2 sample clients for demos (a salon and a restaurant)",
+    "working": "Setting up… (up to a minute)",
+    "submit": "Set up",
+    "success": "All set!",
+    "saveNow": "Save these logins now — passwords are not shown again.",
+    "errors": {
+      "no_supabase": "Supabase is not connected yet.",
+      "already_done": "Setup was already done. Please log in.",
+      "need_expert": "Add at least one founder.",
+      "invalid_expert": "Each founder needs a name, a valid email and a password of at least 8 characters.",
+      "no_database": "No database connection string found (POSTGRES_URL). Run the SQL files from supabase/ in the Supabase SQL editor, then reload.",
+      "migration_failed": "Creating the database tables failed.",
+      "seed_failed": "Creating the accounts failed."
     }
   }
 }

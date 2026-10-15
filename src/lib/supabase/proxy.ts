@@ -1,15 +1,25 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { PUBLIC_SUPABASE_KEY, PUBLIC_SUPABASE_URL } from "@/lib/public-env";
 
-const PUBLIC_PATHS = ["/login"];
+const PUBLIC_PATHS = ["/login", "/setup"];
 
 /** Refreshes the auth session on every request and sends signed-out users to /login. */
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
+  // Not connected to Supabase yet: everything points at the setup page
+  if (!PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_KEY) {
+    if (request.nextUrl.pathname.startsWith("/setup")) return response;
+    const url = request.nextUrl.clone();
+    url.pathname = "/setup";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    PUBLIC_SUPABASE_URL,
+    PUBLIC_SUPABASE_KEY,
     {
       cookies: {
         getAll() {
