@@ -7,7 +7,7 @@
   },
   "login": {
     "title": "Welcome!",
-    "subtitle": "Log in with your email",
+    "subtitle": "Log in to SocialGrid",
     "help": "No email access? Call or WhatsApp the SocialGrid team.",
     "password": "Password",
     "show": "Show",
@@ -18,10 +18,22 @@
       "wrong_credentials": "Email or password is not correct.",
       "no_profile": "This account is not set up yet. Please contact the SocialGrid team.",
       "login_failed": "Login is not working right now ({code}). Please tell the SocialGrid team.",
-      "invalid_email": "Please enter a valid email address."
+      "invalid_email": "Please enter a valid email address.",
+      "use_team_tab": "This is a SocialGrid team account. We've switched to the “SocialGrid team” tab — press Log in again.",
+      "use_customer_tab": "This is a customer account. We've switched to the “Customer login” tab — press Log in again."
     },
     "email": "Email",
-    "forgot": "Forgot password?"
+    "forgot": "Forgot password?",
+    "whoAreYou": "Who is logging in?",
+    "tabs": {
+      "customer": "Customer login",
+      "team": "SocialGrid team"
+    },
+    "tabHint": {
+      "customer": "For business owners (salon, restaurant, cafe…) who get posts from SocialGrid.",
+      "team": "For the SocialGrid founders who make the posts."
+    },
+    "rescue": "Locked out? Account rescue"
   },
   "nav": {
     "readyCount": "{count, plural, one {# post ready} other {# posts ready}}",
@@ -874,12 +886,12 @@
     }
   },
   "reset": {
-    "title": "Reset a password",
-    "intro": "For the SocialGrid team. Set a new password for any login (founder or client email) without using email.",
+    "title": "Account rescue",
+    "intro": "For the SocialGrid owners only. Enter your recovery code to see every login (team and customers), set new passwords, or create a test customer.",
     "code": "Recovery code",
     "login": "Email",
     "loginPlaceholder": "name@example.com",
-    "newPassword": "New password (at least 8 characters)",
+    "newPassword": "New password (8+ characters)",
     "submit": "Set new password",
     "saving": "Saving…",
     "done": "Password changed. You can log in with the new password now.",
@@ -893,8 +905,33 @@
       "not_enabled": "Password reset is switched off.",
       "wrong_code": "That recovery code is not correct.",
       "short_password": "The new password needs at least 8 characters.",
-      "no_user": "No login found with that email."
-    }
+      "no_user": "No login found with that email.",
+      "email_taken": "This email already has an account.",
+      "invalid_email": "Please enter a valid email address."
+    },
+    "unlock": "Show accounts",
+    "teamTitle": "SocialGrid team logins",
+    "teamHint": "Use these on the login page's “SocialGrid team” tab.",
+    "customersTitle": "Customer logins",
+    "customersHint": "Business owners. Use these on the “Customer login” tab.",
+    "unfinishedTitle": "Unfinished accounts",
+    "unfinishedHint": "Logins without a profile (setup stopped halfway). They can't use the app.",
+    "none": "None yet.",
+    "loginEmail": "Login email",
+    "lastLogin": "last login {date}",
+    "neverLoggedIn": "never logged in",
+    "setPassword": "Set",
+    "passwordSet": "Password set for {email}",
+    "createTitle": "Create a test customer",
+    "createHint": "Makes a customer account (with a business, chat and trial plan) that you can log in with straight away.",
+    "create": {
+      "businessName": "Business name",
+      "ownerName": "Owner's name",
+      "email": "Login email",
+      "password": "Password (8+ characters)"
+    },
+    "createButton": "Create customer",
+    "customerCreated": "Customer created: {email}"
   },
   "forgot": {
     "title": "Forgot password",

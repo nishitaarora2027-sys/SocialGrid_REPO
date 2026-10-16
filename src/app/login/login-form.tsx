@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { EyeIcon, EyeOffIcon, LogInIcon, MailIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, LogInIcon, MailIcon, StoreIcon, UsersIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,9 +15,43 @@ export function LoginForm() {
   const [show, setShow] = useState(false);
   // React clears the form after each submit; put back what was typed so only the password needs retyping
   const typed = state?.identifier ?? "";
+  const [mode, setMode] = useState<"customer" | "team">(state?.mode ?? "customer");
+  const [modeFrom, setModeFrom] = useState(state);
+  if (state !== modeFrom) {
+    // a wrong-tab error moves the person to the tab the message points at
+    setModeFrom(state);
+    if (state?.error === "use_team_tab") setMode("team");
+    else if (state?.error === "use_customer_tab") setMode("customer");
+  }
 
   return (
     <form action={action} className="space-y-5">
+      <input type="hidden" name="mode" value={mode} />
+      <div role="tablist" aria-label={t("whoAreYou")} className="grid grid-cols-2 gap-1 rounded-2xl bg-secondary p-1">
+        {(["customer", "team"] as const).map((m) => (
+          <button
+            key={m}
+            type="button"
+            role="tab"
+            aria-selected={mode === m}
+            onClick={() => setMode(m)}
+            className={`flex h-12 items-center justify-center gap-2 rounded-xl text-sm font-semibold transition ${
+              mode === m ? "bg-card text-foreground shadow" : "text-muted-foreground"
+            }`}
+          >
+            {m === "customer" ? <StoreIcon className="size-4" /> : <UsersIcon className="size-4" />}
+            {t(`tabs.${m}`)}
+          </button>
+        ))}
+      </div>
+      <p className="text-sm text-muted-foreground">
+        {t(`tabHint.${mode}`)}{" "}
+        {mode === "team" && (
+          <Link href="/reset" className="font-medium text-primary underline underline-offset-4">
+            {t("rescue")}
+          </Link>
+        )}
+      </p>
       <div className="space-y-2">
         <Label htmlFor="email" className="text-base">
           {t("email")}

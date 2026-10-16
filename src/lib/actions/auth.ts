@@ -8,12 +8,16 @@ import { createClient } from "@/lib/supabase/server";
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
 
-export async function login(_prev: { error?: string; code?: string; identifier?: string } | undefined, formData: FormData) {
+type LoginState = { error?: string; code?: string; identifier?: string; mode?: "customer" | "team" } | undefined;
+
+export async function login(_prev: LoginState, formData: FormData): Promise<LoginState> {
   const identifier = String(formData.get("email") ?? "").trim();
+  // which tab the person used: customers (business owners) or the SocialGrid team
+  const mode = formData.get("mode") === "team" ? "team" : "customer";
   const password = String(formData.get("password") ?? "");
   const supabase = await createClient();
   const result = await emailPasswordAuth.signIn(supabase, identifier, password);
-  if (!result.ok) return { error: result.error, code: result.code, identifier };
+  if (!result.ok) return { error: result.error, code: result.code, identifier, mode };
 
   const {
     data: { user },
@@ -25,10 +29,16 @@ export async function login(_prev: { error?: string; code?: string; identifier?:
     .single();
   if (!profile) {
     await supabase.auth.signOut();
-    return { error: "no_profile", identifier };
+    return { error: "no_profile", identifier, mode };
+  }
+  const isTeam = profile.role_id === 1;
+  if (isTeam !== (mode === "team")) {
+    // right password, wrong door: say which tab to use instead of a vague error
+    await supabase.auth.signOut();
+    return { error: isTeam ? "use_team_tab" : "use_customer_tab", identifier, mode };
   }
   (await cookies()).set(LOCALE_COOKIE, profile.preferred_ui_language, { maxAge: ONE_YEAR, path: "/" });
-  redirect(profile.role_id === 1 ? "/expert" : "/chat");
+  redirect(isTeam ? "/expert" : "/chat");
 }
 
 export async function logout() {
