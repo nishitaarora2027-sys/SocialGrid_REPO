@@ -853,7 +853,9 @@
         "errors": {
           "wrong_current": "Your current password is not correct.",
           "short_password": "The new password needs at least 8 characters."
-        }
+        },
+        "addTeamTitle": "Add a founder",
+        "addTeamHint": "Creates another SocialGrid team login. They log in on the “SocialGrid team” tab."
       }
     }
   },
@@ -931,7 +933,9 @@
       "password": "Password (8+ characters)"
     },
     "createButton": "Create customer",
-    "customerCreated": "Customer created: {email}"
+    "customerCreated": "Customer created: {email}",
+    "createTeamTitle": "Create or repair a founder login",
+    "createTeamHint": "Makes a SocialGrid team login. If the email already exists without a profile (unfinished) or as a team login, it's fixed and given this password."
   },
   "forgot": {
     "title": "Forgot password",
@@ -958,6 +962,21 @@
       "short_password": "The new password needs at least 8 characters.",
       "same_password": "Choose a password different from your old one.",
       "expired": "This reset session has expired."
+    }
+  },
+  "teamForm": {
+    "name": "Founder's name",
+    "email": "Login email",
+    "password": "Password (8+ characters)",
+    "submit": "Create team login",
+    "created": "Team login created: {email}",
+    "repaired": "{email} already existed — it's now a working team login with the new password.",
+    "errors": {
+      "missing_name": "Please enter a name.",
+      "invalid_email": "Please enter a valid email address.",
+      "short_password": "The password needs at least 8 characters.",
+      "is_customer": "This email is a customer login. Use a different email for the team account.",
+      "wrong_code": "That recovery code is not correct."
     }
   }
 }

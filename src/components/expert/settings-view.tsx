@@ -15,7 +15,8 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CARD_ICONS, CardIcon } from "@/components/shared/icons";
 import { deleteFestival, saveFestival, savePlan, saveQuickStartCard, updateSettings } from "@/lib/actions/expert-admin";
-import { changeMyPassword } from "@/lib/actions/password";
+import { addTeamMember, changeMyPassword } from "@/lib/actions/password";
+import { TeamMemberForm } from "@/components/shared/team-member-form";
 import { formatDate, formatPrice } from "@/lib/format";
 import {
   CONTENT_TYPES,
@@ -87,6 +88,11 @@ export function SettingsView({
         </TabsContent>
         <TabsContent value="account">
           <ChangePassword />
+          <section className="max-w-md space-y-3 pt-8">
+            <h2 className="text-lg font-bold">{t("account.addTeamTitle")}</h2>
+            <p className="text-sm text-muted-foreground">{t("account.addTeamHint")}</p>
+            <TeamMemberForm submit={addTeamMember} />
+          </section>
         </TabsContent>
       </Tabs>
     </main>

@@ -6,6 +6,7 @@ import { requireExpert } from "@/lib/auth/session";
 import { env } from "@/lib/config";
 import { ROLE } from "@/lib/auth/session";
 import { createClientRecords } from "@/lib/clients/create";
+import { createTeamMember, type NewTeamMember } from "@/lib/team/create";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const MIN_PASSWORD = 8;
@@ -85,6 +86,18 @@ export async function rescueCreateCustomer(
   if (input.password.trim().length < MIN_PASSWORD) return { ok: false, error: "short_password" };
   const res = await createClientRecords({ ...input, password: input.password.trim(), industry: "salon", language: "en" });
   return res.ok ? { ok: true } : { ok: false, error: res.error };
+}
+
+/** Creates (or repairs) a SocialGrid team login from the rescue page. */
+export async function rescueCreateTeam(code: string, input: NewTeamMember): Promise<{ ok: boolean; error?: string; repaired?: boolean }> {
+  if (!(await codeIsValid(code))) return { ok: false, error: "wrong_code" };
+  return createTeamMember(input);
+}
+
+/** A signed-in founder adds another founder (Settings → My account). */
+export async function addTeamMember(input: NewTeamMember): Promise<{ ok: boolean; error?: string; repaired?: boolean }> {
+  await requireExpert();
+  return createTeamMember(input);
 }
 
 /** Signed-in founder changes their own password (Settings → My account). */

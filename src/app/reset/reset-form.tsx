@@ -9,8 +9,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { TeamMemberForm } from "@/components/shared/team-member-form";
 import {
   rescueCreateCustomer,
+  rescueCreateTeam,
   rescueListAccounts,
   rescueSetPassword,
   type RescueAccount,
@@ -72,6 +74,13 @@ export function ResetForm() {
   return (
     <div className="space-y-6">
       <Group title={t("teamTitle")} hint={t("teamHint")} icon={<UsersIcon className="size-5" />} accounts={team} code={code} message={message} />
+      <section className="space-y-3 rounded-2xl border-2 border-primary/30 bg-primary/5 p-4">
+        <h2 className="flex items-center gap-2 text-lg font-bold">
+          <UsersIcon className="size-5" /> {t("createTeamTitle")}
+        </h2>
+        <p className="text-sm text-muted-foreground">{t("createTeamHint")}</p>
+        <TeamMemberForm submit={(input) => rescueCreateTeam(code, input)} onDone={reload} />
+      </section>
       <Group title={t("customersTitle")} hint={t("customersHint")} icon={<StoreIcon className="size-5" />} accounts={customers} code={code} message={message} />
       {unfinished.length > 0 && (
         <Group title={t("unfinishedTitle")} hint={t("unfinishedHint")} icon={<KeyRoundIcon className="size-5" />} accounts={unfinished} code={code} message={message} />
