@@ -2,17 +2,17 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { phonePasswordAuth } from "@/lib/auth/provider";
+import { emailPasswordAuth } from "@/lib/auth/provider";
 import { LOCALE_COOKIE, resolveLocale } from "@/i18n/config";
 import { createClient } from "@/lib/supabase/server";
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
 
 export async function login(_prev: { error?: string; code?: string; identifier?: string } | undefined, formData: FormData) {
-  const identifier = String(formData.get("phone") ?? "");
+  const identifier = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
   const supabase = await createClient();
-  const result = await phonePasswordAuth.signIn(supabase, identifier, password);
+  const result = await emailPasswordAuth.signIn(supabase, identifier, password);
   if (!result.ok) return { error: result.error, code: result.code, identifier };
 
   const {

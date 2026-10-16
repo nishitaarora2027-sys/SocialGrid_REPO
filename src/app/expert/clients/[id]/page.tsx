@@ -63,6 +63,8 @@ export default async function ClientPage({
     ...offeringList.map((o) => o.photo_path).filter(Boolean) as string[],
   ].map((path) => ({ bucket: BUCKETS.brandAssets, path })));
 
+  const { data: login } = await createAdminClient().auth.admin.getUserById(business.owner_profile_id);
+
   return (
     <ClientDetail
       business={business}
@@ -76,6 +78,7 @@ export default async function ClientPage({
       suggestions={(suggestions ?? []) as Suggestion[]}
       requests={(requests ?? []) as RequestRow[]}
       urls={urls}
+      loginEmail={login.user?.email ?? ""}
       initialTab={sp.wizard ? "brand" : (sp.tab ?? "brand")}
       wizard={!!sp.wizard}
     />

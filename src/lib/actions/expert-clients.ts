@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { ENABLED_AUTONOMY_MODES } from "@/lib/ai";
-import { normalizePhone, phoneToEmail } from "@/lib/auth/phone";
+import { normalizePhone } from "@/lib/auth/phone";
+import { isEmail } from "@/lib/auth/provider";
 import { ROLE, requireExpert } from "@/lib/auth/session";
 import { getBillingProvider } from "@/lib/billing";
 import {
@@ -27,7 +28,8 @@ type Result<T = object> = ({ ok: true } & T) | { ok: false; error: string };
 const createClientSchema = z.object({
   businessName: z.string().trim().min(1).max(120),
   ownerName: z.string().trim().min(1).max(120),
-  phone: z.string(),
+  email: z.string().trim().toLowerCase().refine(isEmail),
+  phone: z.string().optional(),
   password: z.string().min(6).max(72),
   industry: z.enum(INDUSTRIES as [string, ...string[]]),
   language: z.enum(["en", "hi"]),
@@ -39,21 +41,24 @@ export async function createClientAccount(
 ): Promise<Result<{ businessId: string }>> {
   await requireExpert();
   const parsed = createClientSchema.safeParse(input);
-  if (!parsed.success) return { ok: false, error: "invalid" };
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues.some((i) => i.path[0] === "email") ? "invalid_email" : "invalid" };
+  }
   const d = parsed.data;
-  const phone = normalizePhone(d.phone);
-  if (!phone) return { ok: false, error: "invalid_phone" };
+  // the mobile number is optional contact info (WhatsApp), not the login
+  const phone = d.phone?.trim() ? normalizePhone(d.phone) : null;
+  if (d.phone?.trim() && !phone) return { ok: false, error: "invalid_phone" };
 
   const admin = createAdminClient();
   const { data: created, error: authError } = await admin.auth.admin.createUser({
-    email: phoneToEmail(phone),
+    email: d.email,
     password: d.password,
     email_confirm: true,
     user_metadata: { phone, display_name: d.ownerName },
   });
   if (authError || !created.user) {
     const exists = authError?.message?.toLowerCase().includes("already");
-    return { ok: false, error: exists ? "phone_taken" : (authError?.message ?? "failed") };
+    return { ok: false, error: exists ? "email_taken" : (authError?.message ?? "failed") };
   }
   const userId = created.user.id;
 
@@ -95,6 +100,22 @@ export async function createClientAccount(
     await admin.auth.admin.deleteUser(userId);
     return { ok: false, error: e instanceof Error ? e.message : "failed" };
   }
+}
+
+/** Changes the email a client logs in with. */
+export async function updateClientLoginEmail(businessId: string, email: string): Promise<Result> {
+  const { supabase } = await requireExpert();
+  const clean = email.trim().toLowerCase();
+  if (!isEmail(clean)) return { ok: false, error: "invalid_email" };
+  const { data: business } = await supabase.from("businesses").select("owner_profile_id").eq("id", businessId).single();
+  if (!business) return { ok: false, error: "not_found" };
+  const { error } = await createAdminClient().auth.admin.updateUserById(business.owner_profile_id, {
+    email: clean,
+    email_confirm: true,
+  });
+  if (error) return { ok: false, error: error.message.toLowerCase().includes("already") ? "email_taken" : error.message };
+  revalidatePath(`/expert/clients/${businessId}`);
+  return { ok: true };
 }
 
 export async function resetClientPassword(businessId: string, password: string): Promise<Result> {

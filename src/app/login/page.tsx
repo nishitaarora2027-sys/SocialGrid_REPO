@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
@@ -23,12 +22,7 @@ export default async function LoginPage() {
           <p className="text-lg text-muted-foreground">{t("subtitle")}</p>
         </div>
         <LoginForm />
-        <div className="space-y-2 text-center">
-          <p className="text-muted-foreground">{t("help")}</p>
-          <Link href="/reset" className="text-sm font-medium text-muted-foreground underline underline-offset-4">
-            {t("teamReset")}
-          </Link>
-        </div>
+        <p className="text-center text-muted-foreground">{t("help")}</p>
       </div>
     </main>
   );

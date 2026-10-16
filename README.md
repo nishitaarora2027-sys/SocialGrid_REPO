@@ -63,7 +63,7 @@ npm install
 npm run seed
 ```
 It prints the logins and passwords **once** — save them. Experts log in with their email;
-sample clients log in with their mobile number (`9000000001` salon, `9000000002` restaurant).
+sample clients log in with the placeholder emails shown by setup — change them to real ones under Clients → client → Plan & settings → Login email.
 Running it again is safe (existing accounts are skipped).
 
 ### 4. Deploy on Vercel
@@ -81,12 +81,41 @@ Running it again is safe (existing accounts are skipped).
 
 ---
 
+## Logins and email
+
+Everyone logs in with **email + password**. Founders create client accounts (no public sign-up).
+Forgotten password: **Forgot password?** on the login page emails a reset link. Supabase's built-in
+email sender allows only ~2 emails/hour, so send auth emails through **Resend**:
+
+1. resend.com → sign up → **Domains** → add your domain and the DNS records it shows (until a domain is
+   verified, Resend only delivers to your own address).
+2. Resend → **API Keys** → create one (sending access).
+3. Supabase → **Authentication → Emails → SMTP Settings** → enable custom SMTP:
+   host `smtp.resend.com`, port `465`, username `resend`, password = the API key,
+   sender `no-reply@yourdomain.com`, sender name `SocialGrid`.
+4. Supabase → **Authentication → Rate Limits** → raise "emails per hour" (e.g. 100).
+5. Supabase → **Authentication → URL Configuration** → Site URL = your site; add `https://your-site/**`
+   to Redirect URLs.
+6. Supabase → **Authentication → Emails → Templates → Reset password** → make the link
+   `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/update-password`
+   (works even when the email is opened on a different device).
+
+Emergency fallback without email: set `RECOVERY_CODE` in Vercel and use `/reset`.
+
+## AI drafts
+
+In a request, **Write 3 drafts** creates captions + hashtags from the brand profile, menu, rules, past
+posts and the client's messages; **Generate image** makes a picture for an option. Nothing is sent to
+the client until an expert approves. Text uses River (DeepSeek) and falls back to OpenRouter; images
+use OpenRouter. Keys and model names are environment variables (see `.env.example`), so models can be
+changed in Vercel without code changes.
+
 ## Day-to-day use
 
 **Onboarding a client (in person, ~10 min):** Expert → Clients → *Create client* → business,
-owner name, mobile, password (auto-suggested, easy to read out) → brand wizard (basics, look,
-voice, audience, things to avoid) → menu/services → weekly plan. Give the owner their mobile
-number + password and add the site to their home screen (Chrome menu → *Add to Home screen*).
+owner name, login email, mobile (optional), password (auto-suggested, easy to read out) → brand wizard (basics, look,
+voice, audience, things to avoid) → menu/services → weekly plan. Give the owner their email
++ password and add the site to their home screen (Chrome menu → *Add to Home screen*).
 
 **Client:** opens the app → chat. Taps an idea card (guided 1–3 questions) or types / sends a
 voice note / photos. Gets an instant "ready by 6:00 PM today" message. When ready: *Choose this
@@ -127,8 +156,8 @@ src/lib/domain.ts      requests, revisions, messages, weekly plan slots
 src/lib/turnaround.ts  working-hours due-time maths
 src/lib/suggestions/   festival / inactivity / plan-reminder rules (run when the client opens chat)
 src/lib/billing/       BillingProvider interface + ManualBillingProvider; request_access check
-src/lib/ai/            ContentGenerator + Transcriber interfaces, ManualGenerator (no-op)
-src/lib/auth/          phone→login mapping, swappable AuthProvider (for OTP later)
+src/lib/ai/            River/OpenRouter providers with fallback, caption + image prompts
+src/lib/auth/          email login (swappable AuthProvider)
 ```
 
 ## How it's built for later
@@ -141,7 +170,7 @@ src/lib/auth/          phone→login mapping, swappable AuthProvider (for OTP la
 - **Razorpay:** add a `BillingProvider` implementation next to `billing/manual.ts` and a webhook
   route that calls `handleWebhook`. Plan limits are enforced in one place — the
   `request_access()` SQL function.
-- **Phone OTP:** replace `phonePasswordAuth` in `src/lib/auth/provider.ts`.
+- **Other login methods (OTP, Google):** replace `emailPasswordAuth` in `src/lib/auth/provider.ts`.
 - **More roles:** roles live in the `roles` table; add a row and extend `ROLE`/RLS helpers.
 - **New content types:** `alter type public.content_type add value '…'` + add to `CONTENT_TYPES`
   and the `contentTypes` translations.

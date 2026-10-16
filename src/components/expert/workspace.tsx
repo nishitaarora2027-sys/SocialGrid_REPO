@@ -55,6 +55,7 @@ export function Workspace({
   recentPosts,
   thread,
   conversationId,
+  ai,
 }: {
   request: RequestRow;
   business: Business;
@@ -66,6 +67,7 @@ export function Workspace({
   recentPosts: ContentOption[];
   thread: ThreadData;
   conversationId: string;
+  ai: { text: boolean; image: boolean };
 }) {
   const t = useTranslations("expert.workspace");
   const tTypes = useTranslations("contentTypes");
@@ -219,6 +221,7 @@ export function Workspace({
               initial={currentDrafts}
               urls={thread.urls}
               lastFeedback={revisions.find((r) => r.number === request.current_revision) ?? null}
+              ai={ai}
             />
           ) : (
             <div className="rounded-2xl border bg-card p-4 text-muted-foreground">

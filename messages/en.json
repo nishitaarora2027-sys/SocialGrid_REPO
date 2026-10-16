@@ -7,24 +7,21 @@
   },
   "login": {
     "title": "Welcome!",
-    "subtitle": "Log in with your mobile number",
-    "help": "Forgot your password? Call or WhatsApp the SocialGrid team.",
-    "phone": "Mobile number",
+    "subtitle": "Log in with your email",
+    "help": "No email access? Call or WhatsApp the SocialGrid team.",
     "password": "Password",
     "show": "Show",
     "hide": "Hide",
     "submit": "Log in",
     "signingIn": "Logging in…",
     "errors": {
-      "invalid_phone": "Please enter a 10-digit mobile number.",
-      "wrong_credentials": "Mobile number or password is not correct.",
+      "wrong_credentials": "Email or password is not correct.",
       "no_profile": "This account is not set up yet. Please contact the SocialGrid team.",
-      "login_failed": "Login is not working right now ({code}). Please tell the SocialGrid team."
+      "login_failed": "Login is not working right now ({code}). Please tell the SocialGrid team.",
+      "invalid_email": "Please enter a valid email address."
     },
     "email": "Email",
-    "useEmail": "SocialGrid team? Log in with email",
-    "usePhone": "Log in with mobile number instead",
-    "teamReset": "SocialGrid team: forgot your password?"
+    "forgot": "Forgot password?"
   },
   "nav": {
     "readyCount": "{count, plural, one {# post ready} other {# posts ready}}",
@@ -518,7 +515,24 @@
       "tagPlaceholder": "Type a tag and press Enter",
       "whyItWorks": "Why this works (optional)",
       "internalNotes": "Internal notes",
-      "internalNotesHint": "Only experts see this"
+      "internalNotesHint": "Only experts see this",
+      "ai": {
+        "title": "AI drafts",
+        "brandLanguage": "Brand's language",
+        "write": "Write 3 drafts",
+        "writing": "Writing…",
+        "hint": "Uses this client's brand profile, menu, rules, past posts and their messages. Always read and edit before delivering.",
+        "done": "{n, plural, one {# draft} other {# drafts}} written — check and edit them.",
+        "confirmReplace": "Replace the captions and hashtags you've written with new AI drafts?",
+        "image": "Generate image",
+        "painting": "Generating… (up to a minute)",
+        "imagePlaceholder": "Describe the picture, e.g. bride with gold jewellery, soft light",
+        "failed": "AI didn't work: {error}",
+        "errors": {
+          "not_configured": "AI isn't switched on yet. Add the API keys in Vercel → Settings → Environment Variables.",
+          "empty_prompt": "Describe the picture first."
+        }
+      }
     },
     "clients": {
       "title": "Clients",
@@ -534,7 +548,9 @@
       "errors": {
         "invalid": "Please fill in all fields (password at least 6 characters).",
         "invalid_phone": "Please enter a valid 10-digit mobile number.",
-        "phone_taken": "This mobile number already has an account."
+        "phone_taken": "This mobile number already has an account.",
+        "invalid_email": "Please enter a valid email address.",
+        "email_taken": "This email already has an account."
       },
       "created": "Client created! Now set up the brand.",
       "businessName": "Business name",
@@ -543,10 +559,13 @@
       "phone": "Owner's mobile number",
       "password": "Password",
       "newPassword": "New",
-      "passwordHint": "Write this down for the owner. They log in with mobile number + this password.",
+      "passwordHint": "Write this down for the owner. They log in with their email + this password, and can reset it by email later.",
       "industry": "Type of business",
       "language": "App language",
-      "submit": "Create & set up brand"
+      "submit": "Create & set up brand",
+      "email": "Login email",
+      "emailHint": "The owner logs in with this email and can reset their password from it.",
+      "phoneOptional": "Mobile / WhatsApp (optional, for contact)"
     },
     "client": {
       "allClients": "All clients",
@@ -639,7 +658,14 @@
       },
       "resetPassword": "Reset password",
       "newPassword": "New password",
-      "passwordChanged": "Password changed"
+      "passwordChanged": "Password changed",
+      "loginEmail": "Login email",
+      "loginEmailHint": "The email this client logs in with. Change it if they get a new email (or to replace a placeholder).",
+      "emailChanged": "Login email changed",
+      "errors": {
+        "invalid_email": "Please enter a valid email address.",
+        "email_taken": "This email already has an account."
+      }
     },
     "brand": {
       "saved": "Saved",
@@ -849,10 +875,10 @@
   },
   "reset": {
     "title": "Reset a password",
-    "intro": "For the SocialGrid team. Set a new password for any login — a founder's email or a client's mobile number.",
+    "intro": "For the SocialGrid team. Set a new password for any login (founder or client email) without using email.",
     "code": "Recovery code",
-    "login": "Email or mobile number",
-    "loginPlaceholder": "name@example.com or 98765 43210",
+    "login": "Email",
+    "loginPlaceholder": "name@example.com",
     "newPassword": "New password (at least 8 characters)",
     "submit": "Set new password",
     "saving": "Saving…",
@@ -867,7 +893,34 @@
       "not_enabled": "Password reset is switched off.",
       "wrong_code": "That recovery code is not correct.",
       "short_password": "The new password needs at least 8 characters.",
-      "no_user": "No login found with that email or mobile number."
+      "no_user": "No login found with that email."
+    }
+  },
+  "forgot": {
+    "title": "Forgot password",
+    "intro": "Enter the email you log in with. We'll email you a link to set a new password.",
+    "email": "Email",
+    "submit": "Send reset link",
+    "sending": "Sending…",
+    "sentTitle": "Check your email",
+    "sentText": "If this email has a SocialGrid account, a reset link is on its way. It can take a minute — check spam too.",
+    "linkExpired": "That link has expired or was already used. Ask for a new one below.",
+    "backToLogin": "Back to login",
+    "newTitle": "Set a new password",
+    "newFor": "For {email}",
+    "newPassword": "New password (at least 8 characters)",
+    "save": "Save password",
+    "saving": "Saving…",
+    "changed": "Password changed!",
+    "continue": "Continue",
+    "requestNew": "Send me a new link",
+    "errors": {
+      "invalid_email": "Please enter a valid email address.",
+      "rate_limited": "Too many emails were sent just now. Please wait a few minutes and try again.",
+      "send_failed": "We couldn't send the email right now. Please try again, or contact the SocialGrid team.",
+      "short_password": "The new password needs at least 8 characters.",
+      "same_password": "Choose a password different from your old one.",
+      "expired": "This reset session has expired."
     }
   }
 }

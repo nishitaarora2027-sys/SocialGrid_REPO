@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { CameraIcon, KeyRoundIcon, LightbulbIcon, Loader2Icon, PlayIcon, PlusIcon, SaveIcon, Trash2Icon } from "lucide-react";
+import { CameraIcon, KeyRoundIcon, LightbulbIcon, Loader2Icon, MailIcon, PlayIcon, PlusIcon, SaveIcon, Trash2Icon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,7 @@ import {
   addCustomSuggestion,
   askForPhoto,
   resetClientPassword,
+  updateClientLoginEmail,
   saveWeeklyPlan,
   setSubscription,
   startPlanSlot,
@@ -59,6 +60,7 @@ export function ClientDetail(props: {
   suggestions: Suggestion[];
   requests: RequestRow[];
   urls: Record<string, string>;
+  loginEmail: string;
   initialTab: string;
   wizard: boolean;
 }) {
@@ -103,7 +105,7 @@ export function ClientDetail(props: {
           <PlanEditor businessId={business.id} initial={props.planSlots} weekSlots={props.weekSlots} />
         </TabsContent>
         <TabsContent value="account">
-          <AccountPanel business={business} subscription={props.subscription} plans={props.plans} suggestions={props.suggestions} />
+          <AccountPanel business={business} subscription={props.subscription} plans={props.plans} suggestions={props.suggestions} loginEmail={props.loginEmail} />
         </TabsContent>
         <TabsContent value="history">
           <History requests={props.requests} />
@@ -259,11 +261,13 @@ function AccountPanel({
   subscription,
   plans,
   suggestions,
+  loginEmail,
 }: {
   business: Business;
   subscription: Subscription | null;
   plans: Plan[];
   suggestions: Suggestion[];
+  loginEmail: string;
 }) {
   const t = useTranslations("expert.account");
   const tSub = useTranslations("subscriptionStatus");
@@ -272,6 +276,7 @@ function AccountPanel({
   const { pending, act } = useAct();
   const [status, setStatus] = useState(subscription?.status ?? "trial");
   const [planId, setPlanId] = useState(subscription?.plan_id ?? plans[0]?.id ?? "");
+  const [email, setEmail] = useState(loginEmail);
   const [periodEnd, setPeriodEnd] = useState(subscription?.current_period_end?.slice(0, 10) ?? "");
   const [password, setPassword] = useState("");
   const [sugg, setSugg] = useState({ title_en: "", title_hi: "", content_type: "", show_at: "" });
@@ -410,6 +415,35 @@ function AccountPanel({
             ))}
           </ul>
         )}
+      </section>
+
+      <section className="space-y-3 rounded-2xl border bg-card p-4">
+        <h2 className="flex items-center gap-2 font-bold">
+          <MailIcon className="size-5" /> {t("loginEmail")}
+        </h2>
+        <p className="text-sm text-muted-foreground">{t("loginEmailHint")}</p>
+        <div className="flex gap-2">
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            aria-label={t("loginEmail")}
+          />
+          <Button
+            disabled={pending || !email.includes("@") || email.trim().toLowerCase() === loginEmail}
+            onClick={() =>
+              act(async () => {
+                const res = await updateClientLoginEmail(business.id, email);
+                return res.ok || !t.has(`errors.${res.error}`) ? res : { ok: false, error: t(`errors.${res.error}`) };
+              }, t("emailChanged"))
+            }
+          >
+            <SaveIcon /> {t("save")}
+          </Button>
+        </div>
       </section>
 
       <section className="space-y-3 rounded-2xl border bg-card p-4">

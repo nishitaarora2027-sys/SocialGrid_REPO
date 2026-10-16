@@ -32,7 +32,8 @@ export function CreateClientForm() {
       const res = await createClientAccount({
         businessName: String(fd.get("businessName")),
         ownerName: String(fd.get("ownerName")),
-        phone: String(fd.get("phone")),
+        email: String(fd.get("email")),
+        phone: String(fd.get("phone") ?? ""),
         password,
         industry,
         language,
@@ -56,8 +57,13 @@ export function CreateClientForm() {
         <Input id="ownerName" name="ownerName" required placeholder={t("ownerNameHint")} />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="phone">{t("phone")}</Label>
-        <Input id="phone" name="phone" inputMode="tel" required placeholder="98765 43210" />
+        <Label htmlFor="email">{t("email")}</Label>
+        <Input id="email" name="email" type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} required placeholder="name@example.com" />
+        <p className="text-sm text-muted-foreground">{t("emailHint")}</p>
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="phone">{t("phoneOptional")}</Label>
+        <Input id="phone" name="phone" inputMode="tel" placeholder="98765 43210" />
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="password">{t("password")}</Label>

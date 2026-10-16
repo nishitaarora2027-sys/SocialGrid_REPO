@@ -1,29 +1,24 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { normalizePhone, phoneToEmail } from "./phone";
 
 /**
- * Login is behind this interface so phone OTP can replace phone + password later
- * without touching the login page logic.
+ * Login is behind this interface so another method (OTP, Google) can replace
+ * email + password later without touching the login page logic.
  */
 export interface AuthProvider {
   signIn(
     supabase: SupabaseClient,
     identifier: string,
     secret: string,
-  ): Promise<{ ok: true } | { ok: false; error: "invalid_phone" | "wrong_credentials" | "login_failed"; code?: string }>;
+  ): Promise<{ ok: true } | { ok: false; error: "invalid_email" | "wrong_credentials" | "login_failed"; code?: string }>;
 }
 
-/** V1: phone + password, stored in Supabase as a synthetic email. Experts may use a real email. */
-export const phonePasswordAuth: AuthProvider = {
+export const isEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+
+/** Everyone (founders and clients) logs in with email + password. */
+export const emailPasswordAuth: AuthProvider = {
   async signIn(supabase, identifier, secret) {
-    let email: string;
-    if (identifier.includes("@")) {
-      email = identifier.trim().toLowerCase();
-    } else {
-      const phone = normalizePhone(identifier);
-      if (!phone) return { ok: false, error: "invalid_phone" };
-      email = phoneToEmail(phone);
-    }
+    const email = identifier.trim().toLowerCase();
+    if (!isEmail(email)) return { ok: false, error: "invalid_email" };
     // copied passwords often carry a trailing space or newline
     const { error } = await supabase.auth.signInWithPassword({ email, password: secret.trim() });
     if (!error) return { ok: true };

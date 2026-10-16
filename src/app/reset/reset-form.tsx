@@ -38,7 +38,7 @@ export function ResetForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="login">{t("login")}</Label>
-        <Input key={typedLogin} id="login" name="login" type="text" defaultValue={typedLogin} placeholder={t("loginPlaceholder")} required className="h-12" {...plain} />
+        <Input key={typedLogin} id="login" name="login" type="email" inputMode="email" defaultValue={typedLogin} placeholder={t("loginPlaceholder")} required className="h-12" {...plain} />
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">{t("newPassword")}</Label>

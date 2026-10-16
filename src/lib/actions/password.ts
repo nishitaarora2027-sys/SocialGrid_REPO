@@ -3,7 +3,6 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import { createClient as createStatelessClient } from "@supabase/supabase-js";
 import { requireExpert } from "@/lib/auth/session";
-import { normalizePhone, phoneToEmail } from "@/lib/auth/phone";
 import { env } from "@/lib/config";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { findUserByEmail } from "@/lib/supabase/users";
@@ -22,7 +21,7 @@ export async function isRecoveryEnabled() {
 }
 
 /**
- * Sets a new password for any login (founder email or client mobile number) without being
+ * Sets a new password for any login (founder or client email) without being
  * signed in. Guarded by the RECOVERY_CODE environment variable, which only the Vercel
  * project owner can set.
  */
@@ -40,13 +39,8 @@ export async function recoverPassword(_prev: Result, formData: FormData): Promis
   const password = String(formData.get("password") ?? "").trim();
   if (password.length < MIN_PASSWORD) return { ok: false, error: "short_password", login };
 
-  let email: string;
-  if (login.includes("@")) email = login.toLowerCase();
-  else {
-    const phone = normalizePhone(login);
-    if (!phone) return { ok: false, error: "no_user", login };
-    email = phoneToEmail(phone);
-  }
+  const email = login.toLowerCase();
+  if (!email.includes("@")) return { ok: false, error: "no_user", login };
 
   const admin = createAdminClient();
   const user = await findUserByEmail(admin, email);

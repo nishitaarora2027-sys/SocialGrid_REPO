@@ -119,7 +119,7 @@ export function createSeeder(admin: SupabaseClient, domain: string, log: (msg: s
     }
     const { data, error } = await admin.auth.admin.createUser({ email, password, email_confirm: true });
     if (error) throw error;
-    const cred = { label, login: email.endsWith(`@${domain}`) ? email.split("@")[0] : email, password };
+    const cred = { label, login: email, password };
     created.push(cred);
     log(`+ created ${label.padEnd(28)} login: ${cred.login}   password: ${password}`);
     return data.user.id;

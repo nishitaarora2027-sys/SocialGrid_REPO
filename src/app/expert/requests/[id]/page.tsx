@@ -5,6 +5,7 @@ import { getConversationId, rulesFor } from "@/lib/domain";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { loadThread } from "@/lib/thread";
 import { Workspace } from "@/components/expert/workspace";
+import { isImageAiEnabled, isTextAiEnabled } from "@/lib/ai/providers";
 import type { BrandProfile, Business, ContentOption, Offering, RequestRow, Revision } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -61,6 +62,7 @@ export default async function RequestPage({ params }: { params: Promise<{ id: st
       recentPosts={recentPosts}
       thread={thread}
       conversationId={conversationId}
+      ai={{ text: isTextAiEnabled(), image: isImageAiEnabled() }}
     />
   );
 }

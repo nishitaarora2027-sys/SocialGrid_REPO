@@ -11,6 +11,7 @@ import {
   Loader2Icon,
   PlusIcon,
   SaveIcon,
+  SparklesIcon,
   Trash2Icon,
   UploadIcon,
 } from "lucide-react";
@@ -22,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { TagInput } from "@/components/expert/tag-input";
 import { mediaUrl } from "@/components/shared/option-preview";
 import { deliverOptions, saveDraftOptions, type OptionInput } from "@/lib/actions/expert-requests";
+import { generateCaptionDrafts, generateRequestImage } from "@/lib/actions/ai";
 import { compressImage, uploadFile } from "@/lib/browser/media";
 import { TAG_SUGGESTIONS } from "@/lib/brand-options";
 import { BUCKETS, LIMITS } from "@/lib/config";
@@ -66,15 +68,18 @@ export function OptionsEditor({
   initial,
   urls,
   lastFeedback,
+  ai,
 }: {
   request: RequestRow;
   businessId: string;
   initial: ContentOption[];
   urls: Record<string, string>;
   lastFeedback: Revision | null;
+  ai: { text: boolean; image: boolean };
 }) {
   const t = useTranslations("expert.editor");
   const tChips = useTranslations("chips");
+  const tOpt = useTranslations("brandOptions");
   const router = useRouter();
   const defaultType = (request.content_type ?? "single_post") as ContentType;
   const [drafts, setDrafts] = useState<Draft[]>(() =>
@@ -84,6 +89,44 @@ export function OptionsEditor({
   const [changeNote, setChangeNote] = useState("");
   const [saving, startSave] = useTransition();
   const [delivering, startDeliver] = useTransition();
+  const [writing, startWriting] = useTransition();
+  const [aiLanguage, setAiLanguage] = useState(request.language ?? "");
+  // image ideas from the last AI draft, by draft key, used to prefill "Generate image"
+  const [imageIdeas, setImageIdeas] = useState<Record<string, string>>({});
+
+  const aiError = (error: string) => {
+    toast.error(t.has(`ai.errors.${error}` as never) ? t(`ai.errors.${error}` as never) : t("ai.failed", { error }));
+  };
+
+  const writeWithAi = () => {
+    const filled = drafts.some((d) => d.caption?.trim());
+    if (filled && !window.confirm(t("ai.confirmReplace"))) return;
+    startWriting(async () => {
+      const res = await generateCaptionDrafts(request.id, LIMITS.optionsPerRequest, aiLanguage || undefined);
+      if (!res.ok) {
+        aiError(res.error);
+        return;
+      }
+      const ideas: Record<string, string> = {};
+      setDrafts((ds) => {
+        const next = [...ds];
+        res.drafts.forEach((g, i) => {
+          const base = next[i] ?? emptyDraft((next[0]?.content_type as ContentType) ?? defaultType, request.language ?? "en");
+          next[i] = {
+            ...base,
+            caption: g.caption,
+            hashtags: g.hashtags,
+            why_it_works: g.why_it_works || base.why_it_works,
+            ...(aiLanguage ? { language: aiLanguage } : {}),
+          };
+          if (g.image_idea) ideas[next[i].key] = g.image_idea;
+        });
+        return next;
+      });
+      setImageIdeas(ideas);
+      toast.success(t("ai.done", { n: res.drafts.length }));
+    });
+  };
 
   const update = (key: string, patch: Partial<Draft>) =>
     setDrafts((ds) => ds.map((d) => (d.key === key ? { ...d, ...patch } : d)));
@@ -126,6 +169,25 @@ export function OptionsEditor({
         </div>
       )}
 
+      {ai.text && (
+        <div className="flex flex-wrap items-center gap-2 rounded-2xl border-2 border-primary/30 bg-primary/5 p-3">
+          <SparklesIcon className="size-5 text-primary" />
+          <span className="font-semibold">{t("ai.title")}</span>
+          <NativeSelect value={aiLanguage} onChange={(e) => setAiLanguage(e.target.value)} className="w-40" aria-label={t("language")}>
+            <option value="">{t("ai.brandLanguage")}</option>
+            {["en", "hi", "hinglish"].map((l) => (
+              <option key={l} value={l}>
+                {tOpt(`lang.${l}` as never)}
+              </option>
+            ))}
+          </NativeSelect>
+          <Button onClick={writeWithAi} disabled={writing || saving || delivering}>
+            {writing ? <Loader2Icon className="animate-spin" /> : <SparklesIcon />} {writing ? t("ai.writing") : t("ai.write")}
+          </Button>
+          <p className="w-full text-xs text-muted-foreground">{t("ai.hint")}</p>
+        </div>
+      )}
+
       {drafts.map((d, i) => (
         <OptionForm
           key={d.key}
@@ -136,6 +198,9 @@ export function OptionsEditor({
           urls={{ ...urls, ...localUrls }}
           onUrl={(path, url) => setLocalUrls((u) => ({ ...u, [`${BUCKETS.deliverables}/${path}`]: url }))}
           onChange={(patch) => update(d.key, patch)}
+          imageAi={ai.image}
+          imageIdea={imageIdeas[d.key] ?? ""}
+          onAiError={aiError}
           onRemove={drafts.length > 1 ? () => setDrafts((ds) => ds.filter((x) => x.key !== d.key)) : undefined}
         />
       ))}
@@ -184,6 +249,9 @@ function OptionForm({
   onUrl,
   onChange,
   onRemove,
+  imageAi,
+  imageIdea,
+  onAiError,
 }: {
   index: number;
   draft: Draft;
@@ -193,6 +261,9 @@ function OptionForm({
   onUrl: (path: string, url: string) => void;
   onChange: (patch: Partial<Draft>) => void;
   onRemove?: () => void;
+  imageAi: boolean;
+  imageIdea: string;
+  onAiError: (error: string) => void;
 }) {
   const t = useTranslations("expert.editor");
   const tTypes = useTranslations("contentTypes");
@@ -200,6 +271,14 @@ function OptionForm({
   const tOpt = useTranslations("brandOptions");
   const fileInput = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [idea, setIdea] = useState(imageIdea);
+  const [ideaFrom, setIdeaFrom] = useState(imageIdea);
+  if (imageIdea !== ideaFrom) {
+    // a new AI draft arrived: take its image idea
+    setIdeaFrom(imageIdea);
+    setIdea(imageIdea);
+  }
+  const [painting, startPainting] = useTransition();
   const isReel = draft.content_type === "reel";
   const maxMedia =
     draft.content_type === "carousel" ? LIMITS.carouselMaxSlides : draft.content_type === "story" ? LIMITS.storyMaxItems : isReel ? 1 : draft.content_type === "caption_only" ? 0 : 1;
@@ -228,6 +307,17 @@ function OptionForm({
       setUploading(false);
     }
   };
+
+  const paint = () =>
+    startPainting(async () => {
+      const res = await generateRequestImage(requestId, idea);
+      if (!res.ok) {
+        onAiError(res.error);
+        return;
+      }
+      onUrl(res.path, res.url);
+      onChange({ media: [...draft.media, { path: res.path, type: "image", name: "ai-image.png" }] });
+    });
 
   const move = (i: number, dir: -1 | 1) => {
     const m = [...draft.media];
@@ -317,6 +407,20 @@ function OptionForm({
             }}
           />
           <p className="text-xs text-muted-foreground">{t("mediaHint", { max: maxMedia })}</p>
+          {imageAi && draft.media.length < maxMedia && (
+            <div className="flex flex-wrap gap-2 rounded-xl bg-secondary/50 p-2">
+              <Input
+                value={idea}
+                onChange={(e) => setIdea(e.target.value)}
+                placeholder={t("ai.imagePlaceholder")}
+                className="min-w-48 flex-1"
+                aria-label={t("ai.imagePlaceholder")}
+              />
+              <Button variant="outline" onClick={paint} disabled={painting || !idea.trim()}>
+                {painting ? <Loader2Icon className="animate-spin" /> : <SparklesIcon />} {painting ? t("ai.painting") : t("ai.image")}
+              </Button>
+            </div>
+          )}
         </div>
       )}
 

@@ -1,8 +1,9 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { EyeIcon, EyeOffIcon, LogInIcon, MailIcon, PhoneIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, LogInIcon, MailIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,43 +13,33 @@ export function LoginForm() {
   const t = useTranslations("login");
   const [state, action, pending] = useActionState(login, undefined);
   const [show, setShow] = useState(false);
-  // experts log in with an email; the phone keypad has no "@", so let them switch keyboards
-  const [byEmail, setByEmail] = useState(false);
   // React clears the form after each submit; put back what was typed so only the password needs retyping
   const typed = state?.identifier ?? "";
-  const FieldIcon = byEmail ? MailIcon : PhoneIcon;
 
   return (
     <form action={action} className="space-y-5">
       <div className="space-y-2">
-        <Label htmlFor="phone" className="text-base">
-          {byEmail ? t("email") : t("phone")}
+        <Label htmlFor="email" className="text-base">
+          {t("email")}
         </Label>
         <div className="relative">
-          <FieldIcon className="absolute top-1/2 left-4 size-5 -translate-y-1/2 text-muted-foreground" />
+          <MailIcon className="absolute top-1/2 left-4 size-5 -translate-y-1/2 text-muted-foreground" />
           <Input
-            key={`${byEmail ? "email" : "phone"}-${typed}`}
-            id="phone"
-            name="phone"
-            type={byEmail ? "email" : "text"}
-            inputMode={byEmail ? "email" : "tel"}
+            key={typed}
+            id="email"
+            name="email"
+            type="email"
+            inputMode="email"
             autoComplete="username"
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck={false}
-            placeholder={byEmail ? "name@example.com" : "98765 43210"}
-            defaultValue={typed.includes("@") === byEmail ? typed : ""}
+            placeholder="name@example.com"
+            defaultValue={typed}
             required
             className="h-14 pl-12 text-lg"
           />
         </div>
-        <button
-          type="button"
-          onClick={() => setByEmail((v) => !v)}
-          className="text-sm font-medium text-muted-foreground underline underline-offset-4"
-        >
-          {byEmail ? t("usePhone") : t("useEmail")}
-        </button>
       </div>
       <div className="space-y-2">
         <Label htmlFor="password" className="text-base">
@@ -81,6 +72,11 @@ export function LoginForm() {
           {t(`errors.${state.error}`, { code: state.code ?? "" })}
         </p>
       )}
+      <div className="text-right">
+        <Link href="/forgot" className="text-sm font-medium text-primary underline underline-offset-4">
+          {t("forgot")}
+        </Link>
+      </div>
       <Button type="submit" size="lg" className="w-full" disabled={pending}>
         <LogInIcon />
         {pending ? t("signingIn") : t("submit")}
