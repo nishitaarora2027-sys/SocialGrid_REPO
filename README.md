@@ -1,5 +1,7 @@
 # SocialGrid — V1 (pilot)
 
+_Cool app for small business owners — helps with social media._
+
 A mobile-first web app where small business owners (salons, restaurants, cafes, cloud kitchens)
 ask for social media posts through a friendly chat (text, voice notes, photos), and the two
 founders ("experts") make and deliver the content from an expert dashboard.
