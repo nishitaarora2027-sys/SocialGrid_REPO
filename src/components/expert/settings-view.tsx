@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2Icon, PencilIcon, PlusIcon, SaveIcon, Trash2Icon, XIcon } from "lucide-react";
+import { KeyRoundIcon, Loader2Icon, PencilIcon, PlusIcon, SaveIcon, Trash2Icon, XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -15,6 +15,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CARD_ICONS, CardIcon } from "@/components/shared/icons";
 import { deleteFestival, saveFestival, savePlan, saveQuickStartCard, updateSettings } from "@/lib/actions/expert-admin";
+import { changeMyPassword } from "@/lib/actions/password";
 import { formatDate, formatPrice } from "@/lib/format";
 import {
   CONTENT_TYPES,
@@ -66,7 +67,7 @@ export function SettingsView({
       <h1 className="text-2xl font-bold">{t("title")}</h1>
       <Tabs defaultValue="turnaround">
         <TabsList className="scrollbar-none w-full justify-start overflow-x-auto">
-          {["turnaround", "festivals", "plans", "quickStart"].map((k) => (
+          {["turnaround", "festivals", "plans", "quickStart", "account"].map((k) => (
             <TabsTrigger key={k} value={k} className="flex-none">
               {t(`tabs.${k}`)}
             </TabsTrigger>
@@ -83,6 +84,9 @@ export function SettingsView({
         </TabsContent>
         <TabsContent value="quickStart">
           <QuickStartCards cards={cards} />
+        </TabsContent>
+        <TabsContent value="account">
+          <ChangePassword />
         </TabsContent>
       </Tabs>
     </main>
@@ -598,5 +602,43 @@ function QuickStartCards({ cards }: { cards: QuickStartCard[] }) {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+function ChangePassword() {
+  const t = useTranslations("expert.settings.account");
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const { pending, act } = useAct();
+  const plain = { autoCapitalize: "none", autoCorrect: "off", spellCheck: false } as const;
+  const save = () =>
+    act(
+      async () => {
+        const res = await changeMyPassword(current, next);
+        return res.ok || !res.error ? res : { ok: false, error: t.has(`errors.${res.error}`) ? t(`errors.${res.error}`) : res.error };
+      },
+      () => {
+        setCurrent("");
+        setNext("");
+      },
+    );
+  return (
+    <section className="max-w-md space-y-4 pt-4">
+      <h2 className="flex items-center gap-2 text-lg font-bold">
+        <KeyRoundIcon className="size-5" /> {t("title")}
+      </h2>
+      <div className="space-y-2">
+        <Label htmlFor="current-password">{t("current")}</Label>
+        <Input id="current-password" type="password" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} {...plain} />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="new-password">{t("next")}</Label>
+        <Input id="new-password" type="text" autoComplete="new-password" className="font-mono" value={next} onChange={(e) => setNext(e.target.value)} {...plain} />
+        <p className="text-sm text-muted-foreground">{t("hint")}</p>
+      </div>
+      <Button onClick={save} disabled={pending || !current || next.trim().length < 8}>
+        {pending ? <Loader2Icon className="animate-spin" /> : <SaveIcon />} {t("save")}
+      </Button>
+    </section>
   );
 }

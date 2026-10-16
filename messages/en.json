@@ -23,7 +23,8 @@
     },
     "email": "Email",
     "useEmail": "SocialGrid team? Log in with email",
-    "usePhone": "Log in with mobile number instead"
+    "usePhone": "Log in with mobile number instead",
+    "teamReset": "SocialGrid team: forgot your password?"
   },
   "nav": {
     "readyCount": "{count, plural, one {# post ready} other {# posts ready}}",
@@ -750,7 +751,8 @@
         "turnaround": "Turnaround",
         "festivals": "Festival calendar",
         "plans": "Plans",
-        "quickStart": "Quick-start cards"
+        "quickStart": "Quick-start cards",
+        "account": "My account"
       },
       "standardHours": "Standard (working hours)",
       "urgentHours": "Urgent (working hours)",
@@ -803,7 +805,18 @@
       "choicesHint": "One answer per line: English | Hindi",
       "allowText": "Also allow typing an answer",
       "addQuestion": "Add question",
-      "sort": "Order"
+      "sort": "Order",
+      "account": {
+        "title": "Change my password",
+        "current": "Current password",
+        "next": "New password",
+        "hint": "At least 8 characters.",
+        "save": "Change password",
+        "errors": {
+          "wrong_current": "Your current password is not correct.",
+          "short_password": "The new password needs at least 8 characters."
+        }
+      }
     }
   },
   "setup": {
@@ -832,6 +845,29 @@
       "no_database": "No database connection string found (POSTGRES_URL). Run the SQL files from supabase/ in the Supabase SQL editor, then reload.",
       "migration_failed": "Creating the database tables failed.",
       "seed_failed": "Creating the accounts failed."
+    }
+  },
+  "reset": {
+    "title": "Reset a password",
+    "intro": "For the SocialGrid team. Set a new password for any login — a founder's email or a client's mobile number.",
+    "code": "Recovery code",
+    "login": "Email or mobile number",
+    "loginPlaceholder": "name@example.com or 98765 43210",
+    "newPassword": "New password (at least 8 characters)",
+    "submit": "Set new password",
+    "saving": "Saving…",
+    "done": "Password changed. You can log in with the new password now.",
+    "goToLogin": "Go to login",
+    "disabledTitle": "Password reset is switched off",
+    "disabledText": "To switch it on, the Vercel project owner sets a recovery code once:",
+    "disabledStep1": "Vercel → socialgrid project → Settings → Environment Variables.",
+    "disabledStep2": "Add a variable named RECOVERY_CODE with a long secret phrase you choose (at least 12 characters), for Production.",
+    "disabledStep3": "Redeploy the project, then come back here and enter that phrase as the recovery code.",
+    "errors": {
+      "not_enabled": "Password reset is switched off.",
+      "wrong_code": "That recovery code is not correct.",
+      "short_password": "The new password needs at least 8 characters.",
+      "no_user": "No login found with that email or mobile number."
     }
   }
 }

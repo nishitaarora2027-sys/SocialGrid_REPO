@@ -8,12 +8,12 @@ import { createClient } from "@/lib/supabase/server";
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
 
-export async function login(_prev: { error?: string; code?: string } | undefined, formData: FormData) {
+export async function login(_prev: { error?: string; code?: string; identifier?: string } | undefined, formData: FormData) {
   const identifier = String(formData.get("phone") ?? "");
   const password = String(formData.get("password") ?? "");
   const supabase = await createClient();
   const result = await phonePasswordAuth.signIn(supabase, identifier, password);
-  if (!result.ok) return { error: result.error, code: result.code };
+  if (!result.ok) return { error: result.error, code: result.code, identifier };
 
   const {
     data: { user },
@@ -25,7 +25,7 @@ export async function login(_prev: { error?: string; code?: string } | undefined
     .single();
   if (!profile) {
     await supabase.auth.signOut();
-    return { error: "no_profile" };
+    return { error: "no_profile", identifier };
   }
   (await cookies()).set(LOCALE_COOKIE, profile.preferred_ui_language, { maxAge: ONE_YEAR, path: "/" });
   redirect(profile.role_id === 1 ? "/expert" : "/chat");

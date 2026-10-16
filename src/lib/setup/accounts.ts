@@ -1,5 +1,6 @@
 import { randomBytes } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { findUserByEmail } from "../supabase/users";
 
 // Creates expert logins and the two sample clients. Shared by `npm run seed` and the
 // one-time /setup page. Safe to run repeatedly: existing accounts are skipped and a
@@ -108,16 +109,7 @@ export function createSeeder(admin: SupabaseClient, domain: string, log: (msg: s
     return data;
   }
 
-  async function findUser(email: string) {
-    for (let page = 1; page < 50; page++) {
-      const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 200 });
-      if (error) throw error;
-      const hit = data.users.find((u) => u.email === email);
-      if (hit) return hit;
-      if (data.users.length < 200) return null;
-    }
-    return null;
-  }
+  const findUser = (email: string) => findUserByEmail(admin, email);
 
   async function ensureUser(email: string, password: string, label: string) {
     const existing = await findUser(email);

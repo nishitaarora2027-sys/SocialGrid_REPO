@@ -14,6 +14,8 @@ export function LoginForm() {
   const [show, setShow] = useState(false);
   // experts log in with an email; the phone keypad has no "@", so let them switch keyboards
   const [byEmail, setByEmail] = useState(false);
+  // React clears the form after each submit; put back what was typed so only the password needs retyping
+  const typed = state?.identifier ?? "";
   const FieldIcon = byEmail ? MailIcon : PhoneIcon;
 
   return (
@@ -25,7 +27,7 @@ export function LoginForm() {
         <div className="relative">
           <FieldIcon className="absolute top-1/2 left-4 size-5 -translate-y-1/2 text-muted-foreground" />
           <Input
-            key={byEmail ? "email" : "phone"}
+            key={`${byEmail ? "email" : "phone"}-${typed}`}
             id="phone"
             name="phone"
             type={byEmail ? "email" : "text"}
@@ -35,6 +37,7 @@ export function LoginForm() {
             autoCorrect="off"
             spellCheck={false}
             placeholder={byEmail ? "name@example.com" : "98765 43210"}
+            defaultValue={typed.includes("@") === byEmail ? typed : ""}
             required
             className="h-14 pl-12 text-lg"
           />
