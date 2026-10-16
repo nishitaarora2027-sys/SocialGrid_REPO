@@ -8,12 +8,12 @@ import { createClient } from "@/lib/supabase/server";
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
 
-export async function login(_prev: { error?: string } | undefined, formData: FormData) {
+export async function login(_prev: { error?: string; code?: string } | undefined, formData: FormData) {
   const identifier = String(formData.get("phone") ?? "");
   const password = String(formData.get("password") ?? "");
   const supabase = await createClient();
   const result = await phonePasswordAuth.signIn(supabase, identifier, password);
-  if (!result.ok) return { error: result.error };
+  if (!result.ok) return { error: result.error, code: result.code };
 
   const {
     data: { user },

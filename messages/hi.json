@@ -18,8 +18,12 @@
     "errors": {
       "invalid_phone": "कृपया 10 अंकों का मोबाइल नंबर डालें।",
       "wrong_credentials": "मोबाइल नंबर या पासवर्ड सही नहीं है।",
-      "no_profile": "यह अकाउंट अभी तैयार नहीं है। कृपया SocialGrid टीम से बात करें।"
-    }
+      "no_profile": "यह अकाउंट अभी तैयार नहीं है। कृपया SocialGrid टीम से बात करें।",
+      "login_failed": "अभी लॉग इन नहीं हो पा रहा ({code})। कृपया SocialGrid टीम को बताएँ।"
+    },
+    "email": "ईमेल",
+    "useEmail": "SocialGrid टीम? ईमेल से लॉग इन करें",
+    "usePhone": "मोबाइल नंबर से लॉग इन करें"
   },
   "nav": {
     "readyCount": "{count, plural, one {# पोस्ट तैयार} other {# पोस्ट तैयार}}",

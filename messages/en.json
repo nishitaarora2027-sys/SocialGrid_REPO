@@ -18,8 +18,12 @@
     "errors": {
       "invalid_phone": "Please enter a 10-digit mobile number.",
       "wrong_credentials": "Mobile number or password is not correct.",
-      "no_profile": "This account is not set up yet. Please contact the SocialGrid team."
-    }
+      "no_profile": "This account is not set up yet. Please contact the SocialGrid team.",
+      "login_failed": "Login is not working right now ({code}). Please tell the SocialGrid team."
+    },
+    "email": "Email",
+    "useEmail": "SocialGrid team? Log in with email",
+    "usePhone": "Log in with mobile number instead"
   },
   "nav": {
     "readyCount": "{count, plural, one {# post ready} other {# posts ready}}",
