@@ -58,11 +58,34 @@ SocialGrid is a done-for-you social media service for **small Indian businesses*
 3. Tablet: just needs to not break.
 
 ### 3.4 Brand
-- Name: **SocialGrid**. Current logo: a 2×2 rounded-grid mark in orange. Logo/colours may be refreshed — propose options.
-- Current palette is warm (orange `#D9480F` primary, cream `#FFFAF3` background, green for success, amber for warnings). Keep the warmth or propose a better palette; justify the choice.
-- Typography must render **Devanagari (Hindi) and Latin equally well** (current fallback stack includes Noto Sans Devanagari). Hindi text runs ~20–30% longer than English — layouts must allow it.
+- Name: **SocialGrid**. Current logo: a 2×2 rounded-grid mark in orange — refresh it to fit the new palette (propose options).
+- **Brand palette — chosen by the founders** (reference image: [`docs/design/brand-palette.jpg`](design/brand-palette.jpg)). This **replaces** today's orange/cream:
+
+  | Name | Hex | Role |
+  |---|---|---|
+  | **Salted Caramel** | `#B9825B` | Primary brand colour — warmth, accents, highlights, illustrations |
+  | **Sea Glass** | `#8FB9B2` | Secondary — calm accents, success/positive moments, tags, the team side's cooler tone |
+  | **Shell White** | ≈`#EAE3D8` (sample from the image) | Base / background surfaces |
+
+  The mood of the reference: natural, tactile, premium-but-warm (caramel, sea glass, shells), with **bold, heavy, wide display type** for headings.
+- ⚠️ **Contrast note (measured):** the palette colours are too light to carry text or primary buttons on their own:
+  - Caramel on Shell White 2.6:1, Caramel on white 3.3:1, Sea Glass on Shell White 1.7:1, white on Sea Glass 2.2:1 — all below the **4.5:1** needed for body text.
+  - Please **derive a tonal scale** for each colour and use the **deeper shades for text, icons and button fills** (e.g. a deep caramel ≈`#8A5A38` gives 4.6:1 on Shell White and 5.8:1 with white text; a deep sea glass ≈`#3F6F69` gives 4.5:1 / 5.7:1), with a warm near-black ink (≈`#2B2420`, 12:1 on Shell White) for body copy. Keep the three palette colours as the recognisable surfaces and accents.
+  - Status colours (overdue/urgent red, warning amber) still need to exist — tune them to sit with this palette.
+- Typography must render **Devanagari (Hindi) and Latin equally well** (current fallback stack includes Noto Sans Devanagari). Hindi text runs ~20–30% longer than English — layouts must allow it. The heavy display style from the reference is for headings only; body text must stay highly readable.
 - Must meet **WCAG AA contrast**; minimum 16 px body on phones, 44 px tap targets.
-- Light theme required; dark theme optional (nice to have for the team side).
+- **Themes:** design **both light and dark**, with **light as the default** and a user toggle (both customer and team sides). Derive the dark theme from the same palette.
+
+### 3.5 Inspiration references
+- **ChatGPT website** — ease, one obvious input, calm side navigation (but we want more warmth and content than it has).
+- **Claude (claude.ai)** — warm, calm, readable; good model for the chat, side panel and the AI-helper feel.
+- **Instagram** — visual-first post previews (grid, carousel dots, reels), familiar to every customer; the Posts library and delivered-post cards should feel at home next to Instagram.
+- **WhatsApp** — chat familiarity for customers (bubbles, voice notes, photos, ticks).
+
+### 3.6 Decisions already made
+- **Login stays one page with two clearly separated choices** ("Customer" vs "SocialGrid team") — no separate login URLs for now. Make the distinction unmistakable within that single page.
+- Light theme default; dark theme available via toggle.
+- Brand palette fixed as above; logo may evolve to match.
 
 ---
 
@@ -142,7 +165,7 @@ Team nav today: left sidebar on desktop (Queue with count, Clients, Teaching lib
 ---
 
 ## 6. Known UX pain points to solve
-1. **Login confusion** — two audiences on one page caused real failed logins; the new design should make "Customer vs Team" unmistakable (consider separate entry points or very clear framing).
+1. **Login confusion** — two audiences on one page caused real failed logins; the new design must make "Customer vs Team" unmistakable **on the same page** (see 3.6).
 2. The **request workspace is dense**; on smaller laptops the editor and context panels compete. Needs clear hierarchy: what's due, what the client asked, what I'm delivering.
 3. Customer header can feel crowded on phones (long business names + language toggle + menu).
 4. The **AI helper** was bolted on — it should feel native (where drafts appear, how to compare/accept/regenerate).
@@ -170,7 +193,7 @@ Team nav today: left sidebar on desktop (Queue with count, Clients, Teaching lib
 
 ## 9. What we'd like back from Design
 1. **Design principles + mood** (2–3 directions, then one chosen) matching section 3.
-2. **Design system:** colour tokens (light, optional dark), type scale (Latin + Devanagari), spacing, radius, elevation, iconography, illustration style, motion.
+2. **Design system:** colour tokens built on the brand palette (light default + dark, with the tonal scales from 3.4), type scale (Latin + Devanagari), spacing, radius, elevation, iconography, illustration style, motion.
 3. **Component library:** buttons, inputs, tabs, chips/tags, chat bubbles (text, voice, photo, system, options card), post previews (single/carousel/reel/story), status badges, timers, empty/loading/error states, toasts, sheets/dialogs.
 4. **Key screens — desktop first, then phone:**
    - Login (+ forgot / set new password / account rescue)
