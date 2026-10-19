@@ -1027,14 +1027,20 @@
     }
   },
   "authPanel": {
-    "headline": "Your business on Instagram, without the hard work.",
-    "point1": "Tell us what you need in chat, like on WhatsApp.",
-    "point2": "Type or send a voice note, in Hindi or English.",
-    "point3": "We plan your week and tell you when each post is ready.",
-    "chatMine": "Diwali offer post please, 20% off on facials",
-    "chatTheirs": "Got it! Your post will be ready by 6:00 PM today.",
-    "chatStatus": "Ready by 6:00 PM",
-    "footer": "Made by a real team, for salons, restaurants and shops across India."
+    "footer": "Real designers. Real local businesses. Zero design skills needed.",
+    "line1": "Just say it.",
+    "line2": "We'll post it.",
+    "sub": "Send a voice note in Hindi or English. A real designer turns it into an Instagram-ready post, usually the same day.",
+    "voice": "दिवाली पर फ़ेशियल 20% off वाली पोस्ट बना दो",
+    "onIt": "Priya from SocialGrid is designing it",
+    "ready": "Ready · 6:00 PM",
+    "kind": {
+      "salon": "Salons",
+      "dhaba": "Dhabas",
+      "boutique": "Boutiques",
+      "mithai": "Mithai shops",
+      "cafe": "Cafés"
+    }
   },
   "landing": {
     "nav": {

@@ -186,3 +186,32 @@
     --tabbar-h: 0px;
   }
 }
+
+/* login brand panel: deep green with a warm glow and a faint grid of the logo's rounded squares */
+.auth-panel {
+  background:
+    radial-gradient(60% 50% at 85% 20%, rgb(233 194 122 / 0.22), transparent 70%),
+    radial-gradient(50% 45% at 10% 95%, rgb(138 63 82 / 0.35), transparent 70%),
+    linear-gradient(160deg, #1f3f36 0%, #2f5d50 55%, #24493f 100%);
+}
+.auth-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at center, rgb(255 255 255 / 0.07) 1.5px, transparent 1.6px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
+  pointer-events: none;
+}
+
+/* one-shot entrance animations (they settle and stay; reduced motion skips straight to the end) */
+@keyframes sg-rise { from { opacity: 0; transform: translateY(18px); } }
+@keyframes sg-pop { 0% { opacity: 0; transform: scale(0.8); } 70% { opacity: 1; transform: scale(1.04); } }
+@keyframes sg-fill { from { transform: scaleX(0); } }
+@keyframes sg-bar { from { transform: scaleY(0.15); opacity: 0.4; } }
+@keyframes sg-draw { from { stroke-dashoffset: 320; } }
+.sg-rise { animation: sg-rise 600ms cubic-bezier(.2,.8,.2,1) both; }
+.sg-pop { animation: sg-pop 650ms cubic-bezier(.2,.9,.3,1.2) both; }
+.sg-fill { transform-origin: left; animation: sg-fill 450ms ease-out both; }
+.sg-bar { transform-origin: center; animation: sg-bar 400ms ease-out both; }
+.sg-draw path { stroke-dasharray: 320; animation: sg-draw 900ms ease-out 700ms both; }
