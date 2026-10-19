@@ -37,7 +37,7 @@ async function BrandPanel() {
   const days = (await getTranslations("week")).raw("days") as string[];
   const perks = [t("perk.voice"), t("perk.lang"), t("perk.people")];
   return (
-    <aside className="auth-panel relative sticky top-0 hidden h-dvh flex-col justify-between gap-8 overflow-hidden p-12 text-white lg:flex xl:px-16">
+    <aside className="auth-panel relative sticky top-0 hidden h-dvh flex-col justify-between gap-8 overflow-hidden p-12 text-white lg:flex xl:px-16 [@media(max-height:760px)]:gap-5 [@media(max-height:760px)]:py-8">
       <span className="auth-blob auth-blob-a" aria-hidden />
       <span className="auth-blob auth-blob-b" aria-hidden />
       <span className="auth-blob auth-blob-c" aria-hidden />
@@ -49,25 +49,25 @@ async function BrandPanel() {
         SocialGrid
       </div>
 
-      <div className="relative grid gap-10">
+      <div className="relative grid gap-10 [@media(max-height:760px)]:gap-6">
         <div className="space-y-4">
-          <h2 className="text-[46px] leading-[1.02] font-bold tracking-tight xl:text-[62px] [@media(max-height:860px)]:text-[48px]">
+          <h2 className="text-[46px] leading-[1.02] font-bold tracking-tight xl:text-[62px] [@media(max-height:860px)]:text-[48px] [@media(max-height:760px)]:text-[40px]">
             <span className="sg-rise block">{t("line1")}</span>
             <span className="sg-rise auth-gradient-text block pb-1" style={{ animationDelay: "120ms" }}>
               {t("line2")}
             </span>
-            <span className="sg-rise mt-2 block text-[24px] font-semibold tracking-normal text-white/75 xl:text-[28px]" style={{ animationDelay: "240ms" }}>
+            <span className="sg-rise mt-2 block text-[24px] font-semibold tracking-normal text-white/75 xl:text-[28px] [@media(max-height:760px)]:text-[22px]" style={{ animationDelay: "240ms" }}>
               {t("line3")}
             </span>
           </h2>
-          <p className="sg-rise max-w-[470px] text-[18px] leading-relaxed text-white/70" style={{ animationDelay: "320ms" }}>
+          <p className="sg-rise max-w-[470px] text-[18px] leading-relaxed text-white/70 [@media(max-height:760px)]:text-[16px]" style={{ animationDelay: "320ms" }}>
             {t("sub")}
           </p>
         </div>
 
         {/* the stage */}
-        <div className="relative h-[360px] max-w-[560px] [@media(max-height:860px)]:h-[290px]" aria-hidden>
-          <div className="absolute inset-x-0 top-0 h-[360px] origin-top-left [@media(max-height:860px)]:scale-[0.8]">
+        <div className="relative h-[360px] max-w-[560px] [@media(max-height:860px)]:h-[290px] [@media(max-height:760px)]:h-[220px] [@media(max-height:640px)]:hidden" aria-hidden>
+          <div className="absolute inset-x-0 top-0 h-[360px] origin-top-left [@media(max-height:860px)]:scale-[0.8] [@media(max-height:760px)]:scale-[0.6]">
           {/* 1. voice note */}
           <div className="sg-rise absolute top-0 left-0 w-[290px] -rotate-3 rounded-[22px] bg-[#FAF7F2] p-4 text-ink shadow-[0_30px_70px_-25px_rgba(0,0,0,.8)]" style={{ animationDelay: "400ms" }}>
             <div className="flex items-center gap-2.5">
