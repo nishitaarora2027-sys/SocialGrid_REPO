@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { CheckIcon, LightbulbIcon, Loader2Icon, MessageCircleIcon, PartyPopperIcon, PencilIcon, SendIcon, XIcon } from "lucide-react";
+import { Loader2Icon, MessageCircleIcon, PencilIcon, SendIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
@@ -15,11 +16,11 @@ import { DeliveryView } from "@/components/client/delivery-view";
 import { CHANGE_CHIPS, OptionsCard } from "@/components/client/options-card";
 import { QuickStartSheet } from "@/components/client/quick-start-sheet";
 import { useRealtimeRefresh } from "@/components/shared/use-realtime";
-import { chooseOption, markConversationRead, requestChanges, respondSuggestion } from "@/lib/actions/client";
+import { chooseOption, markConversationRead, requestChanges } from "@/lib/actions/client";
 import { celebrate } from "@/lib/browser/media";
-import { dayPart, formatDue } from "@/lib/format";
+import { dayPart, formatDue, isPast } from "@/lib/format";
 import type { ThreadData } from "@/lib/thread";
-import type { Locale, QuickStartCard, Suggestion } from "@/lib/types";
+import type { Locale, PlanSlot, QuickStartCard } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export function ChatScreen({
@@ -28,6 +29,7 @@ export function ChatScreen({
   conversationId,
   ownerName,
   cards,
+  slots,
   thread,
   teamNames,
   recentRequests,
@@ -39,6 +41,7 @@ export function ChatScreen({
   conversationId: string;
   ownerName: string;
   cards: QuickStartCard[];
+  slots: PlanSlot[];
   thread: ThreadData;
   teamNames: Record<string, string>;
   recentRequests: RecentRequest[];
@@ -57,7 +60,7 @@ export function ChatScreen({
 
   useRealtimeRefresh("messages", `conversation_id=eq.${conversationId}`);
 
-  const { messages, options, suggestions, requests, urls } = thread;
+  const { messages, options, requests, urls } = thread;
   const lastId = messages.at(-1)?.id;
   useEffect(() => {
     bottom.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -81,7 +84,7 @@ export function ChatScreen({
   // The pinned status bar follows the newest open post, or the newest one waiting to be chosen
   const byNewest = Object.values(requests).sort((a, b) => b.created_at.localeCompare(a.created_at));
   const tracked =
-    byNewest.find((r) => ["new", "in_progress", "revision_requested"].includes(r.status)) ??
+    byNewest.find((r) => OPEN.includes(r.status)) ??
     byNewest.find((r) => r.status === "delivered");
 
   const showError = (code: string) => toast.error(tErr.has(code as never) ? tErr(code as never) : tErr("generic"));
@@ -100,10 +103,13 @@ export function ChatScreen({
   const greeting = t(`greeting.${dayPart()}`, { name: ownerName });
   // Idea chips sit in the welcome state; once the owner has written, they move above the composer on laptop
   const hasClientMessages = messages.some((m) => m.sender === "client");
+  // festival / idea suggestions live on the Weekly plan page, not in the chat
+  const shown = messages.filter((m) => m.kind !== "suggestion");
   const ideaChips = <IdeaChips cards={cards} onCard={setCard} disabled={!canRequest} />;
 
   return (
-    <div className="mx-auto flex w-full max-w-[760px] flex-1 flex-col lg:px-6">
+    <div className="flex min-w-0 flex-1">
+    <div className="mx-auto flex w-full max-w-[880px] min-w-0 flex-1 flex-col lg:px-8">
       {tracked && (
         <StatusBar
           title={requestLabel(tracked)}
@@ -124,9 +130,9 @@ export function ChatScreen({
           </section>
         )}
 
-        {messages.map((m, i) => (
+        {shown.map((m, i) => (
           <div key={m.id} className="space-y-2.5">
-            {isNewDay(messages[i - 1], m) && <DateDivider iso={m.created_at} />}
+            {isNewDay(shown[i - 1], m) && <DateDivider iso={m.created_at} />}
             {m.kind === "options_card" ? (
               <OptionsCard
                 options={(m.payload.optionIds ?? []).map((id) => options[id]).filter(Boolean)}
@@ -139,10 +145,6 @@ export function ChatScreen({
                 onOpen={setOpenOption}
                 onAskChanges={canRequest && m.request_id ? () => setChangesFor(m.request_id) : undefined}
               />
-            ) : m.kind === "suggestion" ? (
-              m.payload.suggestionId && suggestions[m.payload.suggestionId] ? (
-                <SuggestionCard suggestion={suggestions[m.payload.suggestionId]} canRequest={canRequest} />
-              ) : null
             ) : (
               <MessageBubble
                 message={m}
@@ -192,9 +194,12 @@ export function ChatScreen({
       />
       <ChangesSheet requestId={changesFor} onClose={() => setChangesFor(null)} />
     </div>
+    <WeekRail slots={slots} openRequests={byNewest.filter((r) => OPEN.includes(r.status))} requestLabel={requestLabel} />
+    </div>
   );
 }
 
+const OPEN = ["new", "in_progress", "revision_requested"];
 const STEP: Record<string, number> = { new: 0, in_progress: 1, revision_requested: 1, delivered: 2, completed: 2 };
 
 /** Received · Making · Ready, with the promised time */
@@ -212,6 +217,7 @@ function StatusBar({
   const t = useTranslations("statusBar");
   const locale = useLocale() as Locale;
   const step = STEP[status] ?? 0;
+  const late = step < 2 && isPast(dueAt);
   const labels = [t("received"), t("making"), t("ready")];
   return (
     <button
@@ -223,7 +229,7 @@ function StatusBar({
       <span className="flex w-full items-baseline justify-between gap-3">
         <span className="min-w-0 truncate text-[16px] font-bold text-ink">{title}</span>
         <span className="shrink-0 text-[16px] font-semibold text-status-ink">
-          {step === 2 ? t("readyNow") : t("readyBy", { time: formatDue(dueAt, locale) })}
+          {step === 2 ? t("readyNow") : late ? t("late") : t("readyBy", { time: formatDue(dueAt, locale) })}
         </span>
       </span>
       <span className="grid w-full grid-cols-3 gap-1" aria-hidden>
@@ -268,55 +274,6 @@ function IdeaChips({
           {locale === "hi" ? c.label_hi : c.label_en}
         </button>
       ))}
-    </div>
-  );
-}
-
-function SuggestionCard({ suggestion, canRequest }: { suggestion: Suggestion; canRequest: boolean }) {
-  const t = useTranslations("suggestion");
-  const tErr = useTranslations("errors");
-  const locale = useLocale() as Locale;
-  const router = useRouter();
-  const [pending, start] = useTransition();
-  const p = suggestion.payload as Suggestion["payload"] & { days?: number };
-  const title = locale === "hi" ? p.title_hi : p.title_en;
-
-  const text =
-    suggestion.kind === "festival"
-      ? p.days === 0
-        ? t("festivalToday", { name: title })
-        : t("festival", { name: title, days: p.days ?? 0 })
-      : suggestion.kind === "inactivity"
-        ? t("idea", { idea: title })
-        : title;
-
-  const respond = (accept: boolean) =>
-    start(async () => {
-      const res = await respondSuggestion(suggestion.id, accept);
-      if (!res.ok) toast.error(tErr.has(res.error as never) ? tErr(res.error as never) : tErr("generic"));
-      router.refresh();
-    });
-
-  return (
-    <div className="mx-3 space-y-3 rounded-[16px] bg-rose-soft px-3.5 py-3">
-      <div className="flex items-start gap-3 text-rose-ink">
-        {suggestion.kind === "festival" ? <PartyPopperIcon className="mt-0.5 size-6 shrink-0" /> : <LightbulbIcon className="mt-0.5 size-6 shrink-0" />}
-        <p className="text-[17px] font-semibold">{text}</p>
-      </div>
-      {suggestion.status === "pending" ? (
-        <div className="flex gap-2">
-          <Button className="flex-1 bg-surface text-rose-ink hover:bg-surface/80" disabled={pending || !canRequest} onClick={() => respond(true)}>
-            {pending ? <Loader2Icon className="animate-spin" /> : <CheckIcon />} {t("yes")}
-          </Button>
-          <Button variant="ghost" className="flex-1 text-rose-ink hover:bg-surface/40" disabled={pending} onClick={() => respond(false)}>
-            <XIcon /> {t("notNow")}
-          </Button>
-        </div>
-      ) : (
-        <p className="text-[15px] font-semibold text-rose-ink">
-          {suggestion.status === "accepted" ? `✓ ${t("accepted")}` : t("dismissed")}
-        </p>
-      )}
     </div>
   );
 }
@@ -387,5 +344,66 @@ function BlockedNotice({ supportWhatsapp }: { supportWhatsapp: string }) {
         </a>
       </Button>
     </div>
+  );
+}
+
+/** Laptop (wide screens): this week's plan and posts being made, beside the chat */
+function WeekRail({
+  slots,
+  openRequests,
+  requestLabel,
+}: {
+  slots: PlanSlot[];
+  openRequests: { id: string; summary: string | null; quick_start_type: string | null; due_at: string; status: string }[];
+  requestLabel: (r: { summary: string | null; quick_start_type: string | null }) => string;
+}) {
+  const t = useTranslations("rail");
+  const tWeek = useTranslations("week");
+  const tTypes = useTranslations("contentTypes");
+  const locale = useLocale() as Locale;
+  const days = tWeek.raw("days") as string[];
+  return (
+    <aside className="sticky top-0 hidden h-dvh w-[320px] shrink-0 flex-col gap-6 overflow-y-auto border-l border-line bg-surface px-5 py-6 xl:flex">
+      <section className="space-y-3">
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-[18px] font-bold">{t("thisWeek")}</h2>
+          <Link href="/plan" className="text-[15px] font-semibold text-primary">
+            {t("seePlan")} →
+          </Link>
+        </div>
+        {slots.length === 0 ? (
+          <p className="text-[15px] text-ink-muted">{t("noPlan")}</p>
+        ) : (
+          <ul className="space-y-2">
+            {slots.map((s) => (
+              <li key={s.id} className="flex items-start gap-3 rounded-[12px] bg-paper px-3 py-2">
+                <span className="w-10 shrink-0 text-[15px] font-bold">{days[s.day]}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[15px] font-semibold">{s.goal?.trim() || tTypes(s.type as never)}</span>
+                  <span className="text-[13px] text-ink-muted">
+                    {tTypes(s.type as never)} · {t(`slot.${s.status}` as never)}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+      {openRequests.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="text-[18px] font-bold">{t("beingMade")}</h2>
+          <ul className="space-y-2">
+            {openRequests.map((r) => (
+              <li key={r.id} className="rounded-[12px] bg-status-soft px-3 py-2">
+                <span className="block truncate text-[15px] font-semibold">{requestLabel(r)}</span>
+                <span className="text-[13px] text-status-ink">
+                  {isPast(r.due_at) ? t("late") : formatDue(r.due_at, locale)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </aside>
   );
 }

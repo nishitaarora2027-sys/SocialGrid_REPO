@@ -58,7 +58,7 @@ export function BrandView({
   };
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 space-y-3 px-3 py-3 lg:space-y-4 lg:px-10 lg:py-8">
+    <main className="w-full max-w-3xl flex-1 space-y-3 px-3 py-3 lg:space-y-4 lg:px-10 lg:py-8">
       <div className="flex items-center gap-4">
         {logo ? (
           // eslint-disable-next-line @next/next/no-img-element

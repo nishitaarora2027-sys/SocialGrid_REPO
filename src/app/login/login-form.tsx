@@ -121,7 +121,7 @@ export function LoginForm() {
 
       {!team && <p className="mt-6 text-center text-[15px] text-ink-muted">{t("help")}</p>}
 
-      <div className="mt-auto -mx-1 flex items-center justify-between gap-3 border-t border-line pt-[18px] pb-7">
+      <div className="mt-auto -mx-1 flex items-center justify-between gap-3 border-t border-line pt-[18px] pb-7 lg:mt-10 lg:pb-0">
         {team ? (
           <>
             <span className="text-[16px] text-ink-muted">{t("ownerQuestion")}</span>

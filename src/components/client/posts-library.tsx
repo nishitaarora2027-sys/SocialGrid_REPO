@@ -36,7 +36,7 @@ export function PostsLibrary({
   const shown = types ? options.filter((o) => types.includes(o.content_type)) : options;
 
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 space-y-3 py-3 lg:space-y-5 lg:px-10 lg:py-8">
+    <main className="w-full max-w-6xl flex-1 space-y-3 py-3 lg:space-y-5 lg:px-10 lg:py-8">
       <h1 className="text-[30px] leading-tight font-bold max-lg:sr-only">{t("title")}</h1>
       <div className="scrollbar-none flex gap-2 overflow-x-auto px-3 lg:px-0">
         {FILTERS.map((f) => (

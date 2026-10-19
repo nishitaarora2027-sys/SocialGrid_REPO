@@ -142,3 +142,8 @@ export function relativeDay(iso: string, now = new Date()): "today" | "yesterday
 export function sameDay(a: string, b: string) {
   return dayKey(a) === dayKey(b);
 }
+
+/** True once the instant has passed */
+export function isPast(iso: string, now = new Date()) {
+  return new Date(iso).getTime() < now.getTime();
+}
