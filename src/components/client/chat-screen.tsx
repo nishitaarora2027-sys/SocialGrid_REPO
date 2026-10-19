@@ -16,6 +16,7 @@ import { Composer, type RecentRequest } from "@/components/client/composer";
 import { DeliveryView } from "@/components/client/delivery-view";
 import { CHANGE_CHIPS, OptionsCard } from "@/components/client/options-card";
 import { QuickStartSheet } from "@/components/client/quick-start-sheet";
+import { FirstPostHero } from "@/components/client/idea-shelf";
 import { useRealtimeRefresh } from "@/components/shared/use-realtime";
 import { chooseOption, markConversationRead, requestChanges } from "@/lib/actions/client";
 import { celebrate } from "@/lib/browser/media";
@@ -101,7 +102,6 @@ export function ChatScreen({
     router.refresh();
   };
 
-  const greeting = t(`greeting.${dayPart()}`, { name: ownerName });
   const hasClientMessages = messages.some((m) => m.sender === "client");
   // festival / idea suggestions live on the Weekly plan page, not in the chat
   const shown = messages.filter((m) => m.kind !== "suggestion");
@@ -130,12 +130,13 @@ export function ChatScreen({
 
         <main className="mx-auto flex w-full max-w-[820px] flex-1 flex-col justify-end gap-1 pt-4 pb-2 lg:px-6 lg:pt-6">
           {!hasClientMessages && (
-            <section className="my-auto px-4 py-8 lg:py-12">
-              <h1 className="display text-[34px] leading-[1.08] font-bold lg:text-[48px]">{greeting}</h1>
-              <p className="mt-2 text-[19px] text-ink-muted lg:text-[21px]">{t("welcomeSubtitle")}</p>
-              <IdeaCards cards={cards} onCard={setCard} disabled={!canRequest} />
-              <p className="mt-6 text-[16px] text-ink-muted">{t("orJustSay")}</p>
-            </section>
+            <FirstPostHero
+              firstName={ownerName.trim().split(/\s+/)[0] ?? ownerName}
+              dayPart={dayPart()}
+              cards={cards}
+              onCard={setCard}
+              canRequest={canRequest}
+            />
           )}
 
           {shown.map((m, i) => (
@@ -269,29 +270,6 @@ function LiveActivity({ title, status, dueAt, onTap }: { title: string; status: 
           </span>
         </span>
       </button>
-    </div>
-  );
-}
-
-/** First-visit ideas: big, friendly tiles */
-function IdeaCards({ cards, onCard, disabled }: { cards: QuickStartCard[]; onCard: (c: QuickStartCard) => void; disabled: boolean }) {
-  const locale = useLocale() as Locale;
-  return (
-    <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
-      {cards.map((c) => (
-        <button
-          key={c.id}
-          type="button"
-          disabled={disabled}
-          onClick={() => onCard(c)}
-          className="group flex min-h-[112px] flex-col justify-between gap-4 rounded-[22px] bg-surface p-4 text-left ring-1 ring-line transition duration-200 hover:-translate-y-0.5 hover:ring-line-strong disabled:opacity-50"
-        >
-          <span className="flex size-11 items-center justify-center rounded-full bg-sun-soft text-sun">
-            <CardIcon name={c.icon} className="size-5" />
-          </span>
-          <span className="text-[17px] leading-tight font-semibold">{locale === "hi" ? c.label_hi : c.label_en}</span>
-        </button>
-      ))}
     </div>
   );
 }

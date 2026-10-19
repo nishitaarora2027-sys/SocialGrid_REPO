@@ -77,17 +77,31 @@
     "deleteRecording": "हटाएँ",
     "recording": "रिकॉर्ड हो रहा है",
     "yourRequest": "आपकी माँग",
-    "greeting": {
-      "morning": "सुप्रभात, {name} जी।",
-      "afternoon": "नमस्ते, {name} जी।",
-      "evening": "शुभ संध्या, {name} जी।"
-    },
-    "welcomeSubtitle": "आज क्या बनाएँ?",
     "placeholderShort": "लिखें या बोलें…",
     "addPhoto": "फ़ोटो जोड़ें",
     "teamFor": "{business} के लिए",
-    "orJustSay": "या नीचे लिखिए या बोलिए।",
-    "composerHint": "भेजने के लिए Enter · नई लाइन के लिए Shift + Enter"
+    "composerHint": "भेजने के लिए Enter · नई लाइन के लिए Shift + Enter",
+    "hello": {
+      "morning": "सुप्रभात, {name} जी",
+      "afternoon": "नमस्ते, {name} जी",
+      "evening": "शुभ संध्या, {name} जी"
+    },
+    "heroA": "आज हम आपके लिए",
+    "heroB": "क्या बनाएँ?",
+    "speakTitle": "बोलकर बताइए",
+    "speakSub": "हिंदी या अंग्रेज़ी में। डिज़ाइन हम करेंगे।",
+    "startFromIdea": "या किसी आइडिया से शुरू करें",
+    "tapToStart": "शुरू करें",
+    "ideaBig": {
+      "new_offer": "20% छूट",
+      "todays_special": "₹220",
+      "festival_post": "दिवाली",
+      "menu_spotlight": "ख़ास डिश",
+      "new_service": "नया!",
+      "before_after": "पहले / बाद",
+      "customer_review": "★★★★★",
+      "reel_idea": "▶ रील"
+    }
   },
   "chips": {
     "looks_good": "अच्छा है 👍",

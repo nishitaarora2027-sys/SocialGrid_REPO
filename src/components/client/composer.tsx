@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -96,6 +96,12 @@ export function Composer({
   };
 
   const hasDraft = !!(text.trim() || photos.length);
+  // the big "Tap and tell us" button on the first screen starts a voice note here
+  useEffect(() => {
+    const start = () => setRecording(true);
+    window.addEventListener("sg:voice", start);
+    return () => window.removeEventListener("sg:voice", start);
+  }, []);
   const pickPhotos = () => fileInput.current?.click();
   const growTextarea = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const el = e.currentTarget;

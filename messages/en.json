@@ -77,17 +77,31 @@
     "deleteRecording": "Delete",
     "recording": "Recording",
     "yourRequest": "your request",
-    "greeting": {
-      "morning": "Good morning, {name} ji.",
-      "afternoon": "Good afternoon, {name} ji.",
-      "evening": "Good evening, {name} ji."
-    },
-    "welcomeSubtitle": "What should we create today?",
     "placeholderShort": "Type or speak…",
     "addPhoto": "Add photo",
     "teamFor": "For {business}",
-    "orJustSay": "Or just type or speak in the bar below.",
-    "composerHint": "Enter to send · Shift + Enter for a new line"
+    "composerHint": "Enter to send · Shift + Enter for a new line",
+    "hello": {
+      "morning": "Good morning, {name} ji",
+      "afternoon": "Good afternoon, {name} ji",
+      "evening": "Good evening, {name} ji"
+    },
+    "heroA": "What should we",
+    "heroB": "create today?",
+    "speakTitle": "Tap and tell us",
+    "speakSub": "Hindi or English. We will design it.",
+    "startFromIdea": "Or start from an idea",
+    "tapToStart": "Start",
+    "ideaBig": {
+      "new_offer": "20% OFF",
+      "todays_special": "₹220",
+      "festival_post": "Diwali",
+      "menu_spotlight": "Chef's pick",
+      "new_service": "New!",
+      "before_after": "Before / After",
+      "customer_review": "★★★★★",
+      "reel_idea": "▶ Reel"
+    }
   },
   "chips": {
     "looks_good": "Looks good 👍",
