@@ -1027,19 +1027,19 @@
     }
   },
   "authPanel": {
-    "footer": "Real designers. Real local businesses. Zero design skills needed.",
     "line1": "Just say it.",
-    "line2": "We'll post it.",
-    "sub": "Send a voice note in Hindi or English. A real designer turns it into an Instagram-ready post, usually the same day.",
+    "line2": "We'll create it.",
+    "sub": "Send a voice note or a message. Your own design team creates on-brand posts and plans what goes out each week. You just download and share.",
     "voice": "दिवाली पर फ़ेशियल 20% off वाली पोस्ट बना दो",
-    "onIt": "Priya from SocialGrid is designing it",
-    "ready": "Ready · 6:00 PM",
-    "kind": {
-      "salon": "Salons",
-      "dhaba": "Dhabas",
-      "boutique": "Boutiques",
-      "mithai": "Mithai shops",
-      "cafe": "Cafés"
+    "ready": "Created · 6:00 PM",
+    "line3": "And plan your whole week.",
+    "voiceLabel": "Voice note",
+    "weekTitle": "This week, planned",
+    "weekCount": "4 posts",
+    "perk": {
+      "voice": "Voice or text",
+      "lang": "Hindi & English",
+      "people": "Real designers, not templates"
     }
   },
   "landing": {
@@ -1052,9 +1052,9 @@
     "loginLong": "Already a customer? Log in",
     "talk": "Talk to us on WhatsApp",
     "waText": "Hi SocialGrid, I'd like to know more about posts for my business.",
-    "eyebrow": "For salons, restaurants, cafés and shops",
+    "eyebrow": "Your content team, on chat",
     "headline": "Your business on Instagram, without the hard work.",
-    "sub": "Tell us what you need in a chat or a voice note, in Hindi or English. Our team makes the post and tells you exactly when it will be ready.",
+    "sub": "Tell us what you need in a chat or a voice note, in Hindi or English. Our team creates the post, plans your week, and tells you exactly when each one will be ready.",
     "seeHow": "See how it works",
     "trust": {
       "1": "Made by real people",
@@ -1077,7 +1077,7 @@
         "text": "Type, send a voice note or share a few photos. An offer, a festival, a new dish, anything."
       },
       "2": {
-        "title": "Our team makes it",
+        "title": "Our team creates it",
         "text": "A real person designs your post and writes the caption, and tells you when it will be ready."
       },
       "3": {
@@ -1108,25 +1108,6 @@
         "kicker": "Weekend",
         "title": "Buy 2 chai, get 1 free",
         "line": "Sat & Sun, all day"
-      }
-    },
-    "whoTitle": "Made for local businesses",
-    "who": {
-      "salon": {
-        "title": "Salons & parlours",
-        "text": "Offers, bridal looks, before & after."
-      },
-      "restaurant": {
-        "title": "Restaurants",
-        "text": "Daily specials, thalis, festival menus."
-      },
-      "cafe": {
-        "title": "Cafés & sweet shops",
-        "text": "New items, combos, weekend deals."
-      },
-      "shop": {
-        "title": "Shops & boutiques",
-        "text": "New stock, sales, festive collections."
       }
     },
     "priceTitle": "Simple monthly plans",
@@ -1167,6 +1148,21 @@
     "contactTitle": "Let's make your first post",
     "contactSub": "Send us a message on WhatsApp. A real person will reply.",
     "contactSoon": "Our WhatsApp number is coming soon. Until then, ask the person who shared this link with you.",
-    "footer": "Instagram posts for local businesses"
+    "footer": "Content created and planned for your business",
+    "getTitle": "What you get",
+    "get": {
+      "create": {
+        "title": "Created for you",
+        "text": "Real designers make every post, carousel and story in your colours, with captions and hashtags written for you."
+      },
+      "plan": {
+        "title": "Planned for you",
+        "text": "A weekly plan with festivals and offers already thought of, so you never wonder what to post next."
+      },
+      "time": {
+        "title": "Ready on time",
+        "text": "Every request shows exactly when it will be ready, and you can ask for changes until you love it."
+      }
+    }
   }
 }

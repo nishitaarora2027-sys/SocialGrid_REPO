@@ -1,16 +1,15 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import {
+  CalendarDaysIcon,
   CameraIcon,
   CheckIcon,
-  CoffeeIcon,
+  ClockIcon,
   DownloadIcon,
   MessageCircleIcon,
   MicIcon,
-  ScissorsIcon,
-  ShoppingBagIcon,
+  PaletteIcon,
   SparklesIcon,
-  UtensilsIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "@/components/shared/language-toggle";
@@ -29,11 +28,10 @@ export async function Landing() {
     { icon: SparklesIcon, title: t("steps.2.title"), text: t("steps.2.text") },
     { icon: DownloadIcon, title: t("steps.3.title"), text: t("steps.3.text") },
   ];
-  const audiences = [
-    { icon: ScissorsIcon, title: t("who.salon.title"), text: t("who.salon.text") },
-    { icon: UtensilsIcon, title: t("who.restaurant.title"), text: t("who.restaurant.text") },
-    { icon: CoffeeIcon, title: t("who.cafe.title"), text: t("who.cafe.text") },
-    { icon: ShoppingBagIcon, title: t("who.shop.title"), text: t("who.shop.text") },
+  const gets = [
+    { icon: PaletteIcon, title: t("get.create.title"), text: t("get.create.text") },
+    { icon: CalendarDaysIcon, title: t("get.plan.title"), text: t("get.plan.text") },
+    { icon: ClockIcon, title: t("get.time.title"), text: t("get.time.text") },
   ];
   const faqs = ["instagram", "hindi", "speed", "changes", "photos", "price"] as const;
 
@@ -122,12 +120,12 @@ export async function Landing() {
           </div>
         </section>
 
-        {/* who it's for */}
+        {/* what you get */}
         <section className="border-y border-line bg-surface">
           <div className="mx-auto max-w-6xl px-4 py-16 lg:px-8 lg:py-20">
-            <h2 className="text-[30px] leading-tight font-bold lg:text-[40px]">{t("whoTitle")}</h2>
-            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {audiences.map(({ icon: Icon, title, text }) => (
+            <h2 className="text-[30px] leading-tight font-bold lg:text-[40px]">{t("getTitle")}</h2>
+            <div className="mt-10 grid gap-4 md:grid-cols-3">
+              {gets.map(({ icon: Icon, title, text }) => (
                 <div key={title} className="rounded-[20px] border border-line bg-paper p-5">
                   <Icon className="size-7 text-primary" aria-hidden />
                   <h3 className="mt-3 text-[19px] font-bold">{title}</h3>

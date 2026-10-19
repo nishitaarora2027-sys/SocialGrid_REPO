@@ -187,21 +187,35 @@
   }
 }
 
-/* login brand panel: deep green with a warm glow and a faint grid of the logo's rounded squares */
+/* login brand panel: deep night-green with soft colour light (emerald, gold, rose) and a faint dot grid */
 .auth-panel {
-  background:
-    radial-gradient(60% 50% at 85% 20%, rgb(233 194 122 / 0.22), transparent 70%),
-    radial-gradient(50% 45% at 10% 95%, rgb(138 63 82 / 0.35), transparent 70%),
-    linear-gradient(160deg, #1f3f36 0%, #2f5d50 55%, #24493f 100%);
+  background: #0c1613;
+  isolation: isolate;
 }
 .auth-panel::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle at center, rgb(255 255 255 / 0.07) 1.5px, transparent 1.6px);
-  background-size: 28px 28px;
-  mask-image: linear-gradient(to bottom, black, transparent 85%);
+  z-index: -1;
+  background-image: radial-gradient(circle at center, rgb(255 255 255 / 0.06) 1.4px, transparent 1.5px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(80% 70% at 50% 40%, black, transparent);
+}
+.auth-blob {
+  position: absolute;
+  z-index: -2;
+  border-radius: 9999px;
+  filter: blur(90px);
   pointer-events: none;
+}
+.auth-blob-a { width: 520px; height: 520px; top: -160px; right: -140px; background: #1f8a6d; opacity: 0.55; }
+.auth-blob-b { width: 420px; height: 420px; top: 38%; left: -180px; background: #c99a4a; opacity: 0.35; }
+.auth-blob-c { width: 480px; height: 480px; bottom: -220px; right: 10%; background: #9b3f63; opacity: 0.45; }
+.auth-gradient-text {
+  background: linear-gradient(95deg, #f4d79b 0%, #f0a882 45%, #e88aa6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* one-shot entrance animations (they settle and stay; reduced motion skips straight to the end) */
