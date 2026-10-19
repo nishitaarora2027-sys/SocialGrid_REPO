@@ -84,33 +84,52 @@ export function QueueView({
     router.push(`/expert?${sp.toString()}`);
   };
 
+  // summary tiles work like Reminders' smart lists: a coloured icon, a big number, tap to filter
   const tiles = [
-    { key: "new", value: counts.new, icon: InboxIcon, onClick: () => setFilter("status", "new"), cls: "text-primary" },
-    { key: "inProgress", value: counts.inProgress, icon: LoaderIcon, onClick: () => setFilter("status", "in_progress"), cls: "text-foreground" },
-    { key: "overdue", value: counts.overdue, icon: AlertTriangleIcon, onClick: () => setFilter("overdue", "1"), cls: "text-danger" },
-    { key: "deliveredToday", value: counts.deliveredToday, icon: CheckCheckIcon, onClick: () => setFilter("status", "delivered"), cls: "text-primary" },
+    { key: "new", value: counts.new, icon: InboxIcon, dot: "bg-ink text-paper", on: filters.status === "new", onClick: () => setFilter("status", filters.status === "new" ? "" : "new") },
+    { key: "inProgress", value: counts.inProgress, icon: LoaderIcon, dot: "bg-status text-white", on: filters.status === "in_progress", onClick: () => setFilter("status", filters.status === "in_progress" ? "" : "in_progress") },
+    { key: "overdue", value: counts.overdue, icon: AlertTriangleIcon, dot: "bg-danger text-white", on: filters.overdue === "1", onClick: () => setFilter("overdue", filters.overdue === "1" ? "" : "1") },
+    { key: "deliveredToday", value: counts.deliveredToday, icon: CheckCheckIcon, dot: "sunset-bg text-white", on: filters.status === "delivered", onClick: () => setFilter("status", filters.status === "delivered" ? "" : "delivered") },
   ];
+  const openCount = counts.new + counts.inProgress;
 
   const summary = (r: QueueRow) =>
     r.summary || (r.firstKind === "voice" ? t("voiceNote") : r.firstKind === "images" ? t("photosOnly") : t("noText"));
 
   return (
-    <main className="space-y-5 p-4 lg:p-6">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
+    <main className="mx-auto max-w-6xl space-y-6 px-4 py-6 lg:px-8 lg:py-8">
+      <header>
+        <h1 className="display text-[34px] leading-tight font-bold lg:text-[40px]">{t("title")}</h1>
+        <p className="mt-1 text-[17px] text-ink-muted">
+          {counts.overdue > 0 ? t("subtitleLate", { open: openCount, late: counts.overdue }) : t("subtitle", { open: openCount })}
+        </p>
+      </header>
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {tiles.map(({ key, value, icon: Icon, onClick, cls }) => (
-          <button key={key} type="button" onClick={onClick} className="rounded-[16px] border bg-card p-4 text-left hover:border-primary">
-            <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-              <Icon className={cn("size-4", cls)} /> {t(`tiles.${key}`)}
-            </div>
-            <div className={cn("mt-1 text-3xl font-bold", cls)}>{value}</div>
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {tiles.map(({ key, value, icon: Icon, dot, on, onClick }) => (
+          <button
+            key={key}
+            type="button"
+            onClick={onClick}
+            aria-pressed={on}
+            className={cn(
+              "flex flex-col gap-3 rounded-[22px] bg-surface p-4 text-left ring-1 transition duration-150 hover:-translate-y-0.5",
+              on ? "ring-2 ring-ink" : "ring-line hover:ring-line-strong",
+            )}
+          >
+            <span className="flex items-start justify-between">
+              <span className={cn("flex size-9 items-center justify-center rounded-full", dot)}>
+                <Icon className="size-[18px]" />
+              </span>
+              <span className={cn("display text-[34px] leading-none font-bold tabular-nums", key === "overdue" && value > 0 && "text-danger")}>{value}</span>
+            </span>
+            <span className="text-[15px] font-semibold text-ink-muted">{t(`tiles.${key}`)}</span>
           </button>
         ))}
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
-        <NativeSelect value={filters.client ?? ""} onChange={(e) => setFilter("client", e.target.value)} aria-label={t("filters.client")}>
+      <div className="flex flex-wrap items-center gap-2">
+        <NativeSelect compact value={filters.client ?? ""} onChange={(e) => setFilter("client", e.target.value)} aria-label={t("filters.client")}>
           <option value="">{t("filters.allClients")}</option>
           {businesses.map((b) => (
             <option key={b.id} value={b.id}>
@@ -118,7 +137,7 @@ export function QueueView({
             </option>
           ))}
         </NativeSelect>
-        <NativeSelect value={filters.status ?? "open"} onChange={(e) => setFilter("status", e.target.value)} aria-label={t("filters.status")}>
+        <NativeSelect compact value={filters.status ?? "open"} onChange={(e) => setFilter("status", e.target.value)} aria-label={t("filters.status")}>
           <option value="open">{t("filters.open")}</option>
           {(["new", "in_progress", "revision_requested", "delivered", "completed", "cancelled"] as const).map((s) => (
             <option key={s} value={s}>
@@ -126,7 +145,7 @@ export function QueueView({
             </option>
           ))}
         </NativeSelect>
-        <NativeSelect value={filters.type ?? ""} onChange={(e) => setFilter("type", e.target.value)} aria-label={t("filters.type")}>
+        <NativeSelect compact value={filters.type ?? ""} onChange={(e) => setFilter("type", e.target.value)} aria-label={t("filters.type")}>
           <option value="">{t("filters.allTypes")}</option>
           {CONTENT_TYPES.map((c) => (
             <option key={c} value={c}>
@@ -134,50 +153,55 @@ export function QueueView({
             </option>
           ))}
         </NativeSelect>
-        <label className="flex h-12 items-center gap-2 rounded-[12px] border bg-card px-4 font-semibold">
-          <input
-            type="checkbox"
-            className="size-5 accent-[var(--primary)]"
-            checked={filters.overdue === "1"}
-            onChange={(e) => setFilter("overdue", e.target.checked ? "1" : "")}
-          />
-          {t("filters.overdueOnly")}
-        </label>
+        <button
+          type="button"
+          aria-pressed={filters.overdue === "1"}
+          onClick={() => setFilter("overdue", filters.overdue === "1" ? "" : "1")}
+          className={cn(
+            "flex h-10 items-center gap-1.5 rounded-full px-4 text-[15px] font-semibold ring-1 transition-colors",
+            filters.overdue === "1" ? "bg-danger text-white ring-danger" : "bg-surface ring-line hover:ring-line-strong",
+          )}
+        >
+          <AlertTriangleIcon className="size-4" /> {t("filters.overdueOnly")}
+        </button>
         {Object.values(filters).some(Boolean) && (
-          <button type="button" onClick={() => router.push("/expert")} className="h-12 rounded-[12px] px-4 font-semibold text-primary hover:bg-accent">
+          <button type="button" onClick={() => router.push("/expert")} className="h-10 rounded-full px-3 text-[15px] font-semibold text-sun hover:underline">
             {t("filters.clear")}
           </button>
         )}
       </div>
 
       {rows.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-[20px] border border-dashed py-16 text-center">
-          <SparklesIcon className="size-10 text-primary" />
+        <div className="flex flex-col items-center gap-3 rounded-[22px] bg-surface py-16 text-center ring-1 ring-line">
+          <SparklesIcon className="size-10 text-sun" />
           <p className="text-lg font-semibold">{t("empty")}</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-[16px] border bg-card">
-          <div className="hidden grid-cols-[1.3fr_2fr_1fr_1fr_0.8fr] gap-3 border-b bg-muted/50 px-4 py-2.5 text-[13px] font-bold tracking-wide text-muted-foreground uppercase md:grid">
+        <div className="overflow-hidden rounded-[22px] bg-surface ring-1 ring-line">
+          <div className="hidden grid-cols-[1.3fr_2fr_1fr_1fr_0.8fr] gap-3 border-b border-line px-5 py-3 text-[12px] font-semibold tracking-wide text-ink-muted uppercase md:grid">
             <span>{t("cols.client")}</span>
             <span>{t("cols.request")}</span>
             <span>{t("cols.type")}</span>
             <span>{t("cols.status")}</span>
             <span>{t("cols.timeLeft")}</span>
           </div>
-          <ul className="divide-y">
+          <ul className="divide-y divide-line">
             {rows.map((r) => {
               const done = ["delivered", "completed", "cancelled"].includes(r.status);
               return (
                 <li key={r.id}>
                   <Link
                     href={`/expert/requests/${r.id}`}
-                    className="grid gap-1.5 px-4 py-3 hover:bg-accent/50 md:grid-cols-[1.3fr_2fr_1fr_1fr_0.8fr] md:items-center md:gap-3"
+                    className="grid gap-1.5 px-5 py-3.5 transition-colors hover:bg-canvas/60 md:grid-cols-[1.3fr_2fr_1fr_1fr_0.8fr] md:items-center md:gap-3"
                   >
-                    <div className="flex items-center gap-2">
-                      {r.unread && <span className="size-2.5 shrink-0 rounded-full bg-primary" title={t("unread")} />}
-                      <div>
-                        <div className="font-bold">{r.businessName}</div>
-                        <div className="text-[13px] text-muted-foreground">{tInd(r.industry)}</div>
+                    <div className="flex items-center gap-3">
+                      <span className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-rose-soft text-[14px] font-bold text-rose-ink">
+                        {r.businessName.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("")}
+                        {r.unread && <span className="absolute -top-0.5 -right-0.5 size-3 rounded-full bg-sun ring-2 ring-surface" title={t("unread")} />}
+                      </span>
+                      <div className="min-w-0 leading-tight">
+                        <div className={cn("truncate", r.unread ? "font-bold" : "font-semibold")}>{r.businessName}</div>
+                        <div className="text-[13px] text-ink-muted">{tInd(r.industry)}</div>
                       </div>
                     </div>
                     <div className="flex min-w-0 flex-wrap items-center gap-1.5">

@@ -64,8 +64,8 @@ export function SettingsView({
 }) {
   const t = useTranslations("expert.settings");
   return (
-    <main className="space-y-5 p-4 lg:p-6">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
+    <main className="mx-auto max-w-6xl space-y-6 px-4 py-6 lg:px-8 lg:py-8">
+      <h1 className="display text-[34px] leading-tight font-bold lg:text-[40px]">{t("title")}</h1>
       <Tabs defaultValue="turnaround">
         <TabsList className="scrollbar-none w-full justify-start overflow-x-auto">
           {["turnaround", "festivals", "plans", "quickStart", "account"].map((k) => (

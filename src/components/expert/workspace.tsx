@@ -102,7 +102,7 @@ export function Workspace({
     });
 
   return (
-    <main className="space-y-4 p-4 lg:p-6">
+    <main className="space-y-4 px-4 py-5 lg:px-8 lg:py-6">
       {/* Header */}
       <div className="flex flex-wrap items-start gap-3">
         <Button asChild variant="ghost" size="sm">

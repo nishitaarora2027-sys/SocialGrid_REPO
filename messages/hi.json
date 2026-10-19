@@ -385,7 +385,10 @@
       "library": "सीखने की लाइब्रेरी",
       "settings": "सेटिंग्स",
       "logout": "लॉग आउट",
-      "overdue": "देर हो चुकी"
+      "overdue": "देर हो चुकी",
+      "workspace": "वर्कस्पेस",
+      "lateCount": "{count} देर",
+      "teamRole": "SocialGrid टीम"
     },
     "status": {
       "new": "नई",
@@ -427,7 +430,9 @@
       "unread": "क्लाइंट का नया मैसेज",
       "urgent": "ज़रूरी",
       "revision": "बदलाव {n}",
-      "typeNotSet": "तय नहीं"
+      "typeNotSet": "तय नहीं",
+      "subtitle": "{open, plural, =0 {अभी कुछ बाकी नहीं।} other {# माँग बाकी।}}",
+      "subtitleLate": "{open} माँग बाकी, {late} देर से।"
     },
     "workspace": {
       "backToQueue": "कतार",

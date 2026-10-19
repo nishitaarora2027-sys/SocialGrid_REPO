@@ -48,9 +48,9 @@ export function LibraryView({
 }) {
   const t = useTranslations("expert.library");
   return (
-    <main className="space-y-5 p-4 lg:p-6">
+    <main className="mx-auto max-w-6xl space-y-6 px-4 py-6 lg:px-8 lg:py-8">
       <div>
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <h1 className="display text-[34px] leading-tight font-bold lg:text-[40px]">{t("title")}</h1>
         <p className="text-muted-foreground">{t("subtitle")}</p>
       </div>
       <Tabs defaultValue={filters.tab ?? "rules"}>

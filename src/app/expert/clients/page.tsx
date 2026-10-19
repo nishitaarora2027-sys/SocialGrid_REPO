@@ -37,9 +37,9 @@ export default async function ClientsPage() {
   }
 
   return (
-    <main className="space-y-5 p-4 lg:p-6">
+    <main className="mx-auto max-w-6xl space-y-6 px-4 py-6 lg:px-8 lg:py-8">
       <div className="flex items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
+        <h1 className="display text-[34px] leading-tight font-bold lg:text-[40px]">{t("title")}</h1>
         <Button asChild>
           <Link href="/expert/clients/new">
             <PlusIcon /> {t("create")}
@@ -47,26 +47,33 @@ export default async function ClientsPage() {
         </Button>
       </div>
       {!businesses?.length ? (
-        <p className="rounded-[16px] border border-dashed p-10 text-center text-muted-foreground">{t("empty")}</p>
+        <p className="rounded-[22px] bg-surface p-10 text-center text-ink-muted ring-1 ring-line">{t("empty")}</p>
       ) : (
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {(businesses as Business[]).map((b) => (
-            <Link key={b.id} href={`/expert/clients/${b.id}`} className="space-y-2 rounded-[16px] border bg-card p-4 hover:border-primary">
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <div className="text-lg font-bold">{b.name}</div>
+            <Link
+              key={b.id}
+              href={`/expert/clients/${b.id}`}
+              className="space-y-3 rounded-[22px] bg-surface p-5 ring-1 ring-line transition duration-150 hover:-translate-y-0.5 hover:ring-line-strong"
+            >
+              <div className="flex items-start gap-3">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-rose-soft text-[15px] font-bold text-rose-ink">
+                  {b.name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("")}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-[18px] font-bold">{b.name}</div>
                   <div className="text-sm text-muted-foreground">
                     {profBy[b.owner_profile_id]?.display_name} · {formatPhone(profBy[b.owner_profile_id]?.phone)}
                   </div>
                 </div>
-                <Badge variant={subscriptionVariant(subBy[b.id])}>{subBy[b.id] ? tSub(subBy[b.id]) : "—"}</Badge>
+                <Badge variant={subscriptionVariant(subBy[b.id])} className="shrink-0">{subBy[b.id] ? tSub(subBy[b.id]) : "—"}</Badge>
               </div>
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+              <div className="flex flex-wrap gap-x-4 gap-y-1 border-t border-line pt-3 text-[14px] text-ink-muted">
                 <span>{tInd(b.industry)}</span>
                 <span>
                   {t("lastRequest")}: {lastReq[b.id] ? formatDate(lastReq[b.id], locale) : t("never")}
                 </span>
-                <span className={openCount[b.id] ? "font-bold text-primary" : ""}>
+                <span className={openCount[b.id] ? "font-semibold text-sun" : ""}>
                   {t("openRequests", { count: openCount[b.id] ?? 0 })}
                 </span>
               </div>

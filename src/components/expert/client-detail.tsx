@@ -70,12 +70,12 @@ export function ClientDetail(props: {
   const { business, owner } = props;
 
   return (
-    <main className="space-y-5 p-4 lg:p-6">
+    <main className="mx-auto max-w-6xl space-y-6 px-4 py-6 lg:px-8 lg:py-8">
       <div>
         <Link href="/expert/clients" className="text-sm font-semibold text-primary">
           ← {t("allClients")}
         </Link>
-        <h1 className="text-2xl font-bold">{business.name}</h1>
+        <h1 className="display text-[34px] leading-tight font-bold lg:text-[40px]">{business.name}</h1>
         <p className="text-muted-foreground">
           {owner.display_name} · {formatPhone(owner.phone)} · {tInd(business.industry)}
         </p>

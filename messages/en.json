@@ -385,7 +385,10 @@
       "library": "Teaching library",
       "settings": "Settings",
       "logout": "Log out",
-      "overdue": "Overdue"
+      "overdue": "Overdue",
+      "workspace": "Workspace",
+      "lateCount": "{count} late",
+      "teamRole": "SocialGrid team"
     },
     "status": {
       "new": "New",
@@ -427,7 +430,9 @@
       "unread": "New message from client",
       "urgent": "Urgent",
       "revision": "Revision {n}",
-      "typeNotSet": "Not set"
+      "typeNotSet": "Not set",
+      "subtitle": "{open, plural, =0 {Nothing open right now.} one {# request open.} other {# requests open.}}",
+      "subtitleLate": "{open, plural, one {# request open} other {# requests open}}, {late} running late."
     },
     "workspace": {
       "backToQueue": "Queue",
