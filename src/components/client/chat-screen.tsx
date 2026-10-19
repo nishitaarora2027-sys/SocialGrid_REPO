@@ -5,11 +5,12 @@ import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2Icon, MessageCircleIcon, PencilIcon, SendIcon } from "lucide-react";
+import { CheckIcon, Loader2Icon, MessageCircleIcon, PencilIcon, SendIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { CardIcon } from "@/components/shared/icons";
+import { LogoMark } from "@/components/shared/logo";
 import { DateDivider, MessageBubble, isNewDay } from "@/components/shared/message-item";
 import { Composer, type RecentRequest } from "@/components/client/composer";
 import { DeliveryView } from "@/components/client/delivery-view";
@@ -20,7 +21,7 @@ import { chooseOption, markConversationRead, requestChanges } from "@/lib/action
 import { celebrate } from "@/lib/browser/media";
 import { dayPart, formatDue, isPast } from "@/lib/format";
 import type { ThreadData } from "@/lib/thread";
-import type { Locale, PlanSlot, QuickStartCard } from "@/lib/types";
+import type { Locale, Message, PlanSlot, QuickStartCard } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export function ChatScreen({
@@ -101,99 +102,104 @@ export function ChatScreen({
   };
 
   const greeting = t(`greeting.${dayPart()}`, { name: ownerName });
-  // Idea chips sit in the welcome state; once the owner has written, they move above the composer on laptop
   const hasClientMessages = messages.some((m) => m.sender === "client");
   // festival / idea suggestions live on the Weekly plan page, not in the chat
   const shown = messages.filter((m) => m.kind !== "suggestion");
-  const ideaChips = <IdeaChips cards={cards} onCard={setCard} disabled={!canRequest} />;
+  const isBubble = (m?: Message) => !!m && m.kind !== "options_card" && m.sender !== "system";
+  // consecutive messages from the same person within a few minutes form one run, as in Messages
+  const sameRun = (a?: Message, b?: Message) =>
+    isBubble(a) &&
+    isBubble(b) &&
+    a!.sender === b!.sender &&
+    a!.sender_profile_id === b!.sender_profile_id &&
+    !isNewDay(a, b!) &&
+    Math.abs(new Date(b!.created_at).getTime() - new Date(a!.created_at).getTime()) < 5 * 60_000;
 
   return (
     <div className="flex min-w-0 flex-1">
-    <div className="mx-auto flex w-full max-w-[880px] min-w-0 flex-1 flex-col lg:px-8">
-      {tracked && (
-        <StatusBar
-          title={requestLabel(tracked)}
-          status={tracked.status}
-          dueAt={tracked.due_at}
-          onTap={() => document.getElementById(`options-${tracked.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" })}
-        />
-      )}
-
-      <main className="flex flex-1 flex-col justify-end gap-2.5 px-0 py-3.5">
-        {!hasClientMessages && (
-          <section className="space-y-4 px-3 pb-2">
-            <div className="space-y-1">
-              <h1 className="text-[22px] leading-tight font-bold lg:text-[28px]">{greeting}</h1>
-              <p className="text-[17px] text-ink-muted">{t("welcomeSubtitle")}</p>
-            </div>
-            {ideaChips}
-          </section>
+      <div className="relative flex min-w-0 flex-1 flex-col">
+        <ChatToolbar businessName={businessName} />
+        {tracked && (
+          <LiveActivity
+            title={requestLabel(tracked)}
+            status={tracked.status}
+            dueAt={tracked.due_at}
+            onTap={() => document.getElementById(`options-${tracked.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          />
         )}
 
-        {shown.map((m, i) => (
-          <div key={m.id} className="space-y-2.5">
-            {isNewDay(shown[i - 1], m) && <DateDivider iso={m.created_at} />}
-            {m.kind === "options_card" ? (
-              <OptionsCard
-                options={(m.payload.optionIds ?? []).map((id) => options[id]).filter(Boolean)}
-                request={m.request_id ? requests[m.request_id] : undefined}
-                urls={urls}
-                revision={m.payload.revision ?? 0}
-                interactive={!!m.request_id && latestCardFor[m.request_id] === m.id}
-                businessName={businessName}
-                onChoose={onChoose}
-                onOpen={setOpenOption}
-                onAskChanges={canRequest && m.request_id ? () => setChangesFor(m.request_id) : undefined}
-              />
-            ) : (
-              <MessageBubble
-                message={m}
-                urls={urls}
-                viewer="client"
-                senderName={m.sender_profile_id ? teamNames[m.sender_profile_id] : undefined}
-              />
-            )}
-          </div>
-        ))}
-        <div ref={bottom} />
-      </main>
+        <main className="mx-auto flex w-full max-w-[820px] flex-1 flex-col justify-end gap-1 pt-4 pb-2 lg:px-6 lg:pt-6">
+          {!hasClientMessages && (
+            <section className="my-auto px-4 py-8 lg:py-12">
+              <h1 className="display text-[34px] leading-[1.08] font-bold lg:text-[48px]">{greeting}</h1>
+              <p className="mt-2 text-[19px] text-ink-muted lg:text-[21px]">{t("welcomeSubtitle")}</p>
+              <IdeaCards cards={cards} onCard={setCard} disabled={!canRequest} />
+              <p className="mt-6 text-[16px] text-ink-muted">{t("orJustSay")}</p>
+            </section>
+          )}
 
-      {canRequest ? (
-        <Composer
-          businessId={businessId}
-          recentRequests={recentRequests}
-          requestLabel={requestLabel}
-          topSlot={
-            hasClientMessages && cards.length > 0 ? (
-              <div className="hidden lg:block">
-                <IdeaChips cards={cards} onCard={setCard} disabled={!canRequest} oneRow />
-              </div>
-            ) : null
+          {shown.map((m, i) => (
+            <div key={m.id}>
+              {isNewDay(shown[i - 1], m) && <DateDivider iso={m.created_at} />}
+              {m.kind === "options_card" ? (
+                <div className="py-2">
+                  <OptionsCard
+                    options={(m.payload.optionIds ?? []).map((id) => options[id]).filter(Boolean)}
+                    request={m.request_id ? requests[m.request_id] : undefined}
+                    urls={urls}
+                    revision={m.payload.revision ?? 0}
+                    interactive={!!m.request_id && latestCardFor[m.request_id] === m.id}
+                    businessName={businessName}
+                    onChoose={onChoose}
+                    onOpen={setOpenOption}
+                    onAskChanges={canRequest && m.request_id ? () => setChangesFor(m.request_id) : undefined}
+                  />
+                </div>
+              ) : (
+                <MessageBubble
+                  message={m}
+                  urls={urls}
+                  viewer="client"
+                  senderName={m.sender_profile_id ? teamNames[m.sender_profile_id] : undefined}
+                  first={!sameRun(shown[i - 1], m)}
+                  last={!sameRun(m, shown[i + 1])}
+                />
+              )}
+            </div>
+          ))}
+          <div ref={bottom} />
+        </main>
+
+        {canRequest ? (
+          <Composer
+            businessId={businessId}
+            recentRequests={recentRequests}
+            requestLabel={requestLabel}
+            ideas={hasClientMessages ? <IdeaChips cards={cards} onCard={setCard} disabled={!canRequest} /> : null}
+          />
+        ) : (
+          <BlockedNotice supportWhatsapp={supportWhatsapp} />
+        )}
+
+        <QuickStartSheet card={card} businessId={businessId} onClose={() => setCard(null)} />
+        <DeliveryView
+          option={openOption ? options[openOption] : null}
+          urls={urls}
+          businessName={businessName}
+          open={!!openOption}
+          onOpenChange={(o) => !o && setOpenOption(null)}
+          onMakeChanges={
+            canRequest && openOption
+              ? () => {
+                  const rid = options[openOption]?.request_id;
+                  setOpenOption(null);
+                  if (rid) setChangesFor(rid);
+                }
+              : undefined
           }
         />
-      ) : (
-        <BlockedNotice supportWhatsapp={supportWhatsapp} />
-      )}
-
-      <QuickStartSheet card={card} businessId={businessId} onClose={() => setCard(null)} />
-      <DeliveryView
-        option={openOption ? options[openOption] : null}
-        urls={urls}
-        businessName={businessName}
-        open={!!openOption}
-        onOpenChange={(o) => !o && setOpenOption(null)}
-        onMakeChanges={
-          canRequest && openOption
-            ? () => {
-                const rid = options[openOption]?.request_id;
-                setOpenOption(null);
-                if (rid) setChangesFor(rid);
-              }
-            : undefined
-        }
-      />
-      <ChangesSheet requestId={changesFor} onClose={() => setChangesFor(null)} />
-    </div>
+        <ChangesSheet requestId={changesFor} onClose={() => setChangesFor(null)} />
+      </div>
     <WeekRail slots={slots} openRequests={byNewest.filter((r) => OPEN.includes(r.status))} requestLabel={requestLabel} />
     </div>
   );
@@ -202,79 +208,114 @@ export function ChatScreen({
 const OPEN = ["new", "in_progress", "revision_requested"];
 const STEP: Record<string, number> = { new: 0, in_progress: 1, revision_requested: 1, delivered: 2, completed: 2 };
 
-/** Received · Making · Ready, with the promised time */
-function StatusBar({
-  title,
-  status,
-  dueAt,
-  onTap,
-}: {
-  title: string;
-  status: string;
-  dueAt: string;
-  onTap: () => void;
-}) {
-  const t = useTranslations("statusBar");
-  const locale = useLocale() as Locale;
-  const step = STEP[status] ?? 0;
-  const late = step < 2 && isPast(dueAt);
-  const labels = [t("received"), t("making"), t("ready")];
+/** Laptop toolbar: who you're talking to, on frosted glass like a macOS window toolbar */
+function ChatToolbar({ businessName }: { businessName: string }) {
+  const t = useTranslations("chat");
   return (
-    <button
-      type="button"
-      onClick={onTap}
-      data-testid="status-bar"
-      className="sticky top-[calc(53px+max(12px,env(safe-area-inset-top)))] z-20 mx-3 mt-2.5 flex flex-col gap-2 rounded-[16px] bg-status-soft px-3.5 py-3 text-left lg:top-6 lg:mx-0 lg:mt-6"
-    >
-      <span className="flex w-full items-baseline justify-between gap-3">
-        <span className="min-w-0 truncate text-[16px] font-bold text-ink">{title}</span>
-        <span className="shrink-0 text-[16px] font-semibold text-status-ink">
-          {step === 2 ? t("readyNow") : late ? t("late") : t("readyBy", { time: formatDue(dueAt, locale) })}
-        </span>
-      </span>
-      <span className="grid w-full grid-cols-3 gap-1" aria-hidden>
-        {[0, 1, 2].map((i) => (
-          <span key={i} className={cn("h-1.5 rounded-[3px]", i <= step ? "bg-status" : "bg-status-track")} />
-        ))}
-      </span>
-      <span className="grid w-full grid-cols-3 gap-1 text-[14px] text-status-ink">
-        {labels.map((l, i) => (
-          <span key={l} className={cn(i === step && "font-bold text-ink")} aria-current={i === step ? "step" : undefined}>
-            {l}
-          </span>
-        ))}
-      </span>
-    </button>
+    <header className="glass-bar sticky top-0 z-30 hidden h-16 items-center gap-3 border-b border-line/70 px-6 lg:flex">
+      <TeamAvatar />
+      <div className="min-w-0 leading-tight">
+        <div className="text-[16px] font-bold">{t("teamName")}</div>
+        <div className="truncate text-[14px] text-ink-muted">{t("teamFor", { business: businessName })}</div>
+      </div>
+    </header>
   );
 }
 
-function IdeaChips({
-  cards,
-  onCard,
-  disabled,
-  oneRow,
-}: {
-  cards: QuickStartCard[];
-  onCard: (c: QuickStartCard) => void;
-  disabled: boolean;
-  oneRow?: boolean;
-}) {
+export function TeamAvatar({ className }: { className?: string }) {
+  return (
+    <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-full bg-surface ring-1 ring-line", className)} aria-hidden>
+      <LogoMark className="size-6" />
+    </span>
+  );
+}
+
+
+/**
+ * The post being made, as a small glass capsule pinned under the toolbar
+ * (think Live Activity): what, how far along, and when.
+ */
+function LiveActivity({ title, status, dueAt, onTap }: { title: string; status: string; dueAt: string; onTap: () => void }) {
+  const t = useTranslations("statusBar");
+  const locale = useLocale() as Locale;
+  const step = STEP[status] ?? 0;
+  const ready = step === 2;
+  const late = !ready && isPast(dueAt);
+  const labels = [t("received"), t("making"), t("ready")];
+  return (
+    <div className="sticky top-[calc(61px+max(12px,env(safe-area-inset-top)))] z-20 flex justify-center px-3 pt-2 lg:top-[72px]">
+      <button
+        type="button"
+        onClick={onTap}
+        data-testid="status-bar"
+        aria-label={`${title}: ${labels[step]}`}
+        className="glass-card flex w-full max-w-[560px] items-center gap-3 rounded-full py-2 pr-4 pl-2 text-left transition-transform duration-150 active:scale-[0.99]"
+      >
+        <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-full", ready ? "bg-primary text-on-primary" : "bg-status-soft text-status-ink")}>
+          {ready ? <CheckIcon className="size-5" strokeWidth={2.5} /> : <span className="size-2.5 rounded-full bg-status" />}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="flex items-baseline justify-between gap-3">
+            <span className="truncate text-[15px] font-bold">{title}</span>
+            <span className={cn("shrink-0 text-[14px] font-semibold", ready ? "text-primary" : "text-status-ink")}>
+              {ready ? t("readyNow") : late ? t("late") : t("readyBy", { time: formatDue(dueAt, locale) })}
+            </span>
+          </span>
+          <span className="mt-1 flex items-center gap-2">
+            <span className="grid flex-1 grid-cols-3 gap-1" aria-hidden>
+              {[0, 1, 2].map((i) => (
+                <span key={i} className={cn("h-1 rounded-full", i <= step ? (ready ? "bg-primary" : "bg-status") : "bg-status-track")} />
+              ))}
+            </span>
+            <span className="shrink-0 text-[13px] text-ink-muted">{labels[step]}</span>
+          </span>
+        </span>
+      </button>
+    </div>
+  );
+}
+
+/** First-visit ideas: big, friendly tiles */
+function IdeaCards({ cards, onCard, disabled }: { cards: QuickStartCard[]; onCard: (c: QuickStartCard) => void; disabled: boolean }) {
   const locale = useLocale() as Locale;
   return (
-    <div className={cn("flex gap-2", oneRow ? "scrollbar-none overflow-x-auto" : "flex-wrap")}>
+    <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
       {cards.map((c) => (
         <button
           key={c.id}
           type="button"
           disabled={disabled}
           onClick={() => onCard(c)}
-          className="flex min-h-11 shrink-0 items-center gap-2 rounded-full border border-line bg-surface px-4 text-[16px] font-semibold transition-colors duration-150 hover:bg-canvas disabled:opacity-50"
+          className="group flex min-h-[112px] flex-col justify-between gap-4 rounded-[22px] bg-surface p-4 text-left ring-1 ring-line transition duration-200 hover:-translate-y-0.5 hover:ring-line-strong disabled:opacity-50"
         >
-          <CardIcon name={c.icon} className="size-5 text-primary" />
-          {locale === "hi" ? c.label_hi : c.label_en}
+          <span className="flex size-11 items-center justify-center rounded-full bg-primary-soft text-primary">
+            <CardIcon name={c.icon} className="size-5" />
+          </span>
+          <span className="text-[17px] leading-tight font-semibold">{locale === "hi" ? c.label_hi : c.label_en}</span>
         </button>
       ))}
     </div>
+  );
+}
+
+/** After the first message: the same ideas as a quiet row of capsules above the message bar */
+function IdeaChips({ cards, onCard, disabled }: { cards: QuickStartCard[]; onCard: (c: QuickStartCard) => void; disabled: boolean }) {
+  const locale = useLocale() as Locale;
+  return (
+    <>
+      {cards.map((c) => (
+        <button
+          key={c.id}
+          type="button"
+          disabled={disabled}
+          onClick={() => onCard(c)}
+          className="flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-surface px-3.5 text-[15px] font-medium ring-1 ring-line transition-colors duration-150 hover:ring-line-strong disabled:opacity-50"
+        >
+          <CardIcon name={c.icon} className="size-4 text-primary" />
+          {locale === "hi" ? c.label_hi : c.label_en}
+        </button>
+      ))}
+    </>
   );
 }
 
@@ -363,10 +404,10 @@ function WeekRail({
   const locale = useLocale() as Locale;
   const days = tWeek.raw("days") as string[];
   return (
-    <aside className="sticky top-0 hidden h-dvh w-[320px] shrink-0 flex-col gap-6 overflow-y-auto border-l border-line bg-surface px-5 py-6 xl:flex">
+    <aside className="sticky top-0 hidden h-dvh w-[300px] shrink-0 flex-col gap-7 overflow-y-auto border-l border-line/80 bg-canvas/70 px-5 py-6 xl:flex">
       <section className="space-y-3">
         <div className="flex items-baseline justify-between">
-          <h2 className="text-[18px] font-bold">{t("thisWeek")}</h2>
+          <h2 className="text-[13px] font-semibold tracking-wide text-ink-muted uppercase">{t("thisWeek")}</h2>
           <Link href="/plan" className="text-[15px] font-semibold text-primary">
             {t("seePlan")} →
           </Link>
@@ -376,7 +417,7 @@ function WeekRail({
         ) : (
           <ul className="space-y-2">
             {slots.map((s) => (
-              <li key={s.id} className="flex items-start gap-3 rounded-[12px] bg-paper px-3 py-2">
+              <li key={s.id} className="flex items-start gap-3 rounded-[14px] bg-surface px-3 py-2.5 ring-1 ring-line">
                 <span className="w-10 shrink-0 text-[15px] font-bold">{days[s.day]}</span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[15px] font-semibold">{s.goal?.trim() || tTypes(s.type as never)}</span>
@@ -391,10 +432,10 @@ function WeekRail({
       </section>
       {openRequests.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-[18px] font-bold">{t("beingMade")}</h2>
+          <h2 className="text-[13px] font-semibold tracking-wide text-ink-muted uppercase">{t("beingMade")}</h2>
           <ul className="space-y-2">
             {openRequests.map((r) => (
-              <li key={r.id} className="rounded-[12px] bg-status-soft px-3 py-2">
+              <li key={r.id} className="rounded-[14px] bg-status-soft px-3 py-2.5">
                 <span className="block truncate text-[15px] font-semibold">{requestLabel(r)}</span>
                 <span className="text-[13px] text-status-ink">
                   {isPast(r.due_at) ? t("late") : formatDue(r.due_at, locale)}

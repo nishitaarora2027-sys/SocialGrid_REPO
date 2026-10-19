@@ -49,8 +49,9 @@
   --border: var(--line);
   --input: var(--line-strong);
   --ring: var(--primary);
-  --bubble-client: var(--primary-soft);
-  --bubble-team: var(--surface);
+  /* Messages-style bubbles: mine solid brand green, theirs a soft warm grey */
+  --bubble-client: var(--primary);
+  --bubble-team: #ece7df;
   color-scheme: light;
 }
 
@@ -75,6 +76,7 @@
   --rose-ink: #f0b8c6;
   --danger: #e06b5c;
   --warning: #e0a050;
+  --bubble-team: #2c2722;
   color-scheme: dark;
 }
 
@@ -206,7 +208,7 @@
 }
 /* glass is for the control layer (cards over wallpaper, the nav bar), never for content */
 .glass-card {
-  background: rgb(255 255 255 / 0.72);
+  background: rgb(255 255 255 / 0.82);
   border: 1px solid rgb(255 255 255 / 0.7);
   box-shadow: 0 1px 0 rgb(255 255 255 / 0.6) inset, 0 30px 80px -30px rgb(36 33 29 / 0.35);
   backdrop-filter: blur(28px) saturate(1.6);
@@ -218,12 +220,12 @@
   box-shadow: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 30px 80px -30px rgb(0 0 0 / 0.7);
 }
 .glass-bar {
-  background: rgb(251 250 247 / 0.72);
+  background: rgb(251 250 247 / 0.86);
   backdrop-filter: blur(20px) saturate(1.8);
   -webkit-backdrop-filter: blur(20px) saturate(1.8);
 }
 .dark .glass-bar {
-  background: rgb(22 19 15 / 0.72);
+  background: rgb(22 19 15 / 0.86);
 }
 
 /* scroll reveal: content starts visible without JS; the script only adds the gentle entrance */

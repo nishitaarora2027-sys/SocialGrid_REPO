@@ -78,13 +78,16 @@
     "recording": "Recording",
     "yourRequest": "your request",
     "greeting": {
-      "morning": "Good morning, {name} ji",
-      "afternoon": "Good afternoon, {name} ji",
-      "evening": "Good evening, {name} ji"
+      "morning": "Good morning, {name} ji.",
+      "afternoon": "Good afternoon, {name} ji.",
+      "evening": "Good evening, {name} ji."
     },
-    "welcomeSubtitle": "What post do you need? Tap an idea, or type or speak below.",
+    "welcomeSubtitle": "What should we create today?",
     "placeholderShort": "Type or speak…",
-    "addPhoto": "Add photo"
+    "addPhoto": "Add photo",
+    "teamFor": "For {business}",
+    "orJustSay": "Or just type or speak in the bar below.",
+    "composerHint": "Enter to send · Shift + Enter for a new line"
   },
   "chips": {
     "looks_good": "Looks good 👍",

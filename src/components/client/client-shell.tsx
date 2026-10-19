@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { CalendarDaysIcon, CircleHelpIcon, LayoutGridIcon, LogOutIcon, MessageCircleIcon, StoreIcon } from "lucide-react";
 import { LanguageToggle } from "@/components/shared/language-toggle";
-import { Logo } from "@/components/shared/logo";
+import { Logo, LogoMark } from "@/components/shared/logo";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { logout } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
@@ -60,8 +60,8 @@ export function ClientSidebar({
   const t = useTranslations("nav");
   const isActive = useActive();
   return (
-    <aside className="sticky top-0 hidden h-dvh flex-col border-r border-line bg-surface px-4 py-6 lg:flex">
-      <Link href="/chat" className="mb-5 px-2">
+    <aside className="sticky top-0 hidden h-dvh flex-col border-r border-line/80 bg-canvas/70 px-3 py-5 lg:flex">
+      <Link href="/chat" className="mb-6 px-3">
         <Logo />
       </Link>
       <nav className="flex flex-col gap-1">
@@ -73,11 +73,11 @@ export function ClientSidebar({
               href={href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex items-center gap-3 rounded-[12px] px-3.5 py-3 text-[17px] transition-colors duration-150",
-                active ? "bg-primary-soft font-bold text-primary" : "font-medium text-ink-muted hover:bg-canvas",
+                "flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-[16px] transition-colors duration-150",
+                active ? "bg-surface font-semibold text-ink shadow-[0_1px_2px_rgb(0_0_0/0.06)] ring-1 ring-line" : "font-medium text-ink-muted hover:bg-surface/60 hover:text-ink",
               )}
             >
-              <Icon className="size-6" aria-hidden />
+              <Icon className={cn("size-5", active ? "text-primary" : "")} aria-hidden />
               {t(long)}
               {href === "/posts" && readyCount > 0 && <ReadyBadge count={readyCount} className="ml-auto" />}
             </Link>
@@ -108,21 +108,25 @@ export function ClientSidebar({
   );
 }
 
-/** Phone: white header. Chat shows the business, other pages their title. */
-export function ClientHeader({ businessName, logoUrl }: { businessName: string; logoUrl: string | null }) {
+/** Phone: frosted header. Chat shows who you're talking to; other pages show their title. */
+export function ClientHeader({ businessName }: { businessName: string; logoUrl: string | null }) {
   const t = useTranslations("nav");
+  const tChat = useTranslations("chat");
   const pathname = usePathname();
   const titleKey = Object.entries(TITLES).find(([p]) => pathname.startsWith(p))?.[1];
   return (
-    <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-line bg-surface px-[18px] pt-[max(12px,env(safe-area-inset-top))] pb-3 lg:hidden">
+    <header className="glass-bar sticky top-0 z-30 flex items-center gap-3 border-b border-line/70 px-4 pt-[max(12px,env(safe-area-inset-top))] pb-3 lg:hidden">
       {titleKey ? (
-        <h1 className="min-w-0 flex-1 truncate text-[19px] font-bold">{t(titleKey as never)}</h1>
+        <h1 className="display min-w-0 flex-1 truncate text-[22px] font-bold">{t(titleKey as never)}</h1>
       ) : (
         <div className="flex min-w-0 flex-1 items-center gap-3">
-          <BusinessAvatar name={businessName} logoUrl={logoUrl} />
-          <span className="min-w-0 truncate text-[19px] font-bold" title={businessName}>
-            {businessName}
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface ring-1 ring-line" aria-hidden>
+            <LogoMark className="size-6" />
           </span>
+          <div className="min-w-0 leading-tight">
+            <div className="truncate text-[17px] font-bold">{tChat("teamName")}</div>
+            <div className="truncate text-[14px] text-ink-muted">{tChat("teamFor", { business: businessName })}</div>
+          </div>
         </div>
       )}
       <LanguageToggle className="shrink-0" />
@@ -137,7 +141,7 @@ export function BottomTabs({ readyCount }: { readyCount: number }) {
   return (
     <nav
       aria-label={t("menu")}
-      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-line bg-surface px-1 pt-2 pb-[max(10px,env(safe-area-inset-bottom))] lg:hidden"
+      className="glass-bar fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-line/70 px-1 pt-2 pb-[max(10px,env(safe-area-inset-bottom))] lg:hidden"
     >
       {NAV.map(({ href, icon: Icon, short }) => {
         const active = isActive(href);
@@ -154,7 +158,7 @@ export function BottomTabs({ readyCount }: { readyCount: number }) {
                 active && "bg-primary-soft",
               )}
             >
-              <Icon className={cn("size-6", active ? "text-primary" : "text-line-strong")} aria-hidden />
+              <Icon className={cn("size-6", active ? "text-primary" : "text-ink-muted")} strokeWidth={active ? 2.25 : 1.75} aria-hidden />
               <span className={cn("text-[15px] leading-none", active ? "font-bold text-primary" : "font-medium text-ink-muted")}>
                 {t(short)}
               </span>

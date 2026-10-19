@@ -78,13 +78,16 @@
     "recording": "रिकॉर्ड हो रहा है",
     "yourRequest": "आपकी माँग",
     "greeting": {
-      "morning": "सुप्रभात, {name} जी",
-      "afternoon": "नमस्ते, {name} जी",
-      "evening": "शुभ संध्या, {name} जी"
+      "morning": "सुप्रभात, {name} जी।",
+      "afternoon": "नमस्ते, {name} जी।",
+      "evening": "शुभ संध्या, {name} जी।"
     },
-    "welcomeSubtitle": "आपको कौन सी पोस्ट चाहिए? कोई आइडिया चुनें, या नीचे लिखें या बोलें।",
+    "welcomeSubtitle": "आज क्या बनाएँ?",
     "placeholderShort": "लिखें या बोलें…",
-    "addPhoto": "फ़ोटो जोड़ें"
+    "addPhoto": "फ़ोटो जोड़ें",
+    "teamFor": "{business} के लिए",
+    "orJustSay": "या नीचे लिखिए या बोलिए।",
+    "composerHint": "भेजने के लिए Enter · नई लाइन के लिए Shift + Enter"
   },
   "chips": {
     "looks_good": "अच्छा है 👍",

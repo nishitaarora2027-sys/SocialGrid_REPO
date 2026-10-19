@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { CameraIcon, FlameIcon, ImagePlusIcon, Loader2Icon, MicIcon, PencilIcon, PlusCircleIcon, SendIcon, XIcon } from "lucide-react";
+import { ArrowUpIcon, CameraIcon, FlameIcon, ImagePlusIcon, Loader2Icon, MicIcon, PencilIcon, PlusCircleIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { VoiceRecorder } from "@/components/client/voice-recorder";
@@ -27,12 +27,13 @@ export function Composer({
   businessId,
   recentRequests,
   requestLabel,
-  topSlot,
+  ideas,
 }: {
   businessId: string;
   recentRequests: RecentRequest[];
   requestLabel: (r: RecentRequest) => string;
-  topSlot?: React.ReactNode;
+  /** idea capsules shown beside "Need it today" */
+  ideas?: React.ReactNode;
 }) {
   const t = useTranslations("chat");
   const tErr = useTranslations("errors");
@@ -110,82 +111,92 @@ export function Composer({
   };
 
   return (
-    <div className="sticky bottom-[var(--tabbar-h)] z-20 bg-paper px-3 pt-2 pb-2.5 lg:bottom-0 lg:px-0 lg:pb-6">
-      {!recording && topSlot && <div className="mb-3">{topSlot}</div>}
-      <input
-        ref={fileInput}
-        type="file"
-        accept="image/*"
-        multiple
-        hidden
-        onChange={(e) => {
-          addPhotos(e.target.files);
-          e.target.value = "";
-        }}
-      />
-      {photos.length > 0 && (
-        <div className="scrollbar-none mb-2 flex gap-2 overflow-x-auto">
-          {photos.map((p, i) => (
-            <div key={`${p.name}-${i}`} className="relative size-20 shrink-0">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={URL.createObjectURL(p)} alt="" className="size-20 rounded-[12px] object-cover" />
-              <button
-                type="button"
-                onClick={() => setPhotos(photos.filter((_, j) => j !== i))}
-                className="absolute -top-1.5 -right-1.5 flex size-7 items-center justify-center rounded-full bg-ink text-paper"
-                aria-label={t("removePhoto")}
-              >
-                <XIcon className="size-4" />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {recording ? (
-        <VoiceRecorder
-          onCancel={() => setRecording(false)}
-          onError={(reason) => {
-            setRecording(false);
-            toast.error(reason === "denied" ? t("micDenied") : t("micUnsupported"));
-          }}
-          onDone={(blob, seconds) => {
-            setRecording(false);
-            submit({ text: "", photos: [], voice: { blob, seconds } });
+    <div className="sticky bottom-[var(--tabbar-h)] z-20 bg-gradient-to-t from-paper from-70% to-transparent px-3 pt-6 pb-3 lg:bottom-0 lg:px-6 lg:pb-6">
+      <div className="mx-auto max-w-[820px]">
+        <input
+          ref={fileInput}
+          type="file"
+          accept="image/*"
+          multiple
+          hidden
+          onChange={(e) => {
+            addPhotos(e.target.files);
+            e.target.value = "";
           }}
         />
-      ) : (
-        <>
-          <button
-            type="button"
-            onClick={() => setUrgent(!urgent)}
-            aria-pressed={urgent}
-            className={cn(
-              "mb-2 inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3 text-[15px] font-semibold transition-colors duration-150",
-              urgent ? "border-danger bg-danger text-white" : "border-line bg-surface text-ink-muted",
-            )}
-          >
-            <FlameIcon className="size-4" /> {t("needToday")}
-          </button>
 
-          {/* phone: round photo button, pill field, round mic that turns into Send */}
-          <div className="flex items-end gap-2 lg:hidden">
+        {!recording && (
+          <div className="scrollbar-none -mx-3 mb-2.5 flex gap-2 overflow-x-auto px-3 lg:mx-0 lg:px-0">
+            <button
+              type="button"
+              onClick={() => setUrgent(!urgent)}
+              aria-pressed={urgent}
+              className={cn(
+                "flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[15px] font-semibold ring-1 transition-colors duration-150",
+                urgent ? "bg-danger text-white ring-danger" : "bg-surface text-ink ring-line hover:ring-line-strong",
+              )}
+            >
+              <FlameIcon className="size-4" /> {t("needToday")}
+            </button>
+            {ideas && <span className="mx-1 w-px shrink-0 self-stretch bg-line" aria-hidden />}
+            {ideas}
+          </div>
+        )}
+
+        {photos.length > 0 && (
+          <div className="scrollbar-none mb-2.5 flex gap-2 overflow-x-auto">
+            {photos.map((p, i) => (
+              <div key={`${p.name}-${i}`} className="relative size-20 shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={URL.createObjectURL(p)} alt="" className="size-20 rounded-[16px] object-cover" />
+                <button
+                  type="button"
+                  onClick={() => setPhotos(photos.filter((_, j) => j !== i))}
+                  className="absolute -top-1.5 -right-1.5 flex size-7 items-center justify-center rounded-full bg-ink text-paper"
+                  aria-label={t("removePhoto")}
+                >
+                  <XIcon className="size-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {recording ? (
+          <div className="glass-card rounded-[28px] p-2">
+            <VoiceRecorder
+              onCancel={() => setRecording(false)}
+              onError={(reason) => {
+                setRecording(false);
+                toast.error(reason === "denied" ? t("micDenied") : t("micUnsupported"));
+              }}
+              onDone={(blob, seconds) => {
+                setRecording(false);
+                submit({ text: "", photos: [], voice: { blob, seconds } });
+              }}
+            />
+          </div>
+        ) : (
+          // one glass message bar, the same on phone and laptop: photo · text · mic/send
+          <div className="glass-card flex items-end gap-1.5 rounded-[28px] p-1.5">
             <button
               type="button"
               onClick={pickPhotos}
               disabled={sending}
               aria-label={t("addPhoto")}
-              className="flex size-12 shrink-0 items-center justify-center rounded-full border border-line-strong bg-surface text-ink disabled:opacity-50"
+              title={t("addPhoto")}
+              className="flex size-11 shrink-0 items-center justify-center rounded-full bg-canvas text-ink transition-colors hover:bg-line disabled:opacity-50"
             >
-              <CameraIcon className="size-6" />
+              <CameraIcon className="size-5" />
             </button>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
+              onKeyDown={onKeyDown}
               rows={1}
               placeholder={t("placeholderShort")}
               aria-label={t("placeholderShort")}
-              className="max-h-36 min-h-12 flex-1 resize-none rounded-[24px] border border-line-strong bg-surface px-4 py-[11px] text-[17px] leading-snug outline-none placeholder:text-ink-faint focus:border-primary"
+              className="max-h-40 min-h-11 flex-1 resize-none bg-transparent px-2 py-[10px] text-[17px] leading-snug outline-none placeholder:text-ink-faint"
               onInput={growTextarea}
               disabled={sending}
             />
@@ -194,51 +205,21 @@ export function Composer({
               onClick={() => (hasDraft ? submit({ text, photos }) : setRecording(true))}
               disabled={sending}
               aria-label={hasDraft ? t("send") : t("voiceNote")}
-              className="flex size-[52px] shrink-0 items-center justify-center rounded-full bg-primary text-on-primary disabled:opacity-60"
+              title={hasDraft ? t("send") : t("voiceNote")}
+              className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary transition-transform duration-150 active:scale-95 disabled:opacity-60"
             >
               {sending ? (
-                <Loader2Icon className="size-6 animate-spin" />
+                <Loader2Icon className="size-5 animate-spin" />
               ) : hasDraft ? (
-                <SendIcon className="size-6" />
+                <ArrowUpIcon className="size-5" strokeWidth={2.5} />
               ) : (
-                <MicIcon className="size-6" />
+                <MicIcon className="size-5" />
               )}
             </button>
           </div>
-
-          {/* laptop: one card with labelled buttons */}
-          <div className="hidden rounded-[20px] border border-line-strong bg-surface py-3.5 pr-3.5 pl-5 lg:block">
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={onKeyDown}
-              rows={2}
-              placeholder={t("placeholder")}
-              aria-label={t("placeholder")}
-              className="max-h-36 min-h-12 w-full resize-none bg-transparent text-[18px] leading-snug outline-none placeholder:text-ink-faint"
-              onInput={growTextarea}
-              disabled={sending}
-            />
-            <div className="mt-2 flex items-center gap-2">
-              <Button type="button" variant="outline" size="sm" className="h-11" onClick={pickPhotos} disabled={sending}>
-                <CameraIcon /> {t("addPhoto")}
-              </Button>
-              <Button type="button" variant="outline" size="sm" className="h-11" onClick={() => setRecording(true)} disabled={sending}>
-                <MicIcon /> {t("voiceNote")}
-              </Button>
-              <Button
-                type="button"
-                className="ml-auto h-11 px-5 text-[16px]"
-                onClick={() => submit({ text, photos })}
-                disabled={sending || !hasDraft}
-              >
-                {sending ? <Loader2Icon className="animate-spin" /> : <SendIcon />}
-                {t("send")}
-              </Button>
-            </div>
-          </div>
-        </>
-      )}
+        )}
+        <p className="mt-2 hidden text-center text-[13px] text-ink-muted lg:block">{t("composerHint")}</p>
+      </div>
 
       {/* Is this message a new post, more info for an open request, or changes to a delivered one? */}
       <Sheet open={!!pendingDraft} onOpenChange={(o) => !o && setPendingDraft(null)}>

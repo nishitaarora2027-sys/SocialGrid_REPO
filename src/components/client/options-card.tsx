@@ -53,11 +53,11 @@ export function OptionsCard({
     <div
       id={request ? `options-${request.id}` : undefined}
       className={cn(
-        "mx-3 flex max-w-[460px] scroll-mt-28 flex-col gap-3 rounded-[20px] border border-line bg-surface p-3.5",
+        "mx-3 flex max-w-[420px] scroll-mt-32 flex-col gap-3 rounded-[26px] bg-surface p-3 ring-1 ring-line shadow-[0_24px_48px_-32px_rgb(36_33_29/0.35)]",
         superseded && "opacity-60",
       )}
     >
-      <h3 className="text-[19px] leading-tight font-bold">
+      <h3 className="display px-1.5 pt-1 text-[20px] leading-tight font-bold">
         {superseded ? t("olderVersion") : chosen ? t("yourChoice") : t("readyOne")}
       </h3>
 
@@ -72,7 +72,7 @@ export function OptionsCard({
         {options.map((o) => (
           <div key={o.id} className="w-full shrink-0 snap-center space-y-2">
             <button type="button" onClick={() => onOpen?.(o.id)} className="relative block w-full text-left" disabled={!onOpen}>
-              <OptionPreview option={o} urls={urls} className="rounded-[14px]" />
+              <OptionPreview option={o} urls={urls} className="rounded-[18px]" />
               {o.chosen && (
                 <span className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[13px] font-bold text-on-primary">
                   <CheckCircle2Icon className="size-4" /> {t("chosen")}

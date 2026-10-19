@@ -11,7 +11,18 @@ function mmss(s: number) {
   return `${m}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 }
 
-export function VoicePlayer({ src, duration, className }: { src?: string; duration?: number; className?: string }) {
+export function VoicePlayer({
+  src,
+  duration,
+  className,
+  inverse,
+}: {
+  src?: string;
+  duration?: number;
+  className?: string;
+  /** white controls, for use on a green "mine" bubble */
+  inverse?: boolean;
+}) {
   const t = useTranslations("chat");
   const audio = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -53,16 +64,19 @@ export function VoicePlayer({ src, duration, className }: { src?: string; durati
         type="button"
         onClick={toggle}
         disabled={!src}
-        className="flex h-12 shrink-0 items-center gap-1.5 rounded-full bg-primary px-4 font-semibold text-primary-foreground disabled:opacity-50"
+        className={cn(
+          "flex h-11 shrink-0 items-center gap-1.5 rounded-full px-4 font-semibold disabled:opacity-50",
+          inverse ? "bg-white/20 text-white" : "bg-primary text-primary-foreground",
+        )}
       >
         {playing ? <PauseIcon className="size-5" /> : <PlayIcon className="size-5" />}
         {playing ? t("pause") : t("play")}
       </button>
       <div className="flex-1">
-        <div className="h-2 overflow-hidden rounded-full bg-black/10">
-          <div className="h-full bg-primary transition-[width]" style={{ width: `${pct}%` }} />
+        <div className={cn("h-1.5 overflow-hidden rounded-full", inverse ? "bg-white/25" : "bg-black/10")}>
+          <div className={cn("h-full transition-[width]", inverse ? "bg-white" : "bg-primary")} style={{ width: `${pct}%` }} />
         </div>
-        <div className="mt-1 text-[13px] text-muted-foreground tabular-nums">
+        <div className={cn("mt-1 text-[13px] tabular-nums", inverse ? "text-white/80" : "text-muted-foreground")}>
           {mmss(playing || current ? current : total)} {t("voiceNote")}
         </div>
       </div>

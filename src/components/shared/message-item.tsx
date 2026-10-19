@@ -37,7 +37,7 @@ export function ImageGrid({
               key={a.path}
               type="button"
               onClick={() => url && setOpen(url)}
-              className="size-24 overflow-hidden rounded-[12px] bg-canvas lg:size-30"
+              className="size-28 overflow-hidden rounded-[16px] bg-canvas lg:size-36"
             >
               {url ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -65,6 +65,8 @@ export function MessageBubble({
   viewer,
   requestLabel,
   senderName,
+  first = true,
+  last = true,
 }: {
   message: Message;
   urls: Record<string, string>;
@@ -72,6 +74,9 @@ export function MessageBubble({
   requestLabel?: string | null;
   /** team member's first name, shown on their messages to build trust */
   senderName?: string;
+  /** position in a run of messages from the same person (like Messages: name on the first, time and tail on the last) */
+  first?: boolean;
+  last?: boolean;
 }) {
   const t = useTranslations("chat");
   const tChips = useTranslations("chips");
@@ -81,18 +86,12 @@ export function MessageBubble({
   if (message.sender === "system") {
     const key = message.payload?.i18nKey ?? "";
     const Icon = key.startsWith("ack") || key === "added" ? CheckCircle2Icon : key === "ready" ? SparklesIcon : key === "planReminder" ? BellIcon : ClockIcon;
+    // status lines read like the small centred notes in Messages, not like bubbles
     return (
-      <div className="flex justify-center px-2">
-        <div
-          className={cn(
-            "flex max-w-[90%] items-start gap-2 rounded-[14px] px-3.5 py-2 text-[15px]",
-            key === "ready" ? "bg-primary-soft font-semibold text-primary" : "bg-canvas text-ink-muted",
-          )}
-        >
-          <Icon className="mt-0.5 size-5 shrink-0" />
-          <span>{systemText(message.payload)}</span>
-        </div>
-      </div>
+      <p className={cn("mx-auto flex max-w-[85%] items-start justify-center gap-1.5 px-3 py-1 text-center text-[14px] leading-snug", key === "ready" ? "font-semibold text-primary" : "text-ink-muted")}>
+        <Icon className="mt-[3px] size-3.5 shrink-0" aria-hidden />
+        <span>{systemText(message.payload)}</span>
+      </p>
     );
   }
 
@@ -101,31 +100,32 @@ export function MessageBubble({
   const chipKey = message.payload?.i18nKey?.startsWith("chips.") ? message.payload.i18nKey.slice(6) : null;
 
   const time = formatTime(message.created_at, locale);
-  const meta =
-    message.sender === "expert" && !mine ? [senderName?.split(" ")[0], "SocialGrid", time].filter(Boolean).join(" · ") : time;
+  const fromTeam = message.sender === "expert" && !mine;
+  const name = fromTeam ? `${senderName?.split(" ")[0] ?? t("teamName")} · SocialGrid` : null;
+  const onlyMedia = !message.body && !chipKey && !voice;
 
   return (
-    <div className={cn("flex px-3", mine ? "justify-end" : "justify-start")}>
-      <div className={cn("flex max-w-[82%] flex-col gap-1", mine ? "items-end" : "items-start")}>
+    <div className={cn("flex px-3", mine ? "justify-end" : "justify-start", last ? "mb-1.5" : "")}>
+      <div className={cn("flex max-w-[78%] flex-col gap-1 lg:max-w-[68%]", mine ? "items-end" : "items-start")}>
+        {first && name && <div className="px-3.5 text-[13px] font-medium text-ink-muted">{name}</div>}
         <div
           className={cn(
-            "space-y-2 px-3.5 py-2.5",
-            mine
-              ? "rounded-[18px_18px_6px_18px] bg-primary-soft"
-              : "rounded-[18px_18px_18px_6px] border border-line bg-surface",
+            "space-y-2",
+            onlyMedia ? "" : "px-4 py-2.5",
+            onlyMedia ? "" : mine ? "bg-bubble-client text-on-primary" : "bg-bubble-team text-ink",
+            // round everywhere except the corner that points at the speaker, and only on the last bubble of a run
+            mine ? (last ? "rounded-[20px_20px_6px_20px]" : "rounded-[20px]") : last ? "rounded-[20px_20px_20px_6px]" : "rounded-[20px]",
           )}
         >
           {viewer === "expert" && requestLabel && (
-            <div className="text-[13px] font-semibold text-ink-muted">↳ {requestLabel}</div>
+            <div className={cn("text-[13px] font-semibold", mine ? "text-on-primary/80" : "text-ink-muted")}>↳ {requestLabel}</div>
           )}
-          {voice && <VoicePlayer src={fileUrl(urls, voice)} duration={voice.duration} />}
+          {voice && <VoicePlayer src={fileUrl(urls, voice)} duration={voice.duration} inverse={mine} />}
           <ImageGrid attachments={message.attachments} urls={urls} />
           {chipKey && <p className="font-semibold">{tChips(chipKey as never)}</p>}
           {message.body && <p className="text-[17px] leading-[1.45] whitespace-pre-wrap">{message.body}</p>}
         </div>
-        <div className={cn("px-1 text-[13px]", mine ? "text-primary-ink" : "text-ink-muted")}>
-          {meta || t("teamName")}
-        </div>
+        {last && <div className="px-2 text-[12.5px] text-ink-muted tabular-nums">{time}</div>}
       </div>
     </div>
   );
@@ -138,7 +138,7 @@ export function DateDivider({ iso }: { iso: string }) {
   const label = rel ? t(rel) : formatLongDate(iso, locale);
   return (
     <div className="flex justify-center py-1">
-      <span className="text-[14px] text-ink-muted">{label}</span>
+      <span className="text-[13px] font-medium tracking-wide text-ink-muted">{label}</span>
     </div>
   );
 }
