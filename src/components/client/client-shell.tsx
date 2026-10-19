@@ -174,7 +174,7 @@ function ReadyBadge({ count, className }: { count: number; className?: string })
   return (
     <span
       aria-label={t("readyCount", { count })}
-      className={cn("flex min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[13px] leading-5 font-bold text-on-primary", className)}
+      className={cn("flex min-w-5 items-center justify-center rounded-full bg-sun px-1.5 text-[13px] leading-5 font-bold text-white", className)}
     >
       {count}
     </span>

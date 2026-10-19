@@ -49,11 +49,11 @@ export async function Landing() {
       <main>
         {/* 1. hero: the promise, then the product */}
         <section className="overflow-hidden px-5 pt-16 text-center lg:pt-24">
-          <p className="text-[17px] font-semibold text-primary lg:text-[19px]">{t("eyebrow")}</p>
+          <p className="text-[17px] font-semibold text-sun lg:text-[19px]">{t("eyebrow")}</p>
           <h1 className="display mx-auto mt-3 max-w-4xl text-[48px] leading-[1.02] font-bold sm:text-[64px] lg:text-[88px]">
             {t("h1a")}
             <br />
-            <span className="bg-[linear-gradient(90deg,#2F5D50,#B8873A_55%,#8A3F52)] bg-clip-text pb-[0.08em] text-transparent">{t("h1b")}</span>
+            <span className="sunset-text pb-[0.08em]">{t("h1b")}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-[19px] leading-relaxed text-ink-muted lg:text-[22px]">{t("sub")}</p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-7">
@@ -67,7 +67,7 @@ export async function Landing() {
 
           {/* product shot: the real chat, with the posts it produced around it */}
           <div className="relative mx-auto mt-16 flex h-[640px] max-w-6xl justify-center lg:mt-20 lg:h-[700px]">
-            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgb(184_135_58_/_0.18),transparent)]" />
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgb(255_120_90_/_0.16),transparent)]" />
             <FloatingPost post={0} className="top-[70px] left-[calc(50%-440px)] w-[200px] -rotate-6" delay={150} />
             <FloatingPost post={3} className="top-[400px] left-[calc(50%-520px)] w-[170px] rotate-3" delay={300} />
             <FloatingPost post={1} className="top-[110px] left-[calc(50%+250px)] w-[190px] rotate-6" delay={220} />
@@ -159,7 +159,7 @@ export async function Landing() {
               </Tile>
               <Tile className="lg:col-span-2" title={t("f.lang.title")} text={t("f.lang.text")}>
                 <div aria-hidden className="flex items-baseline gap-3 font-bold tracking-tight">
-                  <span lang="hi" className="text-[64px] leading-none text-primary">हिं</span>
+                  <span lang="hi" className="sunset-text text-[64px] leading-none">हिं</span>
                   <span className="text-[40px] leading-none text-line-strong">/</span>
                   <span className="text-[64px] leading-none">EN</span>
                 </div>
@@ -256,7 +256,7 @@ function Step({ n, title, text, delay, children }: { n: number; title: string; t
   return (
     <Reveal delay={delay} className="flex flex-col rounded-[28px] bg-surface p-7 lg:p-8">
       <div className="flex h-16 items-center">{children}</div>
-      <span className="mt-8 text-[15px] font-semibold text-primary">{String(n).padStart(2, "0")}</span>
+      <span className="mt-8 text-[15px] font-semibold text-sun">{String(n).padStart(2, "0")}</span>
       <h3 className="mt-1 text-[24px] leading-tight font-bold tracking-tight">{title}</h3>
       <p className="mt-2 text-[17px] leading-relaxed text-ink-muted">{text}</p>
     </Reveal>

@@ -249,20 +249,20 @@ function LiveActivity({ title, status, dueAt, onTap }: { title: string; status: 
         aria-label={`${title}: ${labels[step]}`}
         className="glass-card flex w-full max-w-[560px] items-center gap-3 rounded-full py-2 pr-4 pl-2 text-left transition-transform duration-150 active:scale-[0.99]"
       >
-        <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-full", ready ? "bg-primary text-on-primary" : "bg-status-soft text-status-ink")}>
+        <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-full", ready ? "sunset-bg text-white" : "bg-status-soft text-status-ink")}>
           {ready ? <CheckIcon className="size-5" strokeWidth={2.5} /> : <span className="size-2.5 rounded-full bg-status" />}
         </span>
         <span className="min-w-0 flex-1">
           <span className="flex items-baseline justify-between gap-3">
             <span className="truncate text-[15px] font-bold">{title}</span>
-            <span className={cn("shrink-0 text-[14px] font-semibold", ready ? "text-primary" : "text-status-ink")}>
+            <span className={cn("shrink-0 text-[14px] font-semibold", ready ? "text-sun" : "text-status-ink")}>
               {ready ? t("readyNow") : late ? t("late") : t("readyBy", { time: formatDue(dueAt, locale) })}
             </span>
           </span>
           <span className="mt-1 flex items-center gap-2">
             <span className="grid flex-1 grid-cols-3 gap-1" aria-hidden>
               {[0, 1, 2].map((i) => (
-                <span key={i} className={cn("h-1 rounded-full", i <= step ? (ready ? "bg-primary" : "bg-status") : "bg-status-track")} />
+                <span key={i} className={cn("h-1 rounded-full", i <= step ? (ready ? "sunset-bg" : "bg-status") : "bg-status-track")} />
               ))}
             </span>
             <span className="shrink-0 text-[13px] text-ink-muted">{labels[step]}</span>
@@ -286,7 +286,7 @@ function IdeaCards({ cards, onCard, disabled }: { cards: QuickStartCard[]; onCar
           onClick={() => onCard(c)}
           className="group flex min-h-[112px] flex-col justify-between gap-4 rounded-[22px] bg-surface p-4 text-left ring-1 ring-line transition duration-200 hover:-translate-y-0.5 hover:ring-line-strong disabled:opacity-50"
         >
-          <span className="flex size-11 items-center justify-center rounded-full bg-primary-soft text-primary">
+          <span className="flex size-11 items-center justify-center rounded-full bg-sun-soft text-sun">
             <CardIcon name={c.icon} className="size-5" />
           </span>
           <span className="text-[17px] leading-tight font-semibold">{locale === "hi" ? c.label_hi : c.label_en}</span>
@@ -309,7 +309,7 @@ function IdeaChips({ cards, onCard, disabled }: { cards: QuickStartCard[]; onCar
           onClick={() => onCard(c)}
           className="flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-surface px-3.5 text-[15px] font-medium ring-1 ring-line transition-colors duration-150 hover:ring-line-strong disabled:opacity-50"
         >
-          <CardIcon name={c.icon} className="size-4 text-primary" />
+          <CardIcon name={c.icon} className="size-4 text-sun" />
           {locale === "hi" ? c.label_hi : c.label_en}
         </button>
       ))}

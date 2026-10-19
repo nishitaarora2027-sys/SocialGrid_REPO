@@ -11,9 +11,15 @@ If a section needs two headlines, it is two sections.
 No stock photos or illustrations. The hero image is the real chat on a phone, and the
 "work" section is posts. Colour comes from the posts, not from the page.
 
-## 3. Quiet canvas, one action colour
-Warm paper and ink for the page; green is used only for things you can press
-("Talk to us", "Log in", links). The dark section exists only to make the posts glow.
+## 3. Ink & Sunset: quiet canvas, one accent
+Warm paper (#FAF7F2) and near-black ink (#17140F). Ink is the action colour: buttons,
+links, the user's own chat bubbles. The only colour is the sunset
+(#FFB13B → #FF5E62 → #C2338B): the highlighted post in the logo, the second line of
+headlines, the "ready" moment, unread badges. Small accent text uses solid --sun (#D93D4A).
+Chosen after research (Oct 2026): calm neutral base + one saturated signature accent is the
+2026 brand direction; warm sunset tones tie to Instagram and Indian festive golden hour;
+monochrome marks are the Apple way. In dark mode ink and cream swap. The dark "work" section
+exists only to make the posts glow.
 
 ## 4. Glass is for controls, never content
 Translucent, blurred surfaces are used only for things that float above the page:

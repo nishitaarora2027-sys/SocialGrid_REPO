@@ -88,7 +88,7 @@ export function MessageBubble({
     const Icon = key.startsWith("ack") || key === "added" ? CheckCircle2Icon : key === "ready" ? SparklesIcon : key === "planReminder" ? BellIcon : ClockIcon;
     // status lines read like the small centred notes in Messages, not like bubbles
     return (
-      <p className={cn("mx-auto flex max-w-[85%] items-start justify-center gap-1.5 px-3 py-1 text-center text-[14px] leading-snug", key === "ready" ? "font-semibold text-primary" : "text-ink-muted")}>
+      <p className={cn("mx-auto flex max-w-[85%] items-start justify-center gap-1.5 px-3 py-1 text-center text-[14px] leading-snug", key === "ready" ? "font-semibold text-sun" : "text-ink-muted")}>
         <Icon className="mt-[3px] size-3.5 shrink-0" aria-hidden />
         <span>{systemText(message.payload)}</span>
       </p>

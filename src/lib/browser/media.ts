@@ -155,7 +155,7 @@ export async function copyText(text: string) {
 export async function celebrate() {
   const { default: confetti } = await import("canvas-confetti");
   const css = getComputedStyle(document.documentElement);
-  const colors = ["--status", "--primary", "--rose-ink"].map((v) => css.getPropertyValue(v).trim()).filter(Boolean);
+  const colors = ["#FFB13B", "#FF5E62", "#C2338B", css.getPropertyValue("--primary").trim() || "#17140F"];
   // short burst (well under a second); skipped entirely for people who ask for less motion
   confetti({ particleCount: 70, spread: 70, startVelocity: 35, ticks: 90, origin: { y: 0.7 }, colors, disableForReducedMotion: true });
 }

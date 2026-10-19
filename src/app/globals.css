@@ -15,10 +15,18 @@
   --ink: #24211d;
   --ink-muted: #5e574f;
   --ink-faint: #8a8177;
-  --primary: #2f5d50;
+  /* Ink & Sunset: near-black ink is the action colour; the sunset is the one accent */
+  --primary: #17140f;
   --on-primary: #ffffff;
-  --primary-soft: #e3ece7;
-  --primary-ink: #4e5f57;
+  --primary-soft: #efebe4;
+  --primary-ink: #5e574f;
+  --sun-1: #ffb13b;
+  --sun-2: #ff5e62;
+  --sun-3: #c2338b;
+  --sun: #d93d4a; /* solid accent for small text and icons (4.5:1 on paper) */
+  --sun-soft: #fdece6;
+  --logo-bubble: #17140f;
+  --logo-cell: #fbf8f3;
   --status: #b8873a;
   --status-soft: #f7eedb;
   --status-ink: #6b4e1e;
@@ -64,10 +72,14 @@
   --ink: #f3ede3;
   --ink-muted: #b9afa2;
   --ink-faint: #8c8276;
-  --primary: #6fb89e;
-  --on-primary: #10201a;
-  --primary-soft: #22352e;
-  --primary-ink: #a9cfc0;
+  --primary: #f3ede3;
+  --on-primary: #17140f;
+  --primary-soft: #2c2722;
+  --primary-ink: #c9bfb2;
+  --sun: #ff7a6b;
+  --sun-soft: #3a2420;
+  --logo-bubble: #f3ede3;
+  --logo-cell: #17140f;
   --status: #d9a94f;
   --status-soft: #33291a;
   --status-ink: #ebd3a2;
@@ -81,6 +93,8 @@
 }
 
 @theme inline {
+  --color-sun: var(--sun);
+  --color-sun-soft: var(--sun-soft);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -192,18 +206,18 @@
 /* auth pages: a calm "wallpaper" of brand colours under frosted glass, like the macOS login screen */
 .auth-wallpaper {
   background:
-    radial-gradient(42% 50% at 12% 18%, rgb(127 196 168 / 0.7), transparent 70%),
-    radial-gradient(38% 45% at 88% 12%, rgb(244 215 155 / 0.75), transparent 70%),
-    radial-gradient(45% 55% at 80% 90%, rgb(232 138 166 / 0.5), transparent 70%),
-    radial-gradient(40% 50% at 15% 95%, rgb(142 139 224 / 0.45), transparent 70%),
+    radial-gradient(42% 50% at 12% 18%, rgb(255 177 59 / 0.42), transparent 70%),
+    radial-gradient(38% 45% at 88% 12%, rgb(255 94 98 / 0.28), transparent 70%),
+    radial-gradient(45% 55% at 80% 90%, rgb(194 51 139 / 0.22), transparent 70%),
+    radial-gradient(40% 50% at 15% 95%, rgb(255 196 160 / 0.45), transparent 70%),
     var(--paper);
 }
 .dark .auth-wallpaper {
   background:
-    radial-gradient(42% 50% at 12% 18%, rgb(31 138 109 / 0.45), transparent 70%),
-    radial-gradient(38% 45% at 88% 12%, rgb(201 154 74 / 0.3), transparent 70%),
-    radial-gradient(45% 55% at 80% 90%, rgb(155 63 99 / 0.35), transparent 70%),
-    radial-gradient(40% 50% at 15% 95%, rgb(70 68 160 / 0.35), transparent 70%),
+    radial-gradient(42% 50% at 12% 18%, rgb(255 177 59 / 0.22), transparent 70%),
+    radial-gradient(38% 45% at 88% 12%, rgb(255 94 98 / 0.2), transparent 70%),
+    radial-gradient(45% 55% at 80% 90%, rgb(194 51 139 / 0.25), transparent 70%),
+    radial-gradient(40% 50% at 15% 95%, rgb(120 60 40 / 0.3), transparent 70%),
     var(--paper);
 }
 /* glass is for the control layer (cards over wallpaper, the nav bar), never for content */
@@ -232,3 +246,12 @@
 .reveal { transition: opacity 700ms cubic-bezier(.2,.7,.2,1), transform 700ms cubic-bezier(.2,.7,.2,1); }
 html.js .reveal:not([data-shown]) { opacity: 0; transform: translateY(28px); }
 .display { letter-spacing: -0.025em; }
+
+/* the sunset, for headlines and the highlighted post in the logo */
+.sunset-text {
+  background: linear-gradient(90deg, var(--sun-1, #ffb13b), var(--sun-2, #ff5e62) 50%, var(--sun-3, #c2338b));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.sunset-bg { background: linear-gradient(135deg, #ffb13b, #ff5e62 50%, #c2338b); }

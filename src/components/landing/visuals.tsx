@@ -76,15 +76,15 @@ export function PhoneMock({ labels }: { labels: { post: string; readyBy: string;
         </div>
         {/* messages */}
         <div className="space-y-2 px-3 pt-3">
-          <div className="ml-auto flex w-fit items-center gap-2 rounded-[16px_16px_5px_16px] bg-[#E3ECE7] px-2.5 py-2 text-[#2F5D50]">
-            <span className="flex size-6 items-center justify-center rounded-full bg-[#2F5D50] text-white">
+          <div className="ml-auto flex w-fit items-center gap-2 rounded-[16px_16px_5px_16px] bg-[#17140F] px-2.5 py-2 text-white">
+            <span className="flex size-6 items-center justify-center rounded-full bg-white/20 text-white">
               <PlayIcon className="size-3 fill-current" />
             </span>
-            <Waveform color="#2F5D50" />
+            <Waveform color="#ffffff" />
             <span className="text-[10px] font-semibold">0:12</span>
           </div>
           <div className="ml-auto flex w-fit gap-1">
-            {["#F3E3E6", "#F7EEDB", "#E3ECE7"].map((c) => (
+            {["#F3E3E6", "#F7EEDB", "#FDECE6"].map((c) => (
               <span key={c} className="flex size-11 items-center justify-center rounded-[9px]" style={{ background: c }}>
                 <CameraIcon className="size-3.5 text-[#8A8177]" />
               </span>
@@ -98,11 +98,11 @@ export function PhoneMock({ labels }: { labels: { post: string; readyBy: string;
             <div className="mb-2 text-[13px] font-bold text-[#24211D]">{labels.ready}</div>
             <PostTile post={SAMPLE_POSTS[0]} size="sm" className="rounded-[12px]" />
             <div className="mt-2 flex justify-center gap-1">
-              <span className="size-1.5 rounded-full bg-[#2F5D50]" />
+              <span className="size-1.5 rounded-full bg-[#17140F]" />
               <span className="size-1.5 rounded-full bg-[#CFC7BA]" />
               <span className="size-1.5 rounded-full bg-[#CFC7BA]" />
             </div>
-            <div className="mt-2 flex h-9 items-center justify-center rounded-[11px] bg-[#2F5D50] text-[12px] font-bold text-white">{labels.choose}</div>
+            <div className="mt-2 flex h-9 items-center justify-center rounded-[11px] bg-[#17140F] text-[12px] font-bold text-white">{labels.choose}</div>
           </div>
         </div>
         {/* composer */}
@@ -111,7 +111,7 @@ export function PhoneMock({ labels }: { labels: { post: string; readyBy: string;
             <CameraIcon className="size-3.5 text-[#24211D]" />
           </span>
           <span className="flex h-8 flex-1 items-center rounded-full border border-[#CFC7BA] bg-white px-3 text-[11px] text-[#8A8177]">{labels.type}</span>
-          <span className="flex size-9 items-center justify-center rounded-full bg-[#2F5D50] text-white">
+          <span className="flex size-9 items-center justify-center rounded-full bg-[#17140F] text-white">
             <MicIcon className="size-4" />
           </span>
         </div>
@@ -126,11 +126,11 @@ export function WeekVisual({ days }: { days: string[] }) {
     <div aria-hidden className="grid grid-cols-7 gap-2">
       {days.map((d, i) => (
         <div key={d} className="flex flex-col items-center gap-1.5">
-          <span className={cn("text-[12px] font-semibold", i === 1 ? "text-primary" : "text-ink-muted")}>{d}</span>
+          <span className={cn("text-[12px] font-semibold", i === 1 ? "text-ink" : "text-ink-muted")}>{d}</span>
           {i in filled ? (
             <PostTile post={SAMPLE_POSTS[filled[i]]} size="sm" className="w-full rounded-[10px] [&>*:not(:first-child)]:hidden" />
           ) : (
-            <span className={cn("aspect-[4/5] w-full rounded-[10px] border-[1.5px] border-dashed", i === 1 ? "border-primary" : "border-line-strong")} />
+            <span className={cn("aspect-[4/5] w-full rounded-[10px] border-[1.5px] border-dashed", i === 1 ? "border-ink" : "border-line-strong")} />
           )}
         </div>
       ))}
