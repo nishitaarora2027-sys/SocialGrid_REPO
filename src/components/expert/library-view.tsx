@@ -89,7 +89,7 @@ function RulesPanel({ rules, businesses }: { rules: Rule[]; businesses: Biz[] })
 
   return (
     <div className="grid gap-5 lg:grid-cols-[1fr_1.4fr]">
-      <section className="space-y-3 rounded-2xl border bg-card p-4">
+      <section className="space-y-3 rounded-[16px] border bg-card p-4">
         <h2 className="font-bold">{t("addRule")}</h2>
         <div className="flex gap-2">
           {(["client", "industry", "global"] as const).map((s) => (
@@ -97,7 +97,7 @@ function RulesPanel({ rules, businesses }: { rules: Rule[]; businesses: Biz[] })
               key={s}
               type="button"
               onClick={() => setScope(s)}
-              className={cn("h-10 flex-1 rounded-xl border-2 text-sm font-semibold", scope === s ? "border-primary bg-secondary" : "bg-card")}
+              className={cn("h-10 flex-1 rounded-[12px] border text-sm font-semibold", scope === s ? "border-primary bg-secondary" : "bg-card")}
             >
               {t(`scope.${s}`)}
             </button>
@@ -137,9 +137,9 @@ function RulesPanel({ rules, businesses }: { rules: Rule[]; businesses: Biz[] })
       </section>
 
       <section className="space-y-2">
-        {rules.length === 0 && <p className="rounded-2xl border-2 border-dashed p-8 text-center text-muted-foreground">{t("noRules")}</p>}
+        {rules.length === 0 && <p className="rounded-[16px] border border-dashed p-8 text-center text-muted-foreground">{t("noRules")}</p>}
         {rules.map((r) => (
-          <div key={r.id} className={cn("flex items-start gap-3 rounded-2xl border bg-card p-3", !r.active && "opacity-50")}>
+          <div key={r.id} className={cn("flex items-start gap-3 rounded-[16px] border bg-card p-3", !r.active && "opacity-50")}>
             <Badge variant="outline" className="mt-0.5 shrink-0">
               {r.scope === "client" ? bizName[r.business_id ?? ""] ?? t("scope.client") : r.scope === "industry" ? tInd(r.industry!) : t("scope.global")}
             </Badge>
@@ -208,7 +208,7 @@ function ExamplesPanel({
             </option>
           ))}
         </NativeSelect>
-        <label className="flex h-12 items-center gap-2 rounded-xl border-2 bg-card px-3 font-semibold">
+        <label className="flex h-12 items-center gap-2 rounded-[12px] border bg-card px-3 font-semibold">
           <Switch checked={filters.gold === "1"} onCheckedChange={(v) => setFilter("gold", v ? "1" : "")} />
           {t("goldOnly")}
         </label>
@@ -218,15 +218,15 @@ function ExamplesPanel({
       </div>
 
       {examples.length === 0 ? (
-        <p className="rounded-2xl border-2 border-dashed p-8 text-center text-muted-foreground">{t("noExamples")}</p>
+        <p className="rounded-[16px] border border-dashed p-8 text-center text-muted-foreground">{t("noExamples")}</p>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {examples.map((e) => {
             const first = e.media[0];
             const url = first && urlFor(first);
             return (
-              <div key={e.id} className={cn("space-y-2 rounded-2xl border bg-card p-3", e.is_gold_standard && "border-2 border-warning")}>
-                <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-muted">
+              <div key={e.id} className={cn("space-y-2 rounded-[16px] border bg-card p-3", e.is_gold_standard && "border border-status")}>
+                <div className="relative aspect-[4/5] overflow-hidden rounded-[12px] bg-muted">
                   {url &&
                     (first.type === "video" ? (
                       <video src={url} className="h-full w-full object-cover" muted />
@@ -246,7 +246,7 @@ function ExamplesPanel({
                     )}
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-1 text-xs">
+                <div className="flex flex-wrap gap-1 text-[13px]">
                   {e.industry && <Badge variant="outline">{tInd(e.industry)}</Badge>}
                   {e.content_type && <Badge variant="outline">{tTypes(e.content_type)}</Badge>}
                   {allTags(e.tags ?? {}).map((tag) => (
@@ -305,12 +305,12 @@ function AddExampleDialog({ open, onOpenChange, businesses }: { open: boolean; o
         <div className="flex flex-wrap gap-2">
           {media.map((m) => (
             // eslint-disable-next-line @next/next/no-img-element
-            <img key={m.path} src={m.preview} alt="" className="size-24 rounded-xl object-cover" />
+            <img key={m.path} src={m.preview} alt="" className="size-24 rounded-[12px] object-cover" />
           ))}
           <button
             type="button"
             onClick={() => input.current?.click()}
-            className="flex size-24 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed text-xs font-semibold text-muted-foreground"
+            className="flex size-24 flex-col items-center justify-center gap-1 rounded-[12px] border border-dashed text-[13px] font-semibold text-muted-foreground"
           >
             {busy ? <Loader2Icon className="size-5 animate-spin" /> : <UploadIcon className="size-5" />} {t("upload")}
           </button>

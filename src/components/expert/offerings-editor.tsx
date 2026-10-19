@@ -60,12 +60,12 @@ export function OfferingsEditor({ business, offerings, urls }: { business: Busin
       </div>
 
       {editing && (
-        <div className="grid gap-3 rounded-2xl border-2 border-primary/30 bg-card p-4 md:grid-cols-[8rem_1fr]">
+        <div className="grid gap-3 rounded-[16px] border border-primary/30 bg-card p-4 md:grid-cols-[8rem_1fr]">
           <div>
             <button
               type="button"
               onClick={() => fileInput.current?.click()}
-              className="flex size-32 items-center justify-center overflow-hidden rounded-xl border-2 border-dashed text-muted-foreground"
+              className="flex size-32 items-center justify-center overflow-hidden rounded-[12px] border border-dashed text-muted-foreground"
             >
               {uploading ? (
                 <Loader2Icon className="size-6 animate-spin" />
@@ -73,7 +73,7 @@ export function OfferingsEditor({ business, offerings, urls }: { business: Busin
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={localUrl ?? photoUrl(editing.photo_path)} alt="" className="h-full w-full object-cover" />
               ) : (
-                <span className="flex flex-col items-center gap-1 text-xs font-semibold">
+                <span className="flex flex-col items-center gap-1 text-[13px] font-semibold">
                   <ImageIcon className="size-6" /> {t("photo")}
                 </span>
               )}
@@ -131,20 +131,20 @@ export function OfferingsEditor({ business, offerings, urls }: { business: Busin
       )}
 
       {offerings.length === 0 && !editing ? (
-        <p className="rounded-2xl border-2 border-dashed p-8 text-center text-muted-foreground">{t("empty")}</p>
+        <p className="rounded-[16px] border border-dashed p-8 text-center text-muted-foreground">{t("empty")}</p>
       ) : (
-        <ul className="divide-y rounded-2xl border bg-card">
+        <ul className="divide-y rounded-[16px] border bg-card">
           {offerings.map((o) => (
             <li key={o.id} className="flex items-center gap-3 px-4 py-3">
               {photoUrl(o.photo_path) ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={photoUrl(o.photo_path)} alt="" className="size-14 rounded-xl object-cover" />
+                <img src={photoUrl(o.photo_path)} alt="" className="size-14 rounded-[12px] object-cover" />
               ) : (
-                <div className="size-14 rounded-xl bg-muted" />
+                <div className="size-14 rounded-[12px] bg-muted" />
               )}
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1 font-semibold">
-                  {o.is_signature && <StarIcon className="size-4 fill-warning text-warning" />}
+                  {o.is_signature && <StarIcon className="size-4 fill-status text-warning" />}
                   {o.name}
                 </div>
                 <div className="text-sm text-muted-foreground">

@@ -58,19 +58,19 @@ export function BrandView({
   };
 
   return (
-    <main className="flex-1 space-y-4 px-4 py-4">
+    <main className="mx-auto w-full max-w-2xl flex-1 space-y-3 px-3 py-3 lg:space-y-4 lg:px-10 lg:py-8">
       <div className="flex items-center gap-4">
         {logo ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={logo} alt="" className="size-20 rounded-2xl border object-cover" />
+          <img src={logo} alt="" className="size-20 rounded-[16px] border border-line object-cover" />
         ) : (
-          <div className="flex size-20 items-center justify-center rounded-2xl bg-primary text-3xl font-bold text-primary-foreground">
+          <div className="flex size-20 items-center justify-center rounded-[16px] bg-rose-soft text-3xl font-bold text-rose-ink">
             {business.name.slice(0, 1)}
           </div>
         )}
         <div>
-          <h1 className="text-2xl font-bold">{business.name}</h1>
-          <p className="text-muted-foreground">{t("subtitle")}</p>
+          <h1 className="text-[24px] leading-tight font-bold lg:text-[30px]">{business.name}</h1>
+          <p className="text-ink-muted">{t("subtitle")}</p>
         </div>
       </div>
 
@@ -107,7 +107,7 @@ export function BrandView({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <p className="text-muted-foreground">{t("photosHelp")}</p>
+          <p className="text-ink-muted">{t("photosHelp")}</p>
           <Button variant="outline" size="lg" className="w-full" onClick={() => fileInput.current?.click()} disabled={uploading}>
             {uploading ? <Loader2Icon className="animate-spin" /> : <CameraIcon />} {t("addPhotos")}
           </Button>
@@ -117,7 +117,7 @@ export function BrandView({
               {photos.map((p) => {
                 const url = urls[`${BUCKETS.clientUploads}/${p.path}`];
                 // eslint-disable-next-line @next/next/no-img-element
-                return url ? <img key={p.id} src={url} alt="" className="aspect-square w-full rounded-xl object-cover" /> : null;
+                return url ? <img key={p.id} src={url} alt="" className="aspect-square w-full rounded-[12px] object-cover" /> : null;
               })}
             </div>
           )}
@@ -135,8 +135,8 @@ export function BrandView({
             <div className="flex gap-3">
               {(["primary", "secondary", "accent"] as const).map((k) => (
                 <div key={k} className="flex flex-col items-center gap-1">
-                  <span className="size-12 rounded-full border-2" style={{ background: brand.colors?.[k] }} />
-                  <span className="text-xs text-muted-foreground">{t(`colors.${k}`)}</span>
+                  <span className="size-12 rounded-full border" style={{ background: brand.colors?.[k] }} />
+                  <span className="text-[13px] text-ink-muted">{t(`colors.${k}`)}</span>
                 </div>
               ))}
             </div>
@@ -161,7 +161,7 @@ export function BrandView({
           </CardContent>
         </Card>
       )}
-      <p className="pb-4 text-center text-sm text-muted-foreground">{t("otherChanges")}</p>
+      <p className="pb-4 text-center text-sm text-ink-muted">{t("otherChanges")}</p>
     </main>
   );
 }
@@ -170,7 +170,7 @@ function Info({ label, value, icon }: { label: string; value: string | null | un
   if (!value) return null;
   return (
     <div>
-      <div className="text-sm text-muted-foreground">{label}</div>
+      <div className="text-sm text-ink-muted">{label}</div>
       <div className="flex items-center gap-1.5 font-medium whitespace-pre-wrap">
         {icon}
         {value}
@@ -235,14 +235,14 @@ function OfferingRow({ offering, photo }: { offering: Offering; photo?: string }
     <div className="flex items-center gap-3 py-3">
       {photo ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={photo} alt="" className="size-14 shrink-0 rounded-xl object-cover" />
+        <img src={photo} alt="" className="size-14 shrink-0 rounded-[12px] object-cover" />
       ) : null}
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1 font-semibold">
-          {offering.is_signature && <StarIcon className="size-4 fill-warning text-warning" />}
+          {offering.is_signature && <StarIcon className="size-4 fill-status text-status" />}
           {offering.name}
         </div>
-        {!editing && <div className="text-muted-foreground">{formatPrice(offering.price) || "—"}</div>}
+        {!editing && <div className="text-ink-muted">{formatPrice(offering.price) || "—"}</div>}
         {editing && (
           <div className="mt-1 flex gap-2">
             <Input inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value.replace(/[^\d.]/g, ""))} className="h-11" />

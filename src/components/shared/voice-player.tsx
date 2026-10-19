@@ -62,7 +62,7 @@ export function VoicePlayer({ src, duration, className }: { src?: string; durati
         <div className="h-2 overflow-hidden rounded-full bg-black/10">
           <div className="h-full bg-primary transition-[width]" style={{ width: `${pct}%` }} />
         </div>
-        <div className="mt-1 text-xs text-muted-foreground tabular-nums">
+        <div className="mt-1 text-[13px] text-muted-foreground tabular-nums">
           {mmss(playing || current ? current : total)} {t("voiceNote")}
         </div>
       </div>

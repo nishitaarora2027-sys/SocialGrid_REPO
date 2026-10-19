@@ -108,16 +108,16 @@ export function VoiceRecorder({
       <Button variant="outline" onClick={() => stop(false)} aria-label={t("deleteRecording")} className="px-3">
         <Trash2Icon /> <span className="hidden sm:inline">{t("deleteRecording")}</span>
       </Button>
-      <div className="flex h-12 flex-1 items-center gap-3 rounded-full bg-destructive/10 px-4">
-        <span className="size-3 animate-pulse rounded-full bg-destructive" aria-hidden />
-        <span className="font-bold text-destructive tabular-nums">
+      <div className="flex h-12 flex-1 items-center gap-3 rounded-full border border-line bg-surface px-4">
+        <span className="size-3 animate-pulse rounded-full bg-danger" aria-hidden />
+        <span className="font-bold text-danger tabular-nums">
           {mm}:{ss}
         </span>
         <div className="flex h-6 flex-1 items-center gap-[3px] overflow-hidden" aria-hidden>
           {Array.from({ length: 24 }).map((_, i) => (
             <span
               key={i}
-              className="wave-bar h-full w-[3px] rounded-full bg-destructive/70"
+              className="wave-bar h-full w-[3px] rounded-full bg-primary"
               style={{ animationDelay: `${(i * 97) % 900}ms` }}
             />
           ))}

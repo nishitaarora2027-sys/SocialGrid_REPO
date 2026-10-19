@@ -47,10 +47,10 @@ export function TimeLeft({ dueAt, done }: { dueAt: string; done?: boolean }) {
     <span
       suppressHydrationWarning
       className={cn(
-        "inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-sm font-bold tabular-nums",
-        level === "overdue" && "bg-destructive/15 text-destructive",
-        level === "soon" && "bg-warning/25 text-warning-foreground",
-        level === "on_time" && "bg-success/15 text-success",
+        "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[14px] font-bold tabular-nums",
+        level === "overdue" && "bg-danger text-white",
+        level === "soon" && "bg-status-soft text-status-ink",
+        level === "on_time" && "bg-primary-soft text-primary",
       )}
     >
       {level === "overdue" && <AlertTriangleIcon className="size-3.5" />}
@@ -87,8 +87,8 @@ export function QueueView({
   const tiles = [
     { key: "new", value: counts.new, icon: InboxIcon, onClick: () => setFilter("status", "new"), cls: "text-primary" },
     { key: "inProgress", value: counts.inProgress, icon: LoaderIcon, onClick: () => setFilter("status", "in_progress"), cls: "text-foreground" },
-    { key: "overdue", value: counts.overdue, icon: AlertTriangleIcon, onClick: () => setFilter("overdue", "1"), cls: "text-destructive" },
-    { key: "deliveredToday", value: counts.deliveredToday, icon: CheckCheckIcon, onClick: () => setFilter("status", "delivered"), cls: "text-success" },
+    { key: "overdue", value: counts.overdue, icon: AlertTriangleIcon, onClick: () => setFilter("overdue", "1"), cls: "text-danger" },
+    { key: "deliveredToday", value: counts.deliveredToday, icon: CheckCheckIcon, onClick: () => setFilter("status", "delivered"), cls: "text-primary" },
   ];
 
   const summary = (r: QueueRow) =>
@@ -100,7 +100,7 @@ export function QueueView({
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {tiles.map(({ key, value, icon: Icon, onClick, cls }) => (
-          <button key={key} type="button" onClick={onClick} className="rounded-2xl border bg-card p-4 text-left shadow-sm hover:border-primary">
+          <button key={key} type="button" onClick={onClick} className="rounded-[16px] border bg-card p-4 text-left hover:border-primary">
             <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
               <Icon className={cn("size-4", cls)} /> {t(`tiles.${key}`)}
             </div>
@@ -134,7 +134,7 @@ export function QueueView({
             </option>
           ))}
         </NativeSelect>
-        <label className="flex h-12 items-center gap-2 rounded-xl border-2 bg-card px-4 font-semibold">
+        <label className="flex h-12 items-center gap-2 rounded-[12px] border bg-card px-4 font-semibold">
           <input
             type="checkbox"
             className="size-5 accent-[var(--primary)]"
@@ -144,20 +144,20 @@ export function QueueView({
           {t("filters.overdueOnly")}
         </label>
         {Object.values(filters).some(Boolean) && (
-          <button type="button" onClick={() => router.push("/expert")} className="h-12 rounded-xl px-4 font-semibold text-primary hover:bg-accent">
+          <button type="button" onClick={() => router.push("/expert")} className="h-12 rounded-[12px] px-4 font-semibold text-primary hover:bg-accent">
             {t("filters.clear")}
           </button>
         )}
       </div>
 
       {rows.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-3xl border-2 border-dashed py-16 text-center">
-          <SparklesIcon className="size-10 text-success" />
+        <div className="flex flex-col items-center gap-3 rounded-[20px] border border-dashed py-16 text-center">
+          <SparklesIcon className="size-10 text-primary" />
           <p className="text-lg font-semibold">{t("empty")}</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border bg-card">
-          <div className="hidden grid-cols-[1.3fr_2fr_1fr_1fr_0.8fr] gap-3 border-b bg-muted/50 px-4 py-2.5 text-xs font-bold tracking-wide text-muted-foreground uppercase md:grid">
+        <div className="overflow-hidden rounded-[16px] border bg-card">
+          <div className="hidden grid-cols-[1.3fr_2fr_1fr_1fr_0.8fr] gap-3 border-b bg-muted/50 px-4 py-2.5 text-[13px] font-bold tracking-wide text-muted-foreground uppercase md:grid">
             <span>{t("cols.client")}</span>
             <span>{t("cols.request")}</span>
             <span>{t("cols.type")}</span>
@@ -177,7 +177,7 @@ export function QueueView({
                       {r.unread && <span className="size-2.5 shrink-0 rounded-full bg-primary" title={t("unread")} />}
                       <div>
                         <div className="font-bold">{r.businessName}</div>
-                        <div className="text-xs text-muted-foreground">{tInd(r.industry)}</div>
+                        <div className="text-[13px] text-muted-foreground">{tInd(r.industry)}</div>
                       </div>
                     </div>
                     <div className="flex min-w-0 flex-wrap items-center gap-1.5">

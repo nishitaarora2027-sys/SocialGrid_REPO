@@ -36,10 +36,10 @@ export function BrandPanel({
 
   return (
     <aside className="space-y-4 xl:sticky xl:top-4 xl:max-h-[calc(100dvh-2rem)] xl:overflow-y-auto">
-      <div className="space-y-3 rounded-2xl border bg-card p-4">
+      <div className="space-y-3 rounded-[16px] border bg-card p-4">
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          {logo && <img src={logo} alt="" className="size-12 rounded-xl border object-cover" />}
+          {logo && <img src={logo} alt="" className="size-12 rounded-[12px] border object-cover" />}
           <h2 className="flex items-center gap-2 font-bold">
             <PaletteIcon className="size-5" /> {t("title")}
           </h2>
@@ -52,7 +52,7 @@ export function BrandPanel({
               {(["primary", "secondary", "accent"] as const).map((k) => (
                 <span key={k} className="flex items-center gap-1">
                   <span className="size-6 rounded-full border" style={{ background: brand.colors?.[k] }} />
-                  <code className="text-xs">{brand.colors?.[k]}</code>
+                  <code className="text-[13px]">{brand.colors?.[k]}</code>
                 </span>
               ))}
             </div>
@@ -76,8 +76,8 @@ export function BrandPanel({
       </div>
 
       {brand && (brand.avoid_list.length > 0 || brand.avoid_custom) && (
-        <div className="space-y-2 rounded-2xl border-2 border-destructive/30 bg-destructive/5 p-4">
-          <h3 className="flex items-center gap-2 font-bold text-destructive">
+        <div className="space-y-2 rounded-[16px] border border-danger/30 bg-danger/5 p-4">
+          <h3 className="flex items-center gap-2 font-bold text-danger">
             <BanIcon className="size-5" /> {t("avoid")}
           </h3>
           <ul className="list-inside list-disc space-y-0.5 text-sm">
@@ -86,19 +86,19 @@ export function BrandPanel({
             ))}
             {brand.avoid_custom && <li className="whitespace-pre-wrap">{brand.avoid_custom}</li>}
           </ul>
-          {!business.photo_consent && <p className="text-sm font-semibold text-destructive">{t("noPhotoConsent")}</p>}
+          {!business.photo_consent && <p className="text-sm font-semibold text-danger">{t("noPhotoConsent")}</p>}
         </div>
       )}
 
       {rules.length > 0 && (
-        <div className="space-y-2 rounded-2xl border bg-card p-4">
+        <div className="space-y-2 rounded-[16px] border bg-card p-4">
           <h3 className="flex items-center gap-2 font-bold">
             <BookOpenIcon className="size-5" /> {t("rules")}
           </h3>
           <ul className="space-y-1.5 text-sm">
             {rules.map((r) => (
               <li key={r.id} className="flex gap-2">
-                <span className="shrink-0 rounded bg-muted px-1.5 text-xs leading-5 font-semibold uppercase">{t(`scope.${r.scope}`)}</span>
+                <span className="shrink-0 rounded bg-muted px-1.5 text-[13px] leading-5 font-semibold uppercase">{t(`scope.${r.scope}`)}</span>
                 <span>{r.text}</span>
               </li>
             ))}
@@ -106,7 +106,7 @@ export function BrandPanel({
         </div>
       )}
 
-      <div className="space-y-2 rounded-2xl border bg-card p-4">
+      <div className="space-y-2 rounded-[16px] border bg-card p-4">
         <h3 className="flex items-center gap-2 font-bold">
           <ListChecksIcon className="size-5" /> {t("checklist")}
         </h3>
@@ -126,13 +126,13 @@ export function BrandPanel({
       </div>
 
       {offerings.length > 0 && (
-        <div className="space-y-2 rounded-2xl border bg-card p-4">
+        <div className="space-y-2 rounded-[16px] border bg-card p-4">
           <h3 className="font-bold">{business.industry === "salon" ? t("services") : t("menu")}</h3>
           <ul className="space-y-1 text-sm">
             {offerings.map((o) => (
               <li key={o.id} className="flex justify-between gap-2">
                 <span className="flex items-center gap-1">
-                  {o.is_signature && <StarIcon className="size-3.5 fill-warning text-warning" />}
+                  {o.is_signature && <StarIcon className="size-3.5 fill-status text-warning" />}
                   {o.name}
                 </span>
                 <span className="text-muted-foreground">{formatPrice(o.price)}</span>
@@ -143,7 +143,7 @@ export function BrandPanel({
       )}
 
       {(brand?.example_paths?.length ?? 0) > 0 && (
-        <div className="space-y-2 rounded-2xl border bg-card p-4">
+        <div className="space-y-2 rounded-[16px] border bg-card p-4">
           <h3 className="font-bold">{t("likedExamples")}</h3>
           <div className="grid grid-cols-3 gap-2">
             {brand!.example_paths.map((p) => {
@@ -156,7 +156,7 @@ export function BrandPanel({
       )}
 
       {recentPosts.length > 0 && (
-        <div className="space-y-2 rounded-2xl border bg-card p-4">
+        <div className="space-y-2 rounded-[16px] border bg-card p-4">
           <h3 className="font-bold">{t("recentPosts")}</h3>
           <div className="grid grid-cols-3 gap-2">
             {recentPosts.map((o) => (
@@ -173,7 +173,7 @@ function Row({ label, value }: { label: string; value: string | null | undefined
   if (!value) return null;
   return (
     <div>
-      <dt className="text-xs font-semibold text-muted-foreground uppercase">{label}</dt>
+      <dt className="text-[13px] font-semibold text-muted-foreground uppercase">{label}</dt>
       <dd className="whitespace-pre-wrap">{value}</dd>
     </div>
   );

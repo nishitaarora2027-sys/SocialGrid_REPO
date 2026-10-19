@@ -12,7 +12,7 @@ export default async function ExpertLayout({ children }: { children: React.React
       .lt("due_at", new Date().toISOString()),
   ]);
   return (
-    <div className="flex min-h-dvh flex-col lg:flex-row">
+    <div className="flex min-h-dvh flex-col bg-paper text-[16px] lg:flex-row">
       <ExpertNav name={profile.display_name} newCount={open ?? 0} overdueCount={overdue ?? 0} />
       <div className="min-w-0 flex-1">{children}</div>
     </div>

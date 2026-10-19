@@ -4,9 +4,8 @@ import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { FlameIcon, ImagePlusIcon, Loader2Icon, MicIcon, PencilIcon, PlusCircleIcon, SendIcon, XIcon } from "lucide-react";
+import { CameraIcon, FlameIcon, ImagePlusIcon, Loader2Icon, MicIcon, PencilIcon, PlusCircleIcon, SendIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { VoiceRecorder } from "@/components/client/voice-recorder";
 import { sendChatMessage } from "@/lib/actions/client";
@@ -95,19 +94,45 @@ export function Composer({
     }
   };
 
+  const hasDraft = !!(text.trim() || photos.length);
+  const pickPhotos = () => fileInput.current?.click();
+  const growTextarea = (e: React.FormEvent<HTMLTextAreaElement>) => {
+    const el = e.currentTarget;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight, 144)}px`;
+  };
+  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // laptop: Enter sends, Shift+Enter adds a line
+    if (e.key === "Enter" && !e.shiftKey && window.matchMedia("(min-width: 1024px)").matches) {
+      e.preventDefault();
+      if (hasDraft && !sending) submit({ text, photos });
+    }
+  };
+
   return (
-    <div className="sticky bottom-0 z-20 border-t bg-card/95 px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur">
-      {!recording && topSlot}
+    <div className="sticky bottom-[var(--tabbar-h)] z-20 bg-paper px-3 pt-2 pb-2.5 lg:bottom-0 lg:px-0 lg:pb-6">
+      {!recording && topSlot && <div className="mb-3">{topSlot}</div>}
+      <input
+        ref={fileInput}
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+        onChange={(e) => {
+          addPhotos(e.target.files);
+          e.target.value = "";
+        }}
+      />
       {photos.length > 0 && (
         <div className="scrollbar-none mb-2 flex gap-2 overflow-x-auto">
           {photos.map((p, i) => (
             <div key={`${p.name}-${i}`} className="relative size-20 shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={URL.createObjectURL(p)} alt="" className="size-20 rounded-xl object-cover" />
+              <img src={URL.createObjectURL(p)} alt="" className="size-20 rounded-[12px] object-cover" />
               <button
                 type="button"
                 onClick={() => setPhotos(photos.filter((_, j) => j !== i))}
-                className="absolute -top-1.5 -right-1.5 flex size-7 items-center justify-center rounded-full bg-foreground text-background"
+                className="absolute -top-1.5 -right-1.5 flex size-7 items-center justify-center rounded-full bg-ink text-paper"
                 aria-label={t("removePhoto")}
               >
                 <XIcon className="size-4" />
@@ -131,68 +156,86 @@ export function Composer({
         />
       ) : (
         <>
-          <label className="mb-2 flex min-h-11 cursor-pointer items-center gap-3 rounded-xl px-1">
-            <Switch checked={urgent} onCheckedChange={setUrgent} />
-            <span className={cn("flex items-center gap-1 font-semibold", urgent && "text-destructive")}>
-              <FlameIcon className="size-5" /> {t("needToday")}
-            </span>
-          </label>
-          <div className="flex items-end gap-2">
-            <Button
+          <button
+            type="button"
+            onClick={() => setUrgent(!urgent)}
+            aria-pressed={urgent}
+            className={cn(
+              "mb-2 inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3 text-[15px] font-semibold transition-colors duration-150",
+              urgent ? "border-danger bg-danger text-white" : "border-line bg-surface text-ink-muted",
+            )}
+          >
+            <FlameIcon className="size-4" /> {t("needToday")}
+          </button>
+
+          {/* phone: round photo button, pill field, round mic that turns into Send */}
+          <div className="flex items-end gap-2 lg:hidden">
+            <button
               type="button"
-              variant="outline"
-              className="h-12 shrink-0 flex-col gap-0 px-2 text-[11px]"
-              onClick={() => fileInput.current?.click()}
+              onClick={pickPhotos}
               disabled={sending}
+              aria-label={t("addPhoto")}
+              className="flex size-12 shrink-0 items-center justify-center rounded-full border border-line-strong bg-surface text-ink disabled:opacity-50"
             >
-              <ImagePlusIcon className="size-5" />
-              {t("photo")}
-            </Button>
-            <input
-              ref={fileInput}
-              type="file"
-              accept="image/*"
-              multiple
-              hidden
-              onChange={(e) => {
-                addPhotos(e.target.files);
-                e.target.value = "";
-              }}
-            />
+              <CameraIcon className="size-6" />
+            </button>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               rows={1}
-              placeholder={t("placeholder")}
-              className="max-h-36 min-h-12 flex-1 resize-none rounded-2xl border-2 border-input bg-background px-4 py-2.5 text-[17px] outline-none focus:border-primary"
-              onInput={(e) => {
-                const el = e.currentTarget;
-                el.style.height = "auto";
-                el.style.height = `${Math.min(el.scrollHeight, 144)}px`;
-              }}
+              placeholder={t("placeholderShort")}
+              aria-label={t("placeholderShort")}
+              className="max-h-36 min-h-12 flex-1 resize-none rounded-[24px] border border-line-strong bg-surface px-4 py-[11px] text-[17px] leading-snug outline-none placeholder:text-ink-faint focus:border-primary"
+              onInput={growTextarea}
               disabled={sending}
             />
-            {text.trim() || photos.length ? (
+            <button
+              type="button"
+              onClick={() => (hasDraft ? submit({ text, photos }) : setRecording(true))}
+              disabled={sending}
+              aria-label={hasDraft ? t("send") : t("voiceNote")}
+              className="flex size-[52px] shrink-0 items-center justify-center rounded-full bg-primary text-on-primary disabled:opacity-60"
+            >
+              {sending ? (
+                <Loader2Icon className="size-6 animate-spin" />
+              ) : hasDraft ? (
+                <SendIcon className="size-6" />
+              ) : (
+                <MicIcon className="size-6" />
+              )}
+            </button>
+          </div>
+
+          {/* laptop: one card with labelled buttons */}
+          <div className="hidden rounded-[20px] border border-line-strong bg-surface py-3.5 pr-3.5 pl-5 lg:block">
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onKeyDown={onKeyDown}
+              rows={2}
+              placeholder={t("placeholder")}
+              aria-label={t("placeholder")}
+              className="max-h-36 min-h-12 w-full resize-none bg-transparent text-[18px] leading-snug outline-none placeholder:text-ink-faint"
+              onInput={growTextarea}
+              disabled={sending}
+            />
+            <div className="mt-2 flex items-center gap-2">
+              <Button type="button" variant="outline" size="sm" className="h-11" onClick={pickPhotos} disabled={sending}>
+                <CameraIcon /> {t("addPhoto")}
+              </Button>
+              <Button type="button" variant="outline" size="sm" className="h-11" onClick={() => setRecording(true)} disabled={sending}>
+                <MicIcon /> {t("voiceNote")}
+              </Button>
               <Button
                 type="button"
-                className="h-12 shrink-0 flex-col gap-0 px-3 text-[11px]"
+                className="ml-auto h-11 px-5 text-[16px]"
                 onClick={() => submit({ text, photos })}
-                disabled={sending}
+                disabled={sending || !hasDraft}
               >
-                {sending ? <Loader2Icon className="size-5 animate-spin" /> : <SendIcon className="size-5" />}
+                {sending ? <Loader2Icon className="animate-spin" /> : <SendIcon />}
                 {t("send")}
               </Button>
-            ) : (
-              <Button
-                type="button"
-                className="h-12 shrink-0 flex-col gap-0 px-3 text-[11px]"
-                onClick={() => setRecording(true)}
-                disabled={sending}
-              >
-                {sending ? <Loader2Icon className="size-5 animate-spin" /> : <MicIcon className="size-5" />}
-                {t("voice")}
-              </Button>
-            )}
+            </div>
           </div>
         </>
       )}
@@ -203,7 +246,7 @@ export function Composer({
           <SheetTitle>{t("intentTitle")}</SheetTitle>
           <SheetDescription>{t("intentSubtitle")}</SheetDescription>
           <div className="grid gap-2.5">
-            <Button size="lg" className="h-auto min-h-14 justify-start py-3 text-left whitespace-normal" onClick={() => pendingDraft && send(pendingDraft, { type: "new" })}>
+            <Button size="lg" className="h-auto min-h-14 justify-start py-3 text-left text-[17px] whitespace-normal" onClick={() => pendingDraft && send(pendingDraft, { type: "new" })}>
               <PlusCircleIcon /> {t("intentNew")}
             </Button>
             {open.map((r) => (
@@ -211,7 +254,7 @@ export function Composer({
                 key={r.id}
                 size="lg"
                 variant="outline"
-                className="h-auto min-h-14 justify-start py-3 text-left whitespace-normal"
+                className="h-auto min-h-14 justify-start py-3 text-left text-[17px] whitespace-normal"
                 onClick={() => pendingDraft && send(pendingDraft, { type: "add", requestId: r.id })}
               >
                 <ImagePlusIcon /> {t("intentAdd", { label: requestLabel(r) })}
@@ -222,7 +265,7 @@ export function Composer({
                 key={r.id}
                 size="lg"
                 variant="outline"
-                className="h-auto min-h-14 justify-start py-3 text-left whitespace-normal"
+                className="h-auto min-h-14 justify-start py-3 text-left text-[17px] whitespace-normal"
                 onClick={() => pendingDraft && send(pendingDraft, { type: "changes", requestId: r.id })}
               >
                 <PencilIcon /> {t("intentChanges", { label: requestLabel(r) })}

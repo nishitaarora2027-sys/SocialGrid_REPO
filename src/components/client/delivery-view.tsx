@@ -29,7 +29,7 @@ function captionText(o: Pick<ContentOption, "caption" | "hashtags">) {
   return [o.caption, o.hashtags].filter(Boolean).join("\n\n");
 }
 
-function celebrateOnce(optionId: string) {
+export function celebrateOnce(optionId: string) {
   try {
     const key = `sg-celebrated-${optionId}`;
     if (localStorage.getItem(key)) return;
@@ -40,28 +40,11 @@ function celebrateOnce(optionId: string) {
   void celebrate();
 }
 
-export function DeliveryView({
-  option,
-  urls,
-  businessName,
-  open,
-  onOpenChange,
-  onMakeChanges,
-}: {
-  option: ContentOption | null;
-  urls: Record<string, string>;
-  businessName: string;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onMakeChanges?: () => void;
-}) {
+/** Download / copy caption / share for one delivered option */
+export function usePostActions(option: ContentOption | null, urls: Record<string, string>, businessName: string) {
   const t = useTranslations("delivery");
-  const tTypes = useTranslations("contentTypes");
-  const tCommon = useTranslations("common");
   const [busy, setBusy] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [checked, setChecked] = useState<Record<string, boolean>>({});
-
   if (!option) return null;
 
   const base = `${slug(businessName)}-${new Date(option.delivered_at ?? option.created_at).toISOString().slice(0, 10)}`;
@@ -73,8 +56,6 @@ export function DeliveryView({
     })
     .filter(Boolean) as DownloadItem[];
   const caption = captionText(option);
-  const reel = option.reel_fields ?? {};
-  const isReel = option.content_type === "reel";
 
   const run = async (key: string, fn: () => Promise<void>) => {
     setBusy(key);
@@ -116,6 +97,36 @@ export function DeliveryView({
       }
     });
 
+  return { items, caption, base, busy, copied, run, onDownloadAll, onCopy, onShare };
+}
+
+export function DeliveryView({
+  option,
+  urls,
+  businessName,
+  open,
+  onOpenChange,
+  onMakeChanges,
+}: {
+  option: ContentOption | null;
+  urls: Record<string, string>;
+  businessName: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onMakeChanges?: () => void;
+}) {
+  const t = useTranslations("delivery");
+  const tTypes = useTranslations("contentTypes");
+  const tCommon = useTranslations("common");
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const actions = usePostActions(option, urls, businessName);
+
+  if (!option) return null;
+
+  const reel = option.reel_fields ?? {};
+  const isReel = option.content_type === "reel";
+  const { items, caption, busy, copied, run, onDownloadAll, onCopy, onShare } = actions!;
+
   const lines = (s?: string) => (s ?? "").split("\n").map((l) => l.trim()).filter(Boolean);
 
   return (
@@ -142,10 +153,10 @@ export function DeliveryView({
               return (
                 <div key={m.path} className={items.length > 1 ? "w-[85%] shrink-0 snap-center" : "w-full"}>
                   {m.type === "video" ? (
-                    <video src={url} controls playsInline className="max-h-[60dvh] w-full rounded-2xl bg-black" />
+                    <video src={url} controls playsInline className="max-h-[60dvh] w-full rounded-[16px] bg-black" />
                   ) : (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={url} alt="" className="max-h-[60dvh] w-full rounded-2xl bg-muted object-contain" />
+                    <img src={url} alt="" className="max-h-[60dvh] w-full rounded-[16px] bg-muted object-contain" />
                   )}
                   {items.length > 1 && (
                     <button
@@ -156,7 +167,7 @@ export function DeliveryView({
                           void recordDownload(option.id, "download");
                         })
                       }
-                      className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-xl border-2 text-sm font-semibold"
+                      className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-[12px] border text-sm font-semibold"
                     >
                       {busy === `one-${i}` ? <Loader2Icon className="size-4 animate-spin" /> : <DownloadIcon className="size-4" />}
                       {t("downloadSlide", { n: i + 1 })}
@@ -198,7 +209,7 @@ export function DeliveryView({
 
         {/* Reel filming checklist */}
         {isReel && (
-          <div className="space-y-4 rounded-2xl bg-secondary/60 p-4">
+          <div className="space-y-4 rounded-[16px] bg-secondary/60 p-4">
             <h3 className="text-lg font-bold">{t("filmingChecklist")}</h3>
             {reel.script && (
               <section>
@@ -245,7 +256,7 @@ export function DeliveryView({
         )}
 
         {caption && (
-          <div className="rounded-2xl border bg-card p-4">
+          <div className="rounded-[16px] border bg-card p-4">
             <h3 className="mb-1 font-bold">{t("caption")}</h3>
             <p className="whitespace-pre-wrap">{caption}</p>
           </div>

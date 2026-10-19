@@ -7,7 +7,7 @@ function NativeSelect({ className, children, ...props }: React.ComponentProps<"s
   return (
     <div className={cn("relative", className)}>
       <select
-        className="h-12 w-full appearance-none rounded-xl border-2 border-input bg-card pr-10 pl-4 text-base shadow-xs outline-none focus-visible:border-primary focus-visible:ring-[3px] focus-visible:ring-primary/20 disabled:opacity-50"
+        className="h-12 w-full appearance-none rounded-[14px] border border-input bg-surface pr-10 pl-4 text-[17px] outline-none focus-visible:border-primary focus-visible:ring-[3px] focus-visible:ring-primary/20 disabled:opacity-50"
         {...props}
       >
         {children}

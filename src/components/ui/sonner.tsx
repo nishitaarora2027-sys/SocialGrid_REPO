@@ -7,7 +7,7 @@ function Toaster(props: ToasterProps) {
     <Sonner
       position="top-center"
       richColors
-      toastOptions={{ classNames: { toast: "!rounded-2xl !text-base" } }}
+      toastOptions={{ classNames: { toast: "!rounded-[16px] !text-base !font-sans" } }}
       {...props}
     />
   );

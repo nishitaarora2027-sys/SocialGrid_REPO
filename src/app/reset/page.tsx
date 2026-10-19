@@ -1,7 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { KeyRoundIcon } from "lucide-react";
-import { LanguageToggle } from "@/components/shared/language-toggle";
-import { Logo } from "@/components/shared/logo";
+import { AuthShell } from "@/components/shared/auth-shell";
 import { isRecoveryEnabled } from "@/lib/actions/password";
 import { ResetForm } from "./reset-form";
 
@@ -12,21 +10,18 @@ export default async function ResetPage() {
   const enabled = await isRecoveryEnabled();
 
   return (
-    <main className="mx-auto max-w-md space-y-6 px-5 py-6">
-      <div className="flex items-center justify-between">
-        <Logo />
-        <LanguageToggle />
-      </div>
-      <h1 className="flex items-center gap-2 text-2xl font-bold">
-        <KeyRoundIcon className="size-6" /> {t("title")}
+    <AuthShell>
+      <div className="space-y-6 py-10">
+      <h1 className="text-[28px] leading-tight font-bold">
+        {t("title")}
       </h1>
       {enabled ? (
         <>
-          <p className="text-muted-foreground">{t("intro")}</p>
+          <p className="text-[18px] text-ink-muted">{t("intro")}</p>
           <ResetForm />
         </>
       ) : (
-        <div className="space-y-3 rounded-2xl border-2 border-warning bg-warning/10 p-5">
+        <div className="space-y-3 rounded-[16px] border border-status bg-status-soft p-5">
           <h2 className="text-lg font-bold">{t("disabledTitle")}</h2>
           <p>{t("disabledText")}</p>
           <ol className="list-decimal space-y-1 pl-5">
@@ -36,6 +31,7 @@ export default async function ResetPage() {
           </ol>
         </div>
       )}
-    </main>
+      </div>
+    </AuthShell>
   );
 }

@@ -3,11 +3,10 @@
 import { useTransition } from "react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
-import { LanguagesIcon } from "lucide-react";
 import { setLocale } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
 
-/** Always-visible English / हिंदी switch */
+/** Always-visible EN / हिं pill */
 export function LanguageToggle({ className }: { className?: string }) {
   const locale = useLocale();
   const router = useRouter();
@@ -23,23 +22,23 @@ export function LanguageToggle({ className }: { className?: string }) {
 
   return (
     <div
-      className={cn("flex h-11 items-center rounded-full border-2 bg-card p-0.5", pending && "opacity-60", className)}
+      className={cn("flex items-center rounded-full border border-line bg-surface p-0.5", pending && "opacity-60", className)}
       role="group"
       aria-label="Language / भाषा"
     >
-      <LanguagesIcon className="mx-1.5 hidden size-4 text-muted-foreground sm:block" aria-hidden />
       {(["en", "hi"] as const).map((l) => (
         <button
           key={l}
           type="button"
           onClick={() => choose(l)}
           aria-pressed={locale === l}
+          lang={l}
           className={cn(
-            "h-full rounded-full px-2.5 text-sm font-bold transition-colors sm:px-3",
-            locale === l ? "bg-primary text-primary-foreground" : "text-muted-foreground",
+            "h-9 min-w-11 rounded-full px-3 text-[14px] font-semibold transition-colors duration-150",
+            locale === l ? "bg-primary-soft text-primary" : "text-ink-muted",
           )}
         >
-          {l === "en" ? "English" : "हिंदी"}
+          {l === "en" ? "EN" : "हिं"}
         </button>
       ))}
     </div>

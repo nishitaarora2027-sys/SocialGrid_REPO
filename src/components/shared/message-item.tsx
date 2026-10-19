@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { BellIcon, CheckCircle2Icon, ClockIcon, SparklesIcon, UsersIcon } from "lucide-react";
+import { BellIcon, CheckCircle2Icon, ClockIcon, SparklesIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VoicePlayer } from "@/components/shared/voice-player";
 import { useSystemText } from "@/components/shared/system-text";
@@ -29,7 +29,7 @@ export function ImageGrid({
   if (!images.length) return null;
   return (
     <>
-      <div className={cn("grid gap-1.5", images.length === 1 ? "grid-cols-1" : "grid-cols-2", className)}>
+      <div className={cn("flex flex-wrap gap-1", className)}>
         {images.map((a) => {
           const url = fileUrl(urls, a);
           return (
@@ -37,14 +37,12 @@ export function ImageGrid({
               key={a.path}
               type="button"
               onClick={() => url && setOpen(url)}
-              className="overflow-hidden rounded-xl bg-muted"
+              className="size-24 overflow-hidden rounded-[12px] bg-canvas lg:size-30"
             >
               {url ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={url} alt="" loading="lazy" className="aspect-square w-full object-cover" />
-              ) : (
-                <div className="aspect-square w-full" />
-              )}
+                <img src={url} alt="" loading="lazy" className="size-full object-cover" />
+              ) : null}
             </button>
           );
         })}
@@ -53,7 +51,7 @@ export function ImageGrid({
         <DialogContent className="max-w-3xl p-2 pt-14" closeLabel={t("close")}>
           <DialogTitle className="sr-only">{t("photo")}</DialogTitle>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          {open && <img src={open} alt="" className="max-h-[80dvh] w-full rounded-xl object-contain" />}
+          {open && <img src={open} alt="" className="max-h-[80dvh] w-full rounded-[12px] object-contain" />}
         </DialogContent>
       </Dialog>
     </>
@@ -66,11 +64,14 @@ export function MessageBubble({
   urls,
   viewer,
   requestLabel,
+  senderName,
 }: {
   message: Message;
   urls: Record<string, string>;
   viewer: "client" | "expert";
   requestLabel?: string | null;
+  /** team member's first name, shown on their messages to build trust */
+  senderName?: string;
 }) {
   const t = useTranslations("chat");
   const tChips = useTranslations("chips");
@@ -84,8 +85,8 @@ export function MessageBubble({
       <div className="flex justify-center px-2">
         <div
           className={cn(
-            "flex max-w-[90%] items-start gap-2 rounded-2xl px-4 py-2.5 text-[15px] font-medium",
-            key === "ready" ? "bg-success/10 text-success" : "bg-secondary text-secondary-foreground",
+            "flex max-w-[90%] items-start gap-2 rounded-[14px] px-3.5 py-2 text-[15px]",
+            key === "ready" ? "bg-primary-soft font-semibold text-primary" : "bg-canvas text-ink-muted",
           )}
         >
           <Icon className="mt-0.5 size-5 shrink-0" />
@@ -99,28 +100,32 @@ export function MessageBubble({
   const voice = message.attachments.find((a) => a.type === "audio");
   const chipKey = message.payload?.i18nKey?.startsWith("chips.") ? message.payload.i18nKey.slice(6) : null;
 
+  const time = formatTime(message.created_at, locale);
+  const meta =
+    message.sender === "expert" && !mine ? [senderName?.split(" ")[0], "SocialGrid", time].filter(Boolean).join(" · ") : time;
+
   return (
-    <div className={cn("flex px-2", mine ? "justify-end" : "justify-start")}>
-      <div
-        className={cn(
-          "max-w-[85%] space-y-2 rounded-2xl px-3.5 py-2.5 shadow-sm",
-          message.sender === "client" ? "bg-bubble-client" : "border bg-bubble-team",
-          mine ? "rounded-br-md" : "rounded-bl-md",
-        )}
-      >
-        {message.sender === "expert" && (
-          <div className="flex items-center gap-1 text-xs font-bold text-primary">
-            <UsersIcon className="size-3.5" /> {t("teamName")}
-          </div>
-        )}
-        {viewer === "expert" && requestLabel && (
-          <div className="text-xs font-semibold text-muted-foreground">↳ {requestLabel}</div>
-        )}
-        {voice && <VoicePlayer src={fileUrl(urls, voice)} duration={voice.duration} />}
-        <ImageGrid attachments={message.attachments} urls={urls} />
-        {chipKey && <p className="font-semibold">{tChips(chipKey as never)}</p>}
-        {message.body && <p className="text-[17px] leading-snug whitespace-pre-wrap">{message.body}</p>}
-        <div className="text-right text-xs text-muted-foreground">{formatTime(message.created_at, locale)}</div>
+    <div className={cn("flex px-3", mine ? "justify-end" : "justify-start")}>
+      <div className={cn("flex max-w-[82%] flex-col gap-1", mine ? "items-end" : "items-start")}>
+        <div
+          className={cn(
+            "space-y-2 px-3.5 py-2.5",
+            mine
+              ? "rounded-[18px_18px_6px_18px] bg-primary-soft"
+              : "rounded-[18px_18px_18px_6px] border border-line bg-surface",
+          )}
+        >
+          {viewer === "expert" && requestLabel && (
+            <div className="text-[13px] font-semibold text-ink-muted">↳ {requestLabel}</div>
+          )}
+          {voice && <VoicePlayer src={fileUrl(urls, voice)} duration={voice.duration} />}
+          <ImageGrid attachments={message.attachments} urls={urls} />
+          {chipKey && <p className="font-semibold">{tChips(chipKey as never)}</p>}
+          {message.body && <p className="text-[17px] leading-[1.45] whitespace-pre-wrap">{message.body}</p>}
+        </div>
+        <div className={cn("px-1 text-[13px]", mine ? "text-primary-ink" : "text-ink-muted")}>
+          {meta || t("teamName")}
+        </div>
       </div>
     </div>
   );
@@ -133,7 +138,7 @@ export function DateDivider({ iso }: { iso: string }) {
   const label = rel ? t(rel) : formatLongDate(iso, locale);
   return (
     <div className="flex justify-center py-1">
-      <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">{label}</span>
+      <span className="text-[14px] text-ink-muted">{label}</span>
     </div>
   );
 }

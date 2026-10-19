@@ -24,12 +24,14 @@ export function OptionPreview({
   const first = option.media[0];
   const url = first ? mediaUrl(urls, first.path) : undefined;
   const vertical = option.content_type === "story" || option.content_type === "reel";
+  // text-only options (caption only, reel plan without video) don't need a tall photo frame
+  const textOnly = !first;
 
   return (
     <div
       className={cn(
-        "relative w-full overflow-hidden rounded-xl bg-muted",
-        vertical ? "aspect-[9/16] max-h-96" : "aspect-[4/5]",
+        "relative w-full overflow-hidden rounded-[12px] bg-muted",
+        textOnly ? "min-h-40 pt-8" : vertical ? "aspect-[9/16] max-h-96" : "aspect-[4/5]",
         className,
       )}
     >
@@ -50,17 +52,17 @@ export function OptionPreview({
         </div>
       ) : (
         <div className="flex h-full flex-col gap-2 p-4 text-left">
-          <TypeIcon className="size-8 text-primary" />
-          <p className="line-clamp-[12] text-sm whitespace-pre-wrap">{option.caption}</p>
+          <TypeIcon className="size-6 text-primary" aria-hidden />
+          <p className="line-clamp-[8] text-[16px] whitespace-pre-wrap">{option.caption}</p>
         </div>
       )}
       {option.media.length > 1 && (
-        <span className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-xs font-bold text-white">
+        <span className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-[13px] font-bold text-white">
           <GalleryHorizontalIcon className="size-3.5" /> {option.media.length}
         </span>
       )}
       {option.content_type === "reel" && first && (
-        <span className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-xs font-bold text-white">
+        <span className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-[13px] font-bold text-white">
           <ClapperboardIcon className="size-3.5" /> {t("reel")}
         </span>
       )}

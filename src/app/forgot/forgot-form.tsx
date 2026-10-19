@@ -14,8 +14,8 @@ export function ForgotForm() {
 
   if (state?.ok) {
     return (
-      <div className="space-y-2 rounded-2xl border-2 border-success/40 bg-success/10 p-5">
-        <p className="flex items-center gap-2 text-lg font-bold text-success">
+      <div className="space-y-2 rounded-[16px] border border-primary/40 bg-primary-soft p-5">
+        <p className="flex items-center gap-2 text-lg font-bold text-primary">
           <CheckCircle2Icon className="size-5" /> {t("sentTitle")}
         </p>
         <p>{t("sentText")}</p>
@@ -45,7 +45,7 @@ export function ForgotForm() {
         />
       </div>
       {state && !state.ok && (
-        <p role="alert" className="rounded-xl bg-destructive/10 px-4 py-3 font-medium text-destructive">
+        <p role="alert" className="rounded-[12px] bg-danger/10 px-4 py-3 font-medium text-danger">
           {t(`errors.${state.error}` as never)}
         </p>
       )}

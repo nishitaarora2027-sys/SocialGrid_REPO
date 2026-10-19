@@ -159,7 +159,7 @@ export function OptionsEditor({
   return (
     <div className="space-y-4">
       {lastFeedback && request.current_revision > 0 && (
-        <div className="rounded-2xl border-2 border-warning bg-warning/10 p-4">
+        <div className="rounded-[16px] border border-status bg-status-soft p-4">
           <div className="text-sm font-bold">{t("clientWantsChanges", { n: request.current_revision })}</div>
           <p className="mt-1 text-lg">
             {[lastFeedback.feedback_chip && tChips(lastFeedback.feedback_chip as never), lastFeedback.client_feedback]
@@ -170,7 +170,7 @@ export function OptionsEditor({
       )}
 
       {ai.text && (
-        <div className="flex flex-wrap items-center gap-2 rounded-2xl border-2 border-primary/30 bg-primary/5 p-3">
+        <div className="flex flex-wrap items-center gap-2 rounded-[16px] border border-primary/30 bg-primary/5 p-3">
           <SparklesIcon className="size-5 text-primary" />
           <span className="font-semibold">{t("ai.title")}</span>
           <NativeSelect value={aiLanguage} onChange={(e) => setAiLanguage(e.target.value)} className="w-40" aria-label={t("language")}>
@@ -184,7 +184,7 @@ export function OptionsEditor({
           <Button onClick={writeWithAi} disabled={writing || saving || delivering}>
             {writing ? <Loader2Icon className="animate-spin" /> : <SparklesIcon />} {writing ? t("ai.writing") : t("ai.write")}
           </Button>
-          <p className="w-full text-xs text-muted-foreground">{t("ai.hint")}</p>
+          <p className="w-full text-[13px] text-muted-foreground">{t("ai.hint")}</p>
         </div>
       )}
 
@@ -216,13 +216,13 @@ export function OptionsEditor({
       )}
 
       {request.current_revision > 0 && (
-        <div className="space-y-2 rounded-2xl border bg-card p-4">
+        <div className="space-y-2 rounded-[16px] border bg-card p-4">
           <Label htmlFor="change-note">{t("changeNote")}</Label>
           <Textarea id="change-note" value={changeNote} onChange={(e) => setChangeNote(e.target.value)} placeholder={t("changeNotePlaceholder")} />
         </div>
       )}
 
-      <div className="sticky bottom-0 flex flex-wrap gap-2 rounded-2xl border bg-card/95 p-3 shadow-lg backdrop-blur">
+      <div className="sticky bottom-0 flex flex-wrap gap-2 rounded-[16px] border bg-card/95 p-3 shadow-lg backdrop-blur">
         <Button variant="outline" disabled={saving || delivering} onClick={() => startSave(async () => {
           if (await save()) {
             toast.success(t("saved"));
@@ -234,7 +234,7 @@ export function OptionsEditor({
         <Button variant="success" className="flex-1" disabled={saving || delivering} onClick={deliver}>
           {delivering ? <Loader2Icon className="animate-spin" /> : <CheckCircle2Icon />} {t("approveDeliver")}
         </Button>
-        <p className="w-full text-xs text-muted-foreground">{t("deliverHint")}</p>
+        <p className="w-full text-[13px] text-muted-foreground">{t("deliverHint")}</p>
       </div>
     </div>
   );
@@ -330,7 +330,7 @@ function OptionForm({
   const tagGroups = ["occasion", "style", "goal"] as const;
 
   return (
-    <div className="space-y-4 rounded-2xl border bg-card p-4">
+    <div className="space-y-4 rounded-[16px] border bg-card p-4">
       <div className="flex items-center justify-between gap-2">
         <h3 className="text-lg font-bold">{t("optionN", { n: index + 1 })}</h3>
         <div className="flex items-center gap-2">
@@ -359,7 +359,7 @@ function OptionForm({
               const url = mediaUrl(urls, m.path);
               return (
                 <div key={m.path} className="w-28 space-y-1">
-                  <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-muted">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-[12px] bg-muted">
                     {url &&
                       (m.type === "video" ? (
                         <video src={url} className="h-full w-full object-cover" muted />
@@ -367,13 +367,13 @@ function OptionForm({
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={url} alt="" className="h-full w-full object-cover" />
                       ))}
-                    <span className="absolute top-1 left-1 rounded bg-black/60 px-1.5 text-xs font-bold text-white">{i + 1}</span>
+                    <span className="absolute top-1 left-1 rounded bg-black/60 px-1.5 text-[13px] font-bold text-white">{i + 1}</span>
                   </div>
                   <div className="flex justify-between">
                     <button type="button" className="rounded p-1 hover:bg-accent disabled:opacity-30" disabled={i === 0} onClick={() => move(i, -1)} aria-label={t("moveUp")}>
                       <ArrowUpIcon className="size-4 -rotate-90" />
                     </button>
-                    <button type="button" className="rounded p-1 text-destructive hover:bg-accent" onClick={() => onChange({ media: draft.media.filter((_, j) => j !== i) })} aria-label={t("remove")}>
+                    <button type="button" className="rounded p-1 text-danger hover:bg-accent" onClick={() => onChange({ media: draft.media.filter((_, j) => j !== i) })} aria-label={t("remove")}>
                       <Trash2Icon className="size-4" />
                     </button>
                     <button type="button" className="rounded p-1 hover:bg-accent disabled:opacity-30" disabled={i === draft.media.length - 1} onClick={() => move(i, 1)} aria-label={t("moveDown")}>
@@ -388,7 +388,7 @@ function OptionForm({
                 type="button"
                 onClick={() => fileInput.current?.click()}
                 disabled={uploading}
-                className="flex aspect-[4/5] w-28 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed text-sm font-semibold text-muted-foreground hover:border-primary hover:text-primary"
+                className="flex aspect-[4/5] w-28 flex-col items-center justify-center gap-1 rounded-[12px] border border-dashed text-sm font-semibold text-muted-foreground hover:border-primary hover:text-primary"
               >
                 {uploading ? <Loader2Icon className="size-6 animate-spin" /> : <UploadIcon className="size-6" />}
                 {t("upload")}
@@ -406,9 +406,9 @@ function OptionForm({
               e.target.value = "";
             }}
           />
-          <p className="text-xs text-muted-foreground">{t("mediaHint", { max: maxMedia })}</p>
+          <p className="text-[13px] text-muted-foreground">{t("mediaHint", { max: maxMedia })}</p>
           {imageAi && draft.media.length < maxMedia && (
-            <div className="flex flex-wrap gap-2 rounded-xl bg-secondary/50 p-2">
+            <div className="flex flex-wrap gap-2 rounded-[12px] bg-secondary/50 p-2">
               <Input
                 value={idea}
                 onChange={(e) => setIdea(e.target.value)}
@@ -425,7 +425,7 @@ function OptionForm({
       )}
 
       {isReel && (
-        <div className="grid gap-3 rounded-xl bg-secondary/50 p-3">
+        <div className="grid gap-3 rounded-[12px] bg-secondary/50 p-3">
           {(["script", "shot_list", "on_screen_text", "audio_mood"] as const).map((f) => (
             <div key={f} className="space-y-1">
               <Label>{t(`reel.${f}`)}</Label>
@@ -464,7 +464,7 @@ function OptionForm({
         <Input value={draft.hashtags ?? ""} onChange={(e) => onChange({ hashtags: e.target.value })} placeholder="#diwali #indore #sweets" />
       </div>
 
-      <div className="space-y-3 rounded-xl border-2 border-primary/20 p-3">
+      <div className="space-y-3 rounded-[12px] border border-primary/20 p-3">
         <div className="text-sm font-bold">
           {t("learning")} <span className="font-normal text-muted-foreground">— {t("learningHint")}</span>
         </div>

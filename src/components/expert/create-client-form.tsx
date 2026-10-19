@@ -47,7 +47,7 @@ export function CreateClientForm() {
     });
 
   return (
-    <form action={submit} className="space-y-5 rounded-2xl border bg-card p-5">
+    <form action={submit} className="space-y-5 rounded-[16px] border bg-card p-5">
       <div className="space-y-1.5">
         <Label htmlFor="businessName">{t("businessName")}</Label>
         <Input id="businessName" name="businessName" required />
@@ -83,7 +83,7 @@ export function CreateClientForm() {
               key={i}
               type="button"
               onClick={() => setIndustry(i)}
-              className={cn("h-12 rounded-xl border-2 font-semibold", industry === i ? "border-primary bg-secondary" : "bg-card")}
+              className={cn("h-12 rounded-[12px] border font-semibold", industry === i ? "border-primary bg-secondary" : "bg-card")}
             >
               {tInd(i)}
             </button>
@@ -98,7 +98,7 @@ export function CreateClientForm() {
               key={l}
               type="button"
               onClick={() => setLanguage(l)}
-              className={cn("h-12 rounded-xl border-2 font-semibold", language === l ? "border-primary bg-secondary" : "bg-card")}
+              className={cn("h-12 rounded-[12px] border font-semibold", language === l ? "border-primary bg-secondary" : "bg-card")}
             >
               {l === "hi" ? "हिंदी" : "English"}
             </button>

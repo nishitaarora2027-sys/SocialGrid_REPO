@@ -110,7 +110,7 @@ function TurnaroundForm({ settings }: { settings: Settings }) {
   );
 
   return (
-    <div className="max-w-2xl space-y-5 rounded-2xl border bg-card p-4">
+    <div className="max-w-2xl space-y-5 rounded-[16px] border bg-card p-4">
       <div className="grid gap-3 sm:grid-cols-3">
         <div className="space-y-1">
           <Label>{t("standardHours")}</Label>
@@ -144,7 +144,7 @@ function TurnaroundForm({ settings }: { settings: Settings }) {
               key={d}
               type="button"
               onClick={() => setS({ ...s, work_days: s.work_days.includes(d) ? s.work_days.filter((x) => x !== d) : [...s.work_days, d].sort() })}
-              className={cn("h-11 min-w-14 rounded-xl border-2 px-3 font-semibold", s.work_days.includes(d) ? "border-primary bg-primary text-primary-foreground" : "bg-card")}
+              className={cn("h-11 min-w-14 rounded-[12px] border px-3 font-semibold", s.work_days.includes(d) ? "border-primary bg-primary text-primary-foreground" : "bg-card")}
             >
               {days[d - 1]}
             </button>
@@ -214,9 +214,9 @@ function Festivals({ festivals }: { festivals: Festival[] }) {
         </label>
         <p className="text-sm text-muted-foreground">{t("festivalHint")}</p>
       </div>
-      <div className="overflow-x-auto rounded-2xl border bg-card">
+      <div className="overflow-x-auto rounded-[16px] border bg-card">
         <table className="w-full text-sm">
-          <thead className="bg-muted/50 text-left text-xs uppercase">
+          <thead className="bg-muted/50 text-left text-[13px] uppercase">
             <tr>
               <th className="px-3 py-2">{t("date")}</th>
               <th className="px-3 py-2">{t("name")}</th>
@@ -281,7 +281,7 @@ function Festivals({ festivals }: { festivals: Festival[] }) {
                     onClick={() =>
                       setEdit({ ...edit, industries: edit.industries.includes(i) ? edit.industries.filter((x) => x !== i) : [...edit.industries, i] })
                     }
-                    className={cn("h-10 rounded-full border-2 px-3 text-sm font-semibold", edit.industries.includes(i) ? "border-primary bg-secondary" : "bg-card")}
+                    className={cn("h-10 rounded-full border px-3 text-sm font-semibold", edit.industries.includes(i) ? "border-primary bg-secondary" : "bg-card")}
                   >
                     {tInd(i)}
                   </button>
@@ -317,7 +317,7 @@ function Plans({ plans }: { plans: Plan[] }) {
       </div>
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         {plans.map((p) => (
-          <div key={p.id} className={cn("space-y-2 rounded-2xl border bg-card p-4", !p.active && "opacity-50")}>
+          <div key={p.id} className={cn("space-y-2 rounded-[16px] border bg-card p-4", !p.active && "opacity-50")}>
             <div className="flex items-center justify-between">
               <div className="text-lg font-bold">{p.name}</div>
               <div className="font-bold">{formatPrice(p.price_inr)}</div>
@@ -377,7 +377,7 @@ function Plans({ plans }: { plans: Plan[] }) {
                           const next = on ? current.filter((x) => x !== c) : [...current, c];
                           setEdit({ ...edit, limits: { ...edit.limits, content_types: next.length === CONTENT_TYPES.length ? null : next } });
                         }}
-                        className={cn("h-10 rounded-full border-2 px-3 text-sm font-semibold", on ? "border-primary bg-secondary" : "bg-card text-muted-foreground")}
+                        className={cn("h-10 rounded-full border px-3 text-sm font-semibold", on ? "border-primary bg-secondary" : "bg-card text-muted-foreground")}
                       >
                         {tTypes(c)}
                       </button>
@@ -436,7 +436,7 @@ function QuickStartCards({ cards }: { cards: QuickStartCard[] }) {
             key={i}
             type="button"
             onClick={() => setIndustry(i)}
-            className={cn("h-11 rounded-xl border-2 px-4 font-semibold", industry === i ? "border-primary bg-primary text-primary-foreground" : "bg-card")}
+            className={cn("h-11 rounded-[12px] border px-4 font-semibold", industry === i ? "border-primary bg-primary text-primary-foreground" : "bg-card")}
           >
             {tInd(i)}
           </button>
@@ -453,8 +453,8 @@ function QuickStartCards({ cards }: { cards: QuickStartCard[] }) {
       </div>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {list.map((c) => (
-          <div key={c.id} className={cn("flex items-start gap-3 rounded-2xl border bg-card p-4", !c.active && "opacity-50")}>
-            <span className="flex size-11 items-center justify-center rounded-xl bg-secondary text-primary">
+          <div key={c.id} className={cn("flex items-start gap-3 rounded-[16px] border bg-card p-4", !c.active && "opacity-50")}>
+            <span className="flex size-11 items-center justify-center rounded-[12px] bg-secondary text-primary">
               <CardIcon name={c.icon} className="size-5" />
             </span>
             <div className="min-w-0 flex-1">
@@ -516,7 +516,7 @@ function QuickStartCards({ cards }: { cards: QuickStartCard[] }) {
                       key={name}
                       type="button"
                       onClick={() => setEdit({ ...edit, icon: name })}
-                      className={cn("flex size-11 items-center justify-center rounded-xl border-2", edit.icon === name ? "border-primary bg-secondary" : "bg-card")}
+                      className={cn("flex size-11 items-center justify-center rounded-[12px] border", edit.icon === name ? "border-primary bg-secondary" : "bg-card")}
                       aria-label={name}
                     >
                       <CardIcon name={name} className="size-5" />
@@ -528,7 +528,7 @@ function QuickStartCards({ cards }: { cards: QuickStartCard[] }) {
               <div className="space-y-3">
                 <Label>{t("questions")}</Label>
                 {edit.questions.map((q, i) => (
-                  <div key={i} className="space-y-2 rounded-xl border p-3">
+                  <div key={i} className="space-y-2 rounded-[12px] border p-3">
                     <div className="flex gap-2">
                       <NativeSelect value={q.type} onChange={(e) => setQ(i, { type: e.target.value as QuickStartQuestion["type"] })} className="w-36">
                         <option value="choice">{t("qTypes.choice")}</option>
@@ -544,7 +544,7 @@ function QuickStartCards({ cards }: { cards: QuickStartCard[] }) {
                     {q.type === "choice" && (
                       <>
                         <textarea
-                          className="min-h-20 w-full rounded-xl border-2 p-2 text-sm"
+                          className="min-h-20 w-full rounded-[12px] border p-2 text-sm"
                           placeholder={t("choicesHint")}
                           value={(q.options ?? []).map((o) => `${o.en} | ${o.hi}`).join("\n")}
                           onChange={(e) =>

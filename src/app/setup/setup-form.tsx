@@ -15,11 +15,11 @@ export function SetupForm() {
 
   if (state?.ok) {
     return (
-      <div className="space-y-4 rounded-2xl border-2 border-success/40 bg-card p-5">
-        <p className="flex items-center gap-2 text-lg font-bold text-success">
+      <div className="space-y-4 rounded-[16px] border border-primary/40 bg-card p-5">
+        <p className="flex items-center gap-2 text-lg font-bold text-primary">
           <CheckCircle2Icon className="size-5" /> {t("success")}
         </p>
-        <p className="font-semibold text-destructive">{t("saveNow")}</p>
+        <p className="font-semibold text-danger">{t("saveNow")}</p>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <tbody className="divide-y">
@@ -43,7 +43,7 @@ export function SetupForm() {
   return (
     <form action={action} className="space-y-5">
       {[1, 2].map((n) => (
-        <fieldset key={n} className="space-y-3 rounded-2xl border bg-card p-4">
+        <fieldset key={n} className="space-y-3 rounded-[16px] border bg-card p-4">
           <legend className="px-1 font-bold">
             {t("founder", { n })} {n === 2 && <span className="font-normal text-muted-foreground">({t("optional")})</span>}
           </legend>
@@ -61,14 +61,14 @@ export function SetupForm() {
           </div>
         </fieldset>
       ))}
-      <label className="flex min-h-12 items-center gap-3 rounded-xl border-2 bg-card px-4">
+      <label className="flex min-h-12 items-center gap-3 rounded-[12px] border bg-card px-4">
         <input type="checkbox" name="samples" defaultChecked className="size-5" />
         <span className="font-semibold">{t("samples")}</span>
       </label>
       {state && !state.ok && (
-        <div role="alert" className="rounded-xl bg-destructive/10 p-4 font-medium text-destructive">
+        <div role="alert" className="rounded-[12px] bg-danger/10 p-4 font-medium text-danger">
           {t(`errors.${state.error}` as never)}
-          {state.detail && <pre className="mt-2 text-xs whitespace-pre-wrap">{state.detail}</pre>}
+          {state.detail && <pre className="mt-2 text-[13px] whitespace-pre-wrap">{state.detail}</pre>}
         </div>
       )}
       <Button type="submit" size="lg" className="w-full" disabled={pending}>

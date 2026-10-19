@@ -6,8 +6,8 @@
     "saved": "Saved"
   },
   "login": {
-    "title": "Welcome!",
-    "subtitle": "Log in to SocialGrid",
+    "title": "Namaste",
+    "subtitle": "Log in to chat with your team and see your posts.",
     "help": "No email access? Call or WhatsApp the SocialGrid team.",
     "password": "Password",
     "show": "Show",
@@ -19,30 +19,34 @@
       "no_profile": "This account is not set up yet. Please contact the SocialGrid team.",
       "login_failed": "Login is not working right now ({code}). Please tell the SocialGrid team.",
       "invalid_email": "Please enter a valid email address.",
-      "use_team_tab": "This is a SocialGrid team account. We've switched to the “SocialGrid team” tab — press Log in again.",
-      "use_customer_tab": "This is a customer account. We've switched to the “Customer login” tab — press Log in again."
+      "use_team_tab": "This is a team account, we've switched to Team login. Press Log in again.",
+      "use_customer_tab": "This is a business owner account, we've switched to the owner login. Press Log in again."
     },
     "email": "Email",
     "forgot": "Forgot password?",
-    "whoAreYou": "Who is logging in?",
-    "tabs": {
-      "customer": "Customer login",
-      "team": "SocialGrid team"
-    },
-    "tabHint": {
-      "customer": "For business owners (salon, restaurant, cafe…) who get posts from SocialGrid.",
-      "team": "For the SocialGrid founders who make the posts."
-    },
-    "rescue": "Locked out? Account rescue"
+    "rescue": "Locked out? Account rescue",
+    "teamTitle": "SocialGrid team login",
+    "ownerLogin": "Business owner login",
+    "ownerLoginShort": "Owner login",
+    "ownerQuestion": "Own a business?",
+    "teamQuestion": "Work at SocialGrid?",
+    "teamLogin": "Team login"
   },
   "nav": {
     "readyCount": "{count, plural, one {# post ready} other {# posts ready}}",
     "menu": "Menu",
     "chat": "Chat",
-    "posts": "Your posts",
-    "brand": "Your brand",
+    "posts": "Posts",
+    "brand": "Business",
     "help": "Help",
-    "logout": "Log out"
+    "logout": "Log out",
+    "plan": "Plan",
+    "planLong": "Weekly plan",
+    "postsLong": "My posts",
+    "brandLong": "My business",
+    "planTitle": "This week's plan",
+    "light": "Light",
+    "dark": "Dark"
   },
   "subscription": {
     "pastDue": "Your plan renewal is pending.",
@@ -60,11 +64,9 @@
     "micDenied": "Please allow the microphone to record a voice note.",
     "micUnsupported": "Voice notes don't work in this browser. Please type instead.",
     "removePhoto": "Remove photo",
-    "needToday": "I need this today",
-    "photo": "Photo",
-    "placeholder": "Tell us what post you need…",
+    "needToday": "Need it today",
+    "placeholder": "Tell us what you need…",
     "send": "Send",
-    "voice": "Voice",
     "intentTitle": "What is this message for?",
     "intentSubtitle": "So our team knows where to put it.",
     "intentNew": "A new post",
@@ -73,16 +75,14 @@
     "deleteRecording": "Delete",
     "recording": "Recording",
     "yourRequest": "your request",
-    "pickOneFirst": "Tap \"Choose this one\" on the one you like.",
     "greeting": {
       "morning": "Good morning, {name} ji",
       "afternoon": "Good afternoon, {name} ji",
       "evening": "Good evening, {name} ji"
     },
-    "workingOn": "Our team is working on it · ready {due}",
-    "quickIdeas": "Ideas:",
-    "welcomeSubtitle": "What post do you need today? Tap an idea to start.",
-    "orTypeBelow": "Or just type or send a voice note below."
+    "welcomeSubtitle": "What post do you need? Tap an idea, or type or speak below.",
+    "placeholderShort": "Type or speak…",
+    "addPhoto": "Add photo"
   },
   "chips": {
     "looks_good": "Looks good 👍",
@@ -116,13 +116,10 @@
     "reelPlan": "Reel plan",
     "reel": "Reel",
     "olderVersion": "Older version",
-    "readyPickOne": "Your post is ready! Pick the one you like ({count} options)",
-    "readyOne": "Your post is ready!",
+    "readyOne": "Your post is ready",
     "madeByTeam": "Made for you by the SocialGrid team",
     "optionN": "Option {n}",
-    "yourChoiceOpen": "Your choice – open",
     "chooseThis": "Choose this one",
-    "swipeHint": "Swipe to see all options →",
     "downloadFailed": "Download didn't work. Please check your internet and try again.",
     "downloaded": "Saved to your phone!",
     "copied": "Copied! Now paste it in Instagram or WhatsApp.",
@@ -140,7 +137,14 @@
     "onScreenText": "Text on screen",
     "audioMood": "Music mood",
     "caption": "Caption",
-    "makeChanges": "Make changes"
+    "makeChanges": "Make changes",
+    "yourChoice": "Your chosen post",
+    "chosen": "Chosen",
+    "optionOf": "Option {n} of {count} · swipe to see more",
+    "askChanges": "Ask for changes",
+    "shareShort": "Share",
+    "savedToPosts": "Saved to My posts",
+    "open": "Open"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -209,8 +213,8 @@
       "reel": "Reels",
       "festival": "Festival"
     },
-    "empty": "Your posts will show up here once our team makes them.",
-    "askForPost": "Ask for a post"
+    "empty": "Your finished posts will appear here.",
+    "askForPost": "Ask for your first post"
   },
   "brand": {
     "photosAdded": "Photos added. Thank you!",
@@ -978,5 +982,34 @@
       "is_customer": "This email is a customer login. Use a different email for the team account.",
       "wrong_code": "That recovery code is not correct."
     }
+  },
+  "statusBar": {
+    "received": "Received",
+    "making": "Making",
+    "ready": "Ready",
+    "readyNow": "Ready",
+    "readyBy": "Ready by {time}"
+  },
+  "plan": {
+    "title": "This week's plan",
+    "subtitle": "We plan {count, plural, one {# post} other {# posts}} for you this week. Tap Chat to change any of them.",
+    "planned": "{count, plural, =0 {Nothing planned} one {# post planned} other {# posts planned}}",
+    "lastWeek": "Last week",
+    "nextWeek": "Next week",
+    "today": "Today",
+    "addPost": "Add post",
+    "addToWeek": "Add a post to this week",
+    "change": "Change",
+    "empty": "Nothing is planned for this week yet. Your team will add posts soon.",
+    "ready": "Ready",
+    "making": "Making",
+    "makingBy": "Making · ready {time}",
+    "needsPhoto": "Waiting for your photo",
+    "sendPhotos": "Send photos",
+    "festival": "<b>{name}</b> is coming up. Shall we plan a festival post?",
+    "yesPlan": "Yes, plan",
+    "dismiss": "Not now",
+    "festivalAccepted": "Done! We'll make it for you.",
+    "statusPlanned": "Planned"
   }
 }

@@ -92,7 +92,7 @@ function Flow({ card, businessId, onClose }: { card: QuickStartCard; businessId:
   return (
     <div className="space-y-5">
       <div className="flex items-center gap-3">
-        <div className="flex size-12 items-center justify-center rounded-2xl bg-secondary text-primary">
+        <div className="flex size-12 items-center justify-center rounded-[16px] bg-secondary text-primary">
           <CardIcon name={card.icon} className="size-6" />
         </div>
         <div>
@@ -128,7 +128,7 @@ function Flow({ card, businessId, onClose }: { card: QuickStartCard; businessId:
                       if (!q.allow_text) setTimeout(next, 150);
                     }}
                     className={cn(
-                      "min-h-14 rounded-2xl border-2 px-4 text-left text-lg font-semibold transition-colors",
+                      "min-h-14 rounded-[16px] border px-4 text-left text-lg font-semibold transition-colors",
                       selected ? "border-primary bg-secondary" : "bg-card",
                     )}
                   >
@@ -179,7 +179,7 @@ function Flow({ card, businessId, onClose }: { card: QuickStartCard; businessId:
                   {photos.map((p, i) => (
                     <div key={`${p.name}-${i}`} className="relative size-20">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={URL.createObjectURL(p)} alt="" className="size-20 rounded-xl object-cover" />
+                      <img src={URL.createObjectURL(p)} alt="" className="size-20 rounded-[12px] object-cover" />
                       <button
                         type="button"
                         onClick={() => setPhotos(photos.filter((_, j) => j !== i))}
@@ -213,7 +213,7 @@ function Flow({ card, businessId, onClose }: { card: QuickStartCard; businessId:
 
       {isReview && (
         <div className="space-y-4">
-          <div className="space-y-2 rounded-2xl bg-secondary/60 p-4">
+          <div className="space-y-2 rounded-[16px] bg-secondary/60 p-4">
             {questions.filter((x) => x.type !== "photo").map((x) => (
               <div key={x.id}>
                 <div className="text-sm text-muted-foreground">{qText(x)}</div>
@@ -224,7 +224,7 @@ function Flow({ card, businessId, onClose }: { card: QuickStartCard; businessId:
           </div>
           <label className="flex min-h-12 cursor-pointer items-center gap-3">
             <Switch checked={urgent} onCheckedChange={setUrgent} />
-            <span className={cn("flex items-center gap-1 text-lg font-semibold", urgent && "text-destructive")}>
+            <span className={cn("flex items-center gap-1 text-lg font-semibold", urgent && "text-danger")}>
               <FlameIcon className="size-5" /> {t("needToday")}
             </span>
           </label>

@@ -100,8 +100,8 @@ export function BrandWizard({
               type="button"
               onClick={() => setStep(s)}
               className={cn(
-                "flex h-10 items-center gap-2 rounded-full border-2 px-3 text-sm font-semibold whitespace-nowrap",
-                s === step ? "border-primary bg-primary text-primary-foreground" : i < idx ? "border-success text-success" : "bg-card",
+                "flex h-10 items-center gap-2 rounded-full border px-3 text-sm font-semibold whitespace-nowrap",
+                s === step ? "border-primary bg-primary text-primary-foreground" : i < idx ? "border-primary text-primary" : "bg-card",
               )}
             >
               {i < idx && wizard ? <CheckIcon className="size-4" /> : <span>{i + 1}</span>} {t(`steps.${s}`)}
@@ -110,7 +110,7 @@ export function BrandWizard({
         ))}
       </ol>
 
-      <div className="space-y-4 rounded-2xl border bg-card p-4">
+      <div className="space-y-4 rounded-[16px] border bg-card p-4">
         {step === "basics" && (
           <div className="grid gap-4 md:grid-cols-2">
             <Field label={t("businessName")}>
@@ -160,7 +160,7 @@ export function BrandWizard({
                       type="color"
                       value={b.colors[k]}
                       onChange={(e) => set("colors", { ...b.colors, [k]: e.target.value })}
-                      className="h-12 w-16 cursor-pointer rounded-xl border-2 bg-card p-1"
+                      className="h-12 w-16 cursor-pointer rounded-[12px] border bg-card p-1"
                     />
                     <Input value={b.colors[k]} onChange={(e) => set("colors", { ...b.colors, [k]: e.target.value })} className="font-mono" />
                   </div>
@@ -234,7 +234,7 @@ export function BrandWizard({
             <Field label={t("avoid")}>
               <div className="grid gap-2 sm:grid-cols-2">
                 {AVOID_DEFAULTS.map((a) => (
-                  <label key={a} className={cn("flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border-2 px-3", b.avoid_list.includes(a) && "border-destructive bg-destructive/5")}>
+                  <label key={a} className={cn("flex min-h-12 cursor-pointer items-center gap-3 rounded-[12px] border px-3", b.avoid_list.includes(a) && "border-danger bg-danger/5")}>
                     <input type="checkbox" className="size-5 accent-[var(--destructive)]" checked={b.avoid_list.includes(a)} onChange={() => toggle("avoid_list", a)} />
                     <span className="text-sm font-medium">{tOpt(`avoid.${a}`)}</span>
                   </label>
@@ -244,7 +244,7 @@ export function BrandWizard({
             <Field label={t("avoidCustom")}>
               <Textarea value={b.avoid_custom ?? ""} onChange={(e) => set("avoid_custom", e.target.value)} />
             </Field>
-            <label className="flex min-h-12 items-center gap-3 rounded-xl border-2 px-3">
+            <label className="flex min-h-12 items-center gap-3 rounded-[12px] border px-3">
               <input
                 type="checkbox"
                 className="size-5"
@@ -308,7 +308,7 @@ function Choices<T extends string>({
           type="button"
           onClick={() => onToggle(o)}
           className={cn(
-            "min-h-11 rounded-full border-2 px-4 text-sm font-semibold",
+            "min-h-11 rounded-full border px-4 text-sm font-semibold",
             value.includes(o) ? "border-primary bg-primary text-primary-foreground" : "bg-card",
           )}
         >
@@ -346,7 +346,7 @@ function ImageUpload({
         return (
           <div key={p} className="relative size-24">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            {url ? <img src={url} alt="" className="size-24 rounded-xl border object-cover" /> : <div className="size-24 rounded-xl bg-muted" />}
+            {url ? <img src={url} alt="" className="size-24 rounded-[12px] border object-cover" /> : <div className="size-24 rounded-[12px] bg-muted" />}
             <button
               type="button"
               onClick={() => onRemove(p)}
@@ -363,7 +363,7 @@ function ImageUpload({
           type="button"
           disabled={busy}
           onClick={() => input.current?.click()}
-          className="flex size-24 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed text-xs font-semibold text-muted-foreground hover:border-primary hover:text-primary"
+          className="flex size-24 flex-col items-center justify-center gap-1 rounded-[12px] border border-dashed text-[13px] font-semibold text-muted-foreground hover:border-primary hover:text-primary"
         >
           {busy ? <Loader2Icon className="size-5 animate-spin" /> : <UploadIcon className="size-5" />}
           {t("upload")}

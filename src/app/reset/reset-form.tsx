@@ -56,7 +56,7 @@ export function ResetForm() {
           <Input id="code" type="password" autoComplete="off" value={code} onChange={(e) => setCode(e.target.value)} required className="h-12" {...plain} />
         </div>
         {error && (
-          <p role="alert" className="rounded-xl bg-destructive/10 px-4 py-3 font-medium text-destructive">
+          <p role="alert" className="rounded-[12px] bg-danger/10 px-4 py-3 font-medium text-danger">
             {error}
           </p>
         )}
@@ -74,7 +74,7 @@ export function ResetForm() {
   return (
     <div className="space-y-6">
       <Group title={t("teamTitle")} hint={t("teamHint")} icon={<UsersIcon className="size-5" />} accounts={team} code={code} message={message} />
-      <section className="space-y-3 rounded-2xl border-2 border-primary/30 bg-primary/5 p-4">
+      <section className="space-y-3 rounded-[16px] border border-primary/30 bg-primary/5 p-4">
         <h2 className="flex items-center gap-2 text-lg font-bold">
           <UsersIcon className="size-5" /> {t("createTeamTitle")}
         </h2>
@@ -117,7 +117,7 @@ function Group({
         </h2>
         <p className="text-sm text-muted-foreground">{hint}</p>
       </div>
-      {accounts.length === 0 && <p className="rounded-xl border border-dashed p-3 text-sm text-muted-foreground">{t("none")}</p>}
+      {accounts.length === 0 && <p className="rounded-[12px] border border-dashed p-3 text-sm text-muted-foreground">{t("none")}</p>}
       {accounts.map((a) => (
         <AccountRow key={a.id} account={a} code={code} message={message} />
       ))}
@@ -140,8 +140,8 @@ function AccountRow({ account, code, message }: { account: RescueAccount; code: 
       setPassword("");
     });
   return (
-    <div className="space-y-2 rounded-2xl border bg-card p-3" data-testid="account-row">
-      <div className="text-xs font-semibold text-muted-foreground uppercase">{t("loginEmail")}</div>
+    <div className="space-y-2 rounded-[16px] border bg-card p-3" data-testid="account-row">
+      <div className="text-[13px] font-semibold text-muted-foreground uppercase">{t("loginEmail")}</div>
       <div className="font-mono text-base break-all select-all" data-testid="account-email">
         {account.email}
       </div>
@@ -183,7 +183,7 @@ function CreateCustomer({ code, message, onCreated }: { code: string; message: (
       await onCreated();
     });
   return (
-    <section className="space-y-3 rounded-2xl border-2 border-primary/30 bg-primary/5 p-4">
+    <section className="space-y-3 rounded-[16px] border border-primary/30 bg-primary/5 p-4">
       <h2 className="flex items-center gap-2 text-lg font-bold">
         <UserPlusIcon className="size-5" /> {t("createTitle")}
       </h2>

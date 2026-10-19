@@ -144,7 +144,7 @@ function PlanEditor({ businessId, initial, weekSlots }: { businessId: string; in
 
   return (
     <div className="grid gap-5 lg:grid-cols-2">
-      <section className="space-y-3 rounded-2xl border bg-card p-4">
+      <section className="space-y-3 rounded-[16px] border bg-card p-4">
         <h2 className="font-bold">{t("template")}</h2>
         <p className="text-sm text-muted-foreground">{t("templateHint")}</p>
         {slots.map((s, i) => (
@@ -179,7 +179,7 @@ function PlanEditor({ businessId, initial, weekSlots }: { businessId: string; in
         </div>
       </section>
 
-      <section className="space-y-3 rounded-2xl border bg-card p-4">
+      <section className="space-y-3 rounded-[16px] border bg-card p-4">
         <h2 className="font-bold">{t("thisWeek")}</h2>
         {weekSlots.length === 0 && <p className="text-sm text-muted-foreground">{t("noSlots")}</p>}
         <ul className="divide-y">
@@ -229,7 +229,7 @@ function PlanEditor({ businessId, initial, weekSlots }: { businessId: string; in
           ))}
         </ul>
         {askFor && (
-          <div className="space-y-2 rounded-xl bg-secondary/50 p-3">
+          <div className="space-y-2 rounded-[12px] bg-secondary/50 p-3">
             <Label>{t("askMessage")}</Label>
             <Textarea value={askText} onChange={(e) => setAskText(e.target.value)} />
             <div className="flex gap-2">
@@ -284,7 +284,7 @@ function AccountPanel({
 
   return (
     <div className="grid gap-5 lg:grid-cols-2">
-      <section className="space-y-3 rounded-2xl border bg-card p-4">
+      <section className="space-y-3 rounded-[16px] border bg-card p-4">
         <h2 className="font-bold">{t("subscription")}</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="space-y-1">
@@ -321,7 +321,7 @@ function AccountPanel({
         </Button>
       </section>
 
-      <section className="space-y-4 rounded-2xl border bg-card p-4">
+      <section className="space-y-4 rounded-[16px] border bg-card p-4">
         <h2 className="font-bold">{t("settings")}</h2>
         <label className="flex items-center justify-between gap-3">
           <span>
@@ -352,7 +352,7 @@ function AccountPanel({
                   disabled={!enabled}
                   onClick={() => act(() => updateBusiness(business.id, { autonomy_mode: m }))}
                   className={cn(
-                    "flex min-h-12 items-center justify-between rounded-xl border-2 px-3 text-left",
+                    "flex min-h-12 items-center justify-between rounded-[12px] border px-3 text-left",
                     business.autonomy_mode === m ? "border-primary bg-secondary" : "bg-card",
                     !enabled && "cursor-not-allowed opacity-60",
                   )}
@@ -369,7 +369,7 @@ function AccountPanel({
         </div>
       </section>
 
-      <section className="space-y-3 rounded-2xl border bg-card p-4">
+      <section className="space-y-3 rounded-[16px] border bg-card p-4">
         <h2 className="flex items-center gap-2 font-bold">
           <LightbulbIcon className="size-5" /> {t("customSuggestion")}
         </h2>
@@ -417,7 +417,7 @@ function AccountPanel({
         )}
       </section>
 
-      <section className="space-y-3 rounded-2xl border bg-card p-4">
+      <section className="space-y-3 rounded-[16px] border bg-card p-4">
         <h2 className="flex items-center gap-2 font-bold">
           <MailIcon className="size-5" /> {t("loginEmail")}
         </h2>
@@ -446,7 +446,7 @@ function AccountPanel({
         </div>
       </section>
 
-      <section className="space-y-3 rounded-2xl border bg-card p-4">
+      <section className="space-y-3 rounded-[16px] border bg-card p-4">
         <h2 className="flex items-center gap-2 font-bold">
           <KeyRoundIcon className="size-5" /> {t("resetPassword")}
         </h2>
@@ -476,7 +476,7 @@ function History({ requests }: { requests: RequestRow[] }) {
   const locale = useLocale() as Locale;
   if (!requests.length) return <p className="text-muted-foreground">{t("noHistory")}</p>;
   return (
-    <ul className="divide-y rounded-2xl border bg-card">
+    <ul className="divide-y rounded-[16px] border bg-card">
       {requests.map((r) => (
         <li key={r.id}>
           <Link href={`/expert/requests/${r.id}`} className="flex flex-wrap items-center gap-3 px-4 py-3 hover:bg-accent/50">

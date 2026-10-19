@@ -16,18 +16,18 @@ export default async function HelpPage() {
   const wa = SUPPORT_WHATSAPP.replace(/\D/g, "");
 
   return (
-    <main className="flex-1 space-y-4 px-4 py-4">
-      <h1 className="text-2xl font-bold">{t("title")}</h1>
-      <div className="space-y-3">
+    <main className="mx-auto w-full max-w-2xl flex-1 space-y-3 px-3 py-3 lg:space-y-5 lg:px-10 lg:py-8">
+      <h1 className="text-[30px] leading-tight font-bold max-lg:sr-only">{t("title")}</h1>
+      <div className="space-y-2.5">
         {steps.map(({ icon: Icon, key }) => (
           <Card key={key} className="py-4">
             <CardContent className="flex items-start gap-3">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-secondary text-primary">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-[12px] bg-primary-soft text-primary">
                 <Icon className="size-6" />
               </span>
               <div>
-                <h2 className="font-bold">{t(`${key}.title`)}</h2>
-                <p className="text-muted-foreground">{t(`${key}.text`)}</p>
+                <h2 className="text-[18px] font-bold">{t(`${key}.title`)}</h2>
+                <p className="text-[17px] text-ink-muted">{t(`${key}.text`)}</p>
               </div>
             </CardContent>
           </Card>

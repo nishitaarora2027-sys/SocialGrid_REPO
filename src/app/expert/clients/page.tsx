@@ -47,11 +47,11 @@ export default async function ClientsPage() {
         </Button>
       </div>
       {!businesses?.length ? (
-        <p className="rounded-2xl border-2 border-dashed p-10 text-center text-muted-foreground">{t("empty")}</p>
+        <p className="rounded-[16px] border border-dashed p-10 text-center text-muted-foreground">{t("empty")}</p>
       ) : (
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {(businesses as Business[]).map((b) => (
-            <Link key={b.id} href={`/expert/clients/${b.id}`} className="space-y-2 rounded-2xl border bg-card p-4 shadow-sm hover:border-primary">
+            <Link key={b.id} href={`/expert/clients/${b.id}`} className="space-y-2 rounded-[16px] border bg-card p-4 hover:border-primary">
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <div className="text-lg font-bold">{b.name}</div>

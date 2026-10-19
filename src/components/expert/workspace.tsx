@@ -149,7 +149,7 @@ export function Workspace({
               </option>
             ))}
           </NativeSelect>
-          <label className="flex h-12 items-center gap-2 rounded-xl border-2 bg-card px-3 text-sm font-semibold">
+          <label className="flex h-12 items-center gap-2 rounded-[12px] border bg-card px-3 text-sm font-semibold">
             <Switch
               checked={request.is_urgent}
               onCheckedChange={(v) => act(() => updateRequestMeta(request.id, { is_urgent: v }))}
@@ -174,7 +174,7 @@ export function Workspace({
 
       <div className="grid gap-4 xl:grid-cols-[minmax(320px,1fr)_minmax(0,1.6fr)_minmax(280px,0.9fr)]">
         {/* Chat thread */}
-        <section className="flex max-h-[80dvh] flex-col overflow-hidden rounded-2xl border bg-background">
+        <section className="flex max-h-[80dvh] flex-col overflow-hidden rounded-[16px] border bg-background">
           <h2 className="border-b bg-card px-4 py-3 font-bold">{t("chat")}</h2>
           <ThreadList thread={thread} requestId={request.id} />
           <ExpertComposer requestId={request.id} businessId={business.id} />
@@ -183,10 +183,10 @@ export function Workspace({
         {/* Options */}
         <section className="space-y-4">
           {clientPhotos.length > 0 && (
-            <div className="space-y-2 rounded-2xl border bg-card p-4">
+            <div className="space-y-2 rounded-[16px] border bg-card p-4">
               <h2 className="font-bold">{t("clientPhotos")}</h2>
               {!business.photo_consent && business.industry === "salon" && (
-                <p className="flex items-start gap-2 rounded-xl bg-warning/20 p-3 text-sm font-semibold text-warning-foreground">
+                <p className="flex items-start gap-2 rounded-[12px] bg-status-soft p-3 text-sm font-semibold text-status-ink">
                   <AlertTriangleIcon className="mt-0.5 size-4 shrink-0" /> {t("noConsent")}
                 </p>
               )}
@@ -196,7 +196,7 @@ export function Workspace({
                   return (
                     <div key={p.path} className={p.mine ? "" : "opacity-60"}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      {url && <img src={url} alt="" className="aspect-square w-full rounded-xl object-cover" />}
+                      {url && <img src={url} alt="" className="aspect-square w-full rounded-[12px] object-cover" />}
                       <Button
                         variant="outline"
                         size="sm"
@@ -224,7 +224,7 @@ export function Workspace({
               ai={ai}
             />
           ) : (
-            <div className="rounded-2xl border bg-card p-4 text-muted-foreground">
+            <div className="rounded-[16px] border bg-card p-4 text-muted-foreground">
               {request.status === "cancelled" ? t("cancelled") : t("deliveredWaiting")}
             </div>
           )}
@@ -260,7 +260,7 @@ function ThreadList({ thread, requestId }: { thread: ThreadData; requestId: stri
               interactive={false}
             />
           ) : m.kind === "suggestion" ? (
-            <div className="mx-2 rounded-2xl border border-dashed p-3 text-sm text-muted-foreground">
+            <div className="mx-2 rounded-[16px] border border-dashed p-3 text-sm text-muted-foreground">
               💡 {tReq("suggestionShown")}: {m.payload.suggestionId && suggestions[m.payload.suggestionId]?.payload.title_en}
             </div>
           ) : (
@@ -330,7 +330,7 @@ function RevisionHistory({
   const revNumbers = [...new Set([...delivered.map((o) => o.revision_number), ...revisions.map((r) => r.number)])].sort((a, b) => b - a);
 
   return (
-    <div className="space-y-3 rounded-2xl border bg-card p-4">
+    <div className="space-y-3 rounded-[16px] border bg-card p-4">
       <h2 className="flex items-center gap-2 font-bold">
         <HistoryIcon className="size-5" /> {t("history")}
       </h2>
@@ -344,7 +344,7 @@ function RevisionHistory({
               {n === request.current_revision && <span className="ml-2 text-primary">({t("current")})</span>}
             </div>
             {rev && (
-              <div className="space-y-1 rounded-xl bg-muted/60 p-3 text-sm">
+              <div className="space-y-1 rounded-[12px] bg-muted/60 p-3 text-sm">
                 <div>
                   <span className="font-semibold">{t("clientAsked")}:</span>{" "}
                   {[rev.feedback_chip && tChips(rev.feedback_chip as never), rev.client_feedback].filter(Boolean).join(" — ") || "—"}
@@ -354,7 +354,7 @@ function RevisionHistory({
                     <span className="font-semibold">{t("weChanged")}:</span> {rev.expert_change_note}
                   </div>
                 )}
-                <div className="text-xs text-muted-foreground">{formatDateTime(rev.created_at, locale)}</div>
+                <div className="text-[13px] text-muted-foreground">{formatDateTime(rev.created_at, locale)}</div>
               </div>
             )}
             {opts.length > 0 && (

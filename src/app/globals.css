@@ -1,32 +1,81 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Warm, soft palette. High contrast text for 40–55 year old users on mid-range phones. */
+/*
+ * SocialGrid calm design system (Claude Design handoff, Oct 2026).
+ * Soft warm paper, dark readable ink, one calm green for actions. Light is default;
+ * class="dark" on <html> switches to the dark set.
+ */
 :root {
+  --paper: #faf7f2;
+  --canvas: #f3efe8;
+  --surface: #ffffff;
+  --line: #e4ded4;
+  --line-strong: #cfc7ba;
+  --ink: #24211d;
+  --ink-muted: #5e574f;
+  --ink-faint: #8a8177;
+  --primary: #2f5d50;
+  --on-primary: #ffffff;
+  --primary-soft: #e3ece7;
+  --primary-ink: #4e5f57;
+  --status: #b8873a;
+  --status-soft: #f7eedb;
+  --status-ink: #6b4e1e;
+  --status-track: #e8dcc0;
+  --rose-soft: #f3e3e6;
+  --rose-ink: #8a3f52;
+  --danger: #b23b2e;
+  --warning: #a8661b;
+
+  /* names used by the shared components */
   --radius: 0.875rem;
-  --background: #fffaf3;
-  --foreground: #1f1a17;
-  --card: #ffffff;
-  --card-foreground: #1f1a17;
-  --popover: #ffffff;
-  --popover-foreground: #1f1a17;
-  --primary: #d9480f;
-  --primary-foreground: #ffffff;
-  --secondary: #fff0e0;
-  --secondary-foreground: #7a2e0b;
-  --muted: #f4ece2;
-  --muted-foreground: #5f554d;
-  --accent: #fde8d4;
-  --accent-foreground: #5c2408;
-  --destructive: #c92a2a;
-  --success: #2b8a3e;
-  --warning: #f59f00;
-  --warning-foreground: #3d2a00;
-  --border: #eadfd3;
-  --input: #ddd0c2;
-  --ring: #d9480f;
-  --bubble-client: #ffe8cc;
-  --bubble-team: #ffffff;
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary-foreground: var(--on-primary);
+  --secondary: var(--canvas);
+  --secondary-foreground: var(--ink);
+  --muted: var(--canvas);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--primary-soft);
+  --accent-foreground: var(--primary);
+  --destructive: var(--danger);
+  --success: var(--primary);
+  --warning-foreground: var(--status-ink);
+  --border: var(--line);
+  --input: var(--line-strong);
+  --ring: var(--primary);
+  --bubble-client: var(--primary-soft);
+  --bubble-team: var(--surface);
+  color-scheme: light;
+}
+
+.dark {
+  --paper: #16130f;
+  --canvas: #1d1a16;
+  --surface: #221e19;
+  --line: #38322b;
+  --line-strong: #4a433a;
+  --ink: #f3ede3;
+  --ink-muted: #b9afa2;
+  --ink-faint: #8c8276;
+  --primary: #6fb89e;
+  --on-primary: #10201a;
+  --primary-soft: #22352e;
+  --primary-ink: #a9cfc0;
+  --status: #d9a94f;
+  --status-soft: #33291a;
+  --status-ink: #ebd3a2;
+  --status-track: #4a3d26;
+  --rose-soft: #3a2228;
+  --rose-ink: #f0b8c6;
+  --danger: #e06b5c;
+  --warning: #e0a050;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -53,12 +102,31 @@
   --color-ring: var(--ring);
   --color-bubble-client: var(--bubble-client);
   --color-bubble-team: var(--bubble-team);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Sans Devanagari",
-    "Nirmala UI", sans-serif;
+
+  --color-paper: var(--paper);
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-on-primary: var(--on-primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-ink: var(--primary-ink);
+  --color-status: var(--status);
+  --color-status-soft: var(--status-soft);
+  --color-status-ink: var(--status-ink);
+  --color-status-track: var(--status-track);
+  --color-rose-soft: var(--rose-soft);
+  --color-rose-ink: var(--rose-ink);
+  --color-danger: var(--danger);
+
+  --radius-sm: 12px;
+  --radius-md: 14px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --font-sans: "Mukta", "Noto Sans Devanagari", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 @layer base {
@@ -73,9 +141,15 @@
     font-size: 17px;
     line-height: 1.5;
   }
-  /* Devanagari needs a little more line height */
+  /* Hindi gets +10% line height */
   :lang(hi) body {
     line-height: 1.65;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
@@ -101,4 +175,14 @@
 }
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+/* height of the phone bottom tab bar; sticky composers sit on top of it */
+.client-shell {
+  --tabbar-h: calc(66px + max(10px, env(safe-area-inset-bottom)));
+}
+@media (min-width: 1024px) {
+  .client-shell {
+    --tabbar-h: 0px;
+  }
 }

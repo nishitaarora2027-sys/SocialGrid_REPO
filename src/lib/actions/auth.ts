@@ -7,6 +7,7 @@ import { LOCALE_COOKIE, resolveLocale } from "@/i18n/config";
 import { createClient } from "@/lib/supabase/server";
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
+const THEME_COOKIE = "theme";
 
 type LoginState = { error?: string; code?: string; identifier?: string; mode?: "customer" | "team" } | undefined;
 
@@ -57,4 +58,8 @@ export async function setLocale(locale: string) {
   if (user) {
     await supabase.from("profiles").update({ preferred_ui_language: value }).eq("id", user.id);
   }
+}
+
+export async function setTheme(theme: string) {
+  (await cookies()).set(THEME_COOKIE, theme === "dark" ? "dark" : "light", { maxAge: ONE_YEAR, path: "/" });
 }
