@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Social media posts for your business",
     start_url: "/",
     display: "standalone",
-    background_color: "#fffaf3",
-    theme_color: "#d9480f",
+    background_color: "#faf7f2",
+    theme_color: "#2f5d50",
     icons: [{ src: "/icon.svg", sizes: "any", type: "image/svg+xml" }],
   };
 }

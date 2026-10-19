@@ -1035,5 +1035,132 @@
     "chatTheirs": "Got it! Your post will be ready by 6:00 PM today.",
     "chatStatus": "Ready by 6:00 PM",
     "footer": "Made by a real team, for salons, restaurants and shops across India."
+  },
+  "landing": {
+    "nav": {
+      "how": "How it works",
+      "samples": "Sample posts",
+      "faq": "Questions"
+    },
+    "login": "Log in",
+    "loginLong": "Already a customer? Log in",
+    "talk": "Talk to us on WhatsApp",
+    "waText": "Hi SocialGrid, I'd like to know more about posts for my business.",
+    "eyebrow": "For salons, restaurants, cafés and shops",
+    "headline": "Your business on Instagram, without the hard work.",
+    "sub": "Tell us what you need in a chat or a voice note, in Hindi or English. Our team makes the post and tells you exactly when it will be ready.",
+    "seeHow": "See how it works",
+    "trust": {
+      "1": "Made by real people",
+      "2": "Hindi and English",
+      "3": "No design skills needed"
+    },
+    "chat": {
+      "post": "Diwali offer post",
+      "readyBy": "Ready by 6:00 PM",
+      "voice": "Voice note",
+      "mine": "Diwali offer please, 20% off on facials. Using these photos.",
+      "theirs": "Got it, Sunita ji. Your Diwali post will be ready by 6:00 PM today."
+    },
+    "howTitle": "Three steps. No apps to learn.",
+    "howSub": "If you can send a WhatsApp message, you can use SocialGrid.",
+    "stepN": "Step {n}",
+    "steps": {
+      "1": {
+        "title": "Tell us what you need",
+        "text": "Type, send a voice note or share a few photos. An offer, a festival, a new dish, anything."
+      },
+      "2": {
+        "title": "Our team makes it",
+        "text": "A real person designs your post and writes the caption, and tells you when it will be ready."
+      },
+      "3": {
+        "title": "Download and share",
+        "text": "Pick the one you like, ask for changes if needed, then post it with one tap."
+      }
+    },
+    "samplesTitle": "Posts that look like your business",
+    "samplesSub": "Offers, festivals, new arrivals and daily specials, made with your own photos and colours.",
+    "sampleBadge": "Sample designs",
+    "samples": {
+      "salon": {
+        "kicker": "Diwali offer",
+        "title": "20% off on all facials",
+        "line": "Book your glow before 2 Nov"
+      },
+      "food": {
+        "kicker": "Today's special",
+        "title": "Paneer tikka thali ₹220",
+        "line": "Lunch 12–3 PM only"
+      },
+      "shop": {
+        "kicker": "New arrivals",
+        "title": "Festive kurtas are in",
+        "line": "Sizes S to XXL"
+      },
+      "cafe": {
+        "kicker": "Weekend",
+        "title": "Buy 2 chai, get 1 free",
+        "line": "Sat & Sun, all day"
+      }
+    },
+    "whoTitle": "Made for local businesses",
+    "who": {
+      "salon": {
+        "title": "Salons & parlours",
+        "text": "Offers, bridal looks, before & after."
+      },
+      "restaurant": {
+        "title": "Restaurants",
+        "text": "Daily specials, thalis, festival menus."
+      },
+      "cafe": {
+        "title": "Cafés & sweet shops",
+        "text": "New items, combos, weekend deals."
+      },
+      "shop": {
+        "title": "Shops & boutiques",
+        "text": "New stock, sales, festive collections."
+      }
+    },
+    "priceTitle": "Simple monthly plans",
+    "priceSub": "Plans depend on how many posts you need. Talk to us and we'll suggest the right one for your business.",
+    "includes": {
+      "1": "Posts, carousels, stories and reel ideas",
+      "2": "Captions and hashtags written for you",
+      "3": "A weekly plan, including festivals",
+      "4": "Changes until you're happy"
+    },
+    "faqTitle": "Questions people ask",
+    "faq": {
+      "instagram": {
+        "q": "Do I need to know Instagram?",
+        "a": "No. We send you the finished post and caption. You just download it and share, and we'll show you how the first time."
+      },
+      "hindi": {
+        "q": "Can I talk in Hindi?",
+        "a": "Yes. The whole app works in Hindi and English, and you can send voice notes instead of typing."
+      },
+      "speed": {
+        "q": "How fast will I get my post?",
+        "a": "Usually the same day. Every request shows the exact time it will be ready, and you can mark urgent ones."
+      },
+      "changes": {
+        "q": "What if I don't like it?",
+        "a": "Tap \"Ask for changes\" and tell us what to fix. We send a new version."
+      },
+      "photos": {
+        "q": "Do I need good photos?",
+        "a": "Phone photos are fine. We tell you what to click when we need something specific."
+      },
+      "price": {
+        "q": "How much does it cost?",
+        "a": "It depends on how many posts you need each month. Message us on WhatsApp and we'll share the plans."
+      }
+    },
+    "contactTitle": "Let's make your first post",
+    "contactSub": "Send us a message on WhatsApp. A real person will reply.",
+    "contactSoon": "Our WhatsApp number is coming soon. Until then, ask the person who shared this link with you.",
+    "footer": "Instagram posts for local businesses"
   }
 }
