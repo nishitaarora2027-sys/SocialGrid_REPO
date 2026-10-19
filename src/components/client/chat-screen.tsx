@@ -224,9 +224,7 @@ function ChatToolbar({ businessName }: { businessName: string }) {
 
 export function TeamAvatar({ className }: { className?: string }) {
   return (
-    <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-full bg-surface ring-1 ring-line", className)} aria-hidden>
-      <LogoMark className="size-6" />
-    </span>
+    <LogoMark className={cn("size-10 shrink-0", className)} />
   );
 }
 

@@ -26,7 +26,7 @@ export async function Landing() {
       <header className="glass-bar sticky top-0 z-40 border-b border-line/70">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 lg:px-8">
           <Link href="/" aria-label="SocialGrid">
-            <Logo className="[&_span]:text-[18px]" />
+            <Logo />
           </Link>
           <nav className="hidden items-center gap-8 text-[15px] text-ink-muted md:flex">
             <a href="#how" className="transition-colors hover:text-ink">{t("nav.how")}</a>

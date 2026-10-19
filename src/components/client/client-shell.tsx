@@ -120,9 +120,7 @@ export function ClientHeader({ businessName }: { businessName: string; logoUrl: 
         <h1 className="display min-w-0 flex-1 truncate text-[22px] font-bold">{t(titleKey as never)}</h1>
       ) : (
         <div className="flex min-w-0 flex-1 items-center gap-3">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface ring-1 ring-line" aria-hidden>
-            <LogoMark className="size-6" />
-          </span>
+          <LogoMark className="size-10 shrink-0" />
           <div className="min-w-0 leading-tight">
             <div className="truncate text-[17px] font-bold">{tChat("teamName")}</div>
             <div className="truncate text-[14px] text-ink-muted">{tChat("teamFor", { business: businessName })}</div>
