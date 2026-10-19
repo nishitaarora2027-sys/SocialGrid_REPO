@@ -11,7 +11,7 @@ export default async function UpdatePasswordPage() {
 
   return (
     <AuthShell>
-      <div className="space-y-6 py-10">
+      <div className="space-y-6">
       <h1 className="text-[28px] leading-tight font-bold">
         {t("newTitle")}
       </h1>

@@ -21,8 +21,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const [locale, store] = await Promise.all([getLocale(), cookies()]);
   const dark = store.get("theme")?.value === "dark";
   return (
-    <html lang={locale} className={dark ? "dark" : undefined}>
+    <html lang={locale} className={dark ? "dark" : undefined} suppressHydrationWarning>
       <head>
+        {/* lets CSS hide scroll-reveal content only when JS is running to reveal it */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { login } from "@/lib/actions/auth";
+import { LogoMark } from "@/components/shared/logo";
 
 /** Business owners see their form by default; the team form is one quiet button away (same page, same URL). */
 export function LoginForm() {
@@ -28,24 +29,15 @@ export function LoginForm() {
   const team = mode === "team";
 
   return (
-    <div className="flex flex-1 flex-col">
-      {team ? (
-        <div className="mt-10 flex flex-col gap-2 rounded-[16px] bg-ink px-4 py-3.5 text-paper">
-          <h1 className="text-[22px] leading-tight font-bold">{t("teamTitle")}</h1>
-          <button
-            type="button"
-            onClick={() => setMode("customer")}
-            className="inline-flex items-center gap-1.5 self-start text-[16px] font-semibold underline-offset-4 hover:underline"
-          >
-            <ArrowLeftIcon className="size-4" /> {t("ownerLogin")}
-          </button>
-        </div>
-      ) : (
-        <div className="mt-10 space-y-1.5">
-          <h1 className="text-[28px] leading-tight font-bold">{t("title")}</h1>
-          <p className="text-[18px] text-ink-muted">{t("subtitle")}</p>
-        </div>
-      )}
+    <div className="flex flex-col">
+      <div className="flex flex-col items-center text-center">
+        <LogoMark className="size-14" />
+        {team && (
+          <span className="mt-4 rounded-full bg-ink px-3 py-1 text-[13px] font-semibold tracking-wide text-paper">{t("teamBadge")}</span>
+        )}
+        <h1 className={`${team ? "mt-2" : "mt-5"} text-[28px] leading-tight font-bold tracking-tight`}>{team ? t("teamTitle") : t("title")}</h1>
+        <p className="mt-1.5 text-[17px] text-ink-muted">{team ? t("teamSubtitle") : t("subtitle")}</p>
+      </div>
 
       <form action={action} className="flex flex-col gap-4 pt-7" data-mode={mode}>
         <input type="hidden" name="mode" value={mode} />
@@ -119,22 +111,17 @@ export function LoginForm() {
         )}
       </form>
 
-      {!team && <p className="mt-6 text-center text-[15px] text-ink-muted">{t("help")}</p>}
-
-      <div className="mt-auto -mx-1 flex items-center justify-between gap-3 border-t border-line pt-[18px] pb-7 lg:mt-10 lg:pb-0">
+      <div className="mt-6 border-t border-line pt-5 text-center text-[16px] text-ink-muted">
         {team ? (
-          <>
-            <span className="text-[16px] text-ink-muted">{t("ownerQuestion")}</span>
-            <Button type="button" variant="outline" size="sm" className="h-auto px-3.5 py-2.5 text-[16px]" onClick={() => setMode("customer")}>
-              {t("ownerLoginShort")}
-            </Button>
-          </>
+          <button type="button" onClick={() => setMode("customer")} className="inline-flex items-center gap-1.5 font-semibold text-primary">
+            <ArrowLeftIcon className="size-4" /> {t("ownerLogin")}
+          </button>
         ) : (
           <>
-            <span className="text-[16px] text-ink-muted">{t("teamQuestion")}</span>
-            <Button type="button" variant="outline" size="sm" className="h-auto px-3.5 py-2.5 text-[16px]" onClick={() => setMode("team")}>
+            {t("teamQuestion")}{" "}
+            <button type="button" onClick={() => setMode("team")} className="font-semibold text-primary underline-offset-4 hover:underline">
               {t("teamLogin")}
-            </Button>
+            </button>
           </>
         )}
       </div>

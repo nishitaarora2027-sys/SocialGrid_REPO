@@ -187,45 +187,46 @@
   }
 }
 
-/* login brand panel: deep night-green with soft colour light (emerald, gold, rose) and a faint dot grid */
-.auth-panel {
-  background: #0c1613;
-  isolation: isolate;
+/* auth pages: a calm "wallpaper" of brand colours under frosted glass, like the macOS login screen */
+.auth-wallpaper {
+  background:
+    radial-gradient(42% 50% at 12% 18%, rgb(127 196 168 / 0.7), transparent 70%),
+    radial-gradient(38% 45% at 88% 12%, rgb(244 215 155 / 0.75), transparent 70%),
+    radial-gradient(45% 55% at 80% 90%, rgb(232 138 166 / 0.5), transparent 70%),
+    radial-gradient(40% 50% at 15% 95%, rgb(142 139 224 / 0.45), transparent 70%),
+    var(--paper);
 }
-.auth-panel::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-image: radial-gradient(circle at center, rgb(255 255 255 / 0.06) 1.4px, transparent 1.5px);
-  background-size: 26px 26px;
-  mask-image: radial-gradient(80% 70% at 50% 40%, black, transparent);
+.dark .auth-wallpaper {
+  background:
+    radial-gradient(42% 50% at 12% 18%, rgb(31 138 109 / 0.45), transparent 70%),
+    radial-gradient(38% 45% at 88% 12%, rgb(201 154 74 / 0.3), transparent 70%),
+    radial-gradient(45% 55% at 80% 90%, rgb(155 63 99 / 0.35), transparent 70%),
+    radial-gradient(40% 50% at 15% 95%, rgb(70 68 160 / 0.35), transparent 70%),
+    var(--paper);
 }
-.auth-blob {
-  position: absolute;
-  z-index: -2;
-  border-radius: 9999px;
-  filter: blur(90px);
-  pointer-events: none;
+/* glass is for the control layer (cards over wallpaper, the nav bar), never for content */
+.glass-card {
+  background: rgb(255 255 255 / 0.72);
+  border: 1px solid rgb(255 255 255 / 0.7);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.6) inset, 0 30px 80px -30px rgb(36 33 29 / 0.35);
+  backdrop-filter: blur(28px) saturate(1.6);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
 }
-.auth-blob-a { width: 520px; height: 520px; top: -160px; right: -140px; background: #1f8a6d; opacity: 0.55; }
-.auth-blob-b { width: 420px; height: 420px; top: 38%; left: -180px; background: #c99a4a; opacity: 0.35; }
-.auth-blob-c { width: 480px; height: 480px; bottom: -220px; right: 10%; background: #9b3f63; opacity: 0.45; }
-.auth-gradient-text {
-  background: linear-gradient(95deg, #f4d79b 0%, #f0a882 45%, #e88aa6 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.dark .glass-card {
+  background: rgb(34 30 25 / 0.7);
+  border-color: rgb(255 255 255 / 0.08);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 30px 80px -30px rgb(0 0 0 / 0.7);
+}
+.glass-bar {
+  background: rgb(251 250 247 / 0.72);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+}
+.dark .glass-bar {
+  background: rgb(22 19 15 / 0.72);
 }
 
-/* one-shot entrance animations (they settle and stay; reduced motion skips straight to the end) */
-@keyframes sg-rise { from { opacity: 0; transform: translateY(18px); } }
-@keyframes sg-pop { 0% { opacity: 0; transform: scale(0.8); } 70% { opacity: 1; transform: scale(1.04); } }
-@keyframes sg-fill { from { transform: scaleX(0); } }
-@keyframes sg-bar { from { transform: scaleY(0.15); opacity: 0.4; } }
-@keyframes sg-draw { from { stroke-dashoffset: 320; } }
-.sg-rise { animation: sg-rise 600ms cubic-bezier(.2,.8,.2,1) both; }
-.sg-pop { animation: sg-pop 650ms cubic-bezier(.2,.9,.3,1.2) both; }
-.sg-fill { transform-origin: left; animation: sg-fill 450ms ease-out both; }
-.sg-bar { transform-origin: center; animation: sg-bar 400ms ease-out both; }
-.sg-draw path { stroke-dasharray: 320; animation: sg-draw 900ms ease-out 700ms both; }
+/* scroll reveal: content starts visible without JS; the script only adds the gentle entrance */
+.reveal { transition: opacity 700ms cubic-bezier(.2,.7,.2,1), transform 700ms cubic-bezier(.2,.7,.2,1); }
+html.js .reveal:not([data-shown]) { opacity: 0; transform: translateY(28px); }
+.display { letter-spacing: -0.025em; }

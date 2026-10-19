@@ -25,12 +25,14 @@
     "email": "Email",
     "forgot": "Forgot password?",
     "rescue": "Locked out? Account rescue",
-    "teamTitle": "SocialGrid team login",
+    "teamTitle": "SocialGrid team",
     "ownerLogin": "Business owner login",
     "ownerLoginShort": "Owner login",
     "ownerQuestion": "Own a business?",
     "teamQuestion": "Work at SocialGrid?",
-    "teamLogin": "Team login"
+    "teamLogin": "Team login",
+    "teamBadge": "Team",
+    "teamSubtitle": "Log in to the team dashboard."
   },
   "nav": {
     "readyCount": "{count, plural, one {# post ready} other {# posts ready}}",
@@ -1026,103 +1028,91 @@
       "done": "Ready"
     }
   },
-  "authPanel": {
-    "line1": "Just say it.",
-    "line2": "We'll create it.",
-    "sub": "Send a voice note or a message. Your own design team creates on-brand posts and plans what goes out each week. You just download and share.",
-    "voice": "दिवाली पर फ़ेशियल 20% off वाली पोस्ट बना दो",
-    "ready": "Created · 6:00 PM",
-    "line3": "And plan your whole week.",
-    "voiceLabel": "Voice note",
-    "weekTitle": "This week, planned",
-    "weekCount": "4 posts",
-    "perk": {
-      "voice": "Voice or text",
-      "lang": "Hindi & English",
-      "people": "Real designers, not templates"
-    }
-  },
   "landing": {
     "nav": {
       "how": "How it works",
-      "samples": "Sample posts",
+      "work": "Work",
+      "features": "Features",
       "faq": "Questions"
     },
     "login": "Log in",
-    "loginLong": "Already a customer? Log in",
     "talk": "Talk to us on WhatsApp",
-    "waText": "Hi SocialGrid, I'd like to know more about posts for my business.",
+    "talkShort": "Talk to us",
+    "waText": "Hi SocialGrid, I'd like to know more.",
     "eyebrow": "Your content team, on chat",
-    "headline": "Your business on Instagram, without the hard work.",
-    "sub": "Tell us what you need in a chat or a voice note, in Hindi or English. Our team creates the post, plans your week, and tells you exactly when each one will be ready.",
+    "h1a": "Just say it.",
+    "h1b": "We'll create it.",
+    "sub": "Send a voice note or a message. Your own design team creates your posts and plans your week. You just download and share.",
     "seeHow": "See how it works",
-    "trust": {
-      "1": "Made by real people",
-      "2": "Hindi and English",
-      "3": "No design skills needed"
+    "phone": {
+      "post": "Diwali offer",
+      "readyBy": "Ready by 6 PM",
+      "reply": "Got it, Sunita ji! Ready by 6 PM today.",
+      "ready": "Your post is ready",
+      "choose": "Choose this one",
+      "type": "Type or speak…"
     },
-    "chat": {
-      "post": "Diwali offer post",
-      "readyBy": "Ready by 6:00 PM",
-      "voice": "Voice note",
-      "mine": "Diwali offer please, 20% off on facials. Using these photos.",
-      "theirs": "Got it, Sunita ji. Your Diwali post will be ready by 6:00 PM today."
-    },
-    "howTitle": "Three steps. No apps to learn.",
-    "howSub": "If you can send a WhatsApp message, you can use SocialGrid.",
-    "stepN": "Step {n}",
+    "howTitle": "As easy as a voice note.",
+    "howSub": "No apps to learn, no designs to fiddle with. If you can use WhatsApp, you can use SocialGrid.",
     "steps": {
       "1": {
-        "title": "Tell us what you need",
-        "text": "Type, send a voice note or share a few photos. An offer, a festival, a new dish, anything."
+        "title": "Tell us what you need.",
+        "text": "Speak or type, in Hindi or English. Add a few photos from your phone if you like."
       },
       "2": {
-        "title": "Our team creates it",
-        "text": "A real person designs your post and writes the caption, and tells you when it will be ready."
+        "title": "We create it.",
+        "text": "A real designer makes your post and writes the caption, and you see exactly when it will be ready.",
+        "badge": "designing your post"
       },
       "3": {
-        "title": "Download and share",
-        "text": "Pick the one you like, ask for changes if needed, then post it with one tap."
+        "title": "You share it.",
+        "text": "Pick the one you love, ask for changes if you want, then download and share in a tap.",
+        "download": "Download",
+        "share": "Share"
       }
     },
-    "samplesTitle": "Posts that look like your business",
-    "samplesSub": "Offers, festivals, new arrivals and daily specials, made with your own photos and colours.",
-    "sampleBadge": "Sample designs",
-    "samples": {
-      "salon": {
-        "kicker": "Diwali offer",
-        "title": "20% off on all facials",
-        "line": "Book your glow before 2 Nov"
+    "workTitle": "Created. Not templated.",
+    "workSub": "Every post is designed by a person, in your colours, around your offer.",
+    "sampleNote": "Sample designs",
+    "featuresTitle": "Everything you need. Nothing you don't.",
+    "f": {
+      "plan": {
+        "title": "Your week, planned.",
+        "text": "Festivals, offers and everyday posts, decided before the week begins. You never wonder what to post next."
       },
-      "food": {
-        "kicker": "Today's special",
-        "title": "Paneer tikka thali ₹220",
-        "line": "Lunch 12–3 PM only"
+      "lang": {
+        "title": "Your language.",
+        "text": "The whole app works in Hindi and English. Switch any time."
       },
-      "shop": {
-        "kicker": "New arrivals",
-        "title": "Festive kurtas are in",
-        "line": "Sizes S to XXL"
+      "time": {
+        "title": "Always know when.",
+        "text": "Every request shows its ready time and where it is right now.",
+        "s1": "Received",
+        "s2": "Making",
+        "s3": "Ready"
       },
-      "cafe": {
-        "kicker": "Weekend",
-        "title": "Buy 2 chai, get 1 free",
-        "line": "Sat & Sun, all day"
+      "changes": {
+        "title": "Changes, until you love it.",
+        "text": "Tap what to change, or just say it. We send a new version.",
+        "c1": "Brighter",
+        "c2": "Shorter caption",
+        "c3": "Different colours",
+        "count": "New version in your chat"
       }
     },
-    "priceTitle": "Simple monthly plans",
-    "priceSub": "Plans depend on how many posts you need. Talk to us and we'll suggest the right one for your business.",
+    "priceTitle": "A plan that fits your month.",
+    "priceSub": "Pricing depends on how many posts you need. Tell us about your business and we'll suggest the right plan.",
     "includes": {
-      "1": "Posts, carousels, stories and reel ideas",
-      "2": "Captions and hashtags written for you",
-      "3": "A weekly plan, including festivals",
-      "4": "Changes until you're happy"
+      "1": "Posts, carousels and stories",
+      "2": "Captions and hashtags",
+      "3": "A weekly plan",
+      "4": "Changes included"
     },
-    "faqTitle": "Questions people ask",
+    "faqTitle": "Questions.",
     "faq": {
       "instagram": {
         "q": "Do I need to know Instagram?",
-        "a": "No. We send you the finished post and caption. You just download it and share, and we'll show you how the first time."
+        "a": "No. We send the finished post and caption. You download and share it, and we'll show you how the first time."
       },
       "hindi": {
         "q": "Can I talk in Hindi?",
@@ -1138,31 +1128,16 @@
       },
       "photos": {
         "q": "Do I need good photos?",
-        "a": "Phone photos are fine. We tell you what to click when we need something specific."
+        "a": "Phone photos are fine. When we need something specific, we'll tell you what to click."
       },
       "price": {
         "q": "How much does it cost?",
-        "a": "It depends on how many posts you need each month. Message us on WhatsApp and we'll share the plans."
+        "a": "It depends on how many posts you need each month. Message us and we'll share the plans."
       }
     },
-    "contactTitle": "Let's make your first post",
-    "contactSub": "Send us a message on WhatsApp. A real person will reply.",
-    "contactSoon": "Our WhatsApp number is coming soon. Until then, ask the person who shared this link with you.",
-    "footer": "Content created and planned for your business",
-    "getTitle": "What you get",
-    "get": {
-      "create": {
-        "title": "Created for you",
-        "text": "Real designers make every post, carousel and story in your colours, with captions and hashtags written for you."
-      },
-      "plan": {
-        "title": "Planned for you",
-        "text": "A weekly plan with festivals and offers already thought of, so you never wonder what to post next."
-      },
-      "time": {
-        "title": "Ready on time",
-        "text": "Every request shows exactly when it will be ready, and you can ask for changes until you love it."
-      }
-    }
+    "closeTitle": "Your next post is one voice note away.",
+    "closeSub": "Message us on WhatsApp. A real person will reply.",
+    "closeSoon": "Our WhatsApp number is coming soon. Until then, ask the person who shared this link with you.",
+    "footer": "Content created and planned for your business."
   }
 }
