@@ -31,20 +31,21 @@ export default async function HelpPage() {
   return (
     <main className="w-full max-w-5xl flex-1 space-y-3 px-3 py-3 lg:space-y-5 lg:px-10 lg:py-8">
       <h1 className="text-[30px] leading-tight font-bold max-lg:sr-only">{t("title")}</h1>
-      {sub?.plan && (
+      {sub && (
         <Card className="py-4">
           <CardContent className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="text-[18px] font-bold">
-                {tSub("yourPlan")}: {sub.plan.name}
+                {tSub("yourPlan")}{sub.plan ? `: ${sub.plan.name}` : ""}
               </h2>
               <p className="text-[17px] text-ink-muted">
                 {sub.status === "active" && sub.current_period_end
                   ? tSub("activeTill", { date: formatDate(sub.current_period_end, locale) })
                   : tStatus(sub.status)}
               </p>
+              {!(sub.plan && sub.plan.price_inr > 0) && <p className="text-[15px] text-ink-muted">{tSub("noPaidPlan")}</p>}
             </div>
-            {sub.plan.price_inr > 0 && <PayButton price={sub.plan.price_inr} size="default" />}
+            {sub.plan && sub.plan.price_inr > 0 && <PayButton price={sub.plan.price_inr} size="default" />}
           </CardContent>
         </Card>
       )}

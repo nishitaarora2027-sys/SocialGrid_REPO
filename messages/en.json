@@ -63,7 +63,8 @@
     "verifyFailed": "We couldn't confirm this payment. If money was taken, please contact us.",
     "noPlan": "No plan is set for your account yet. Please contact us.",
     "yourPlan": "Your plan",
-    "activeTill": "Active till {date}"
+    "activeTill": "Active till {date}",
+    "noPaidPlan": "Online payment isn't set up for your plan yet. Please contact us."
   },
   "chat": {
     "pause": "Pause",
