@@ -7,7 +7,7 @@ export interface CreateSubscriptionInput {
   currentPeriodEnd?: string | null;
 }
 
-/** Payment gateways implement this. V1 ships ManualBillingProvider; Razorpay comes later. */
+/** Payment gateways implement this. ManualBillingProvider, plus RazorpayBillingProvider when its keys are set. */
 export interface BillingProvider {
   readonly name: string;
   createSubscription(input: CreateSubscriptionInput): Promise<{ providerRef: string | null }>;

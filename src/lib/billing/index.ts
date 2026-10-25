@@ -2,10 +2,11 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ContentType, SubscriptionStatus } from "@/lib/types";
 import { manualBillingProvider } from "./manual";
+import { isRazorpayConfigured, razorpayBillingProvider } from "./razorpay";
 import type { BillingProvider } from "./types";
 
 export function getBillingProvider(): BillingProvider {
-  return manualBillingProvider;
+  return isRazorpayConfigured() ? razorpayBillingProvider : manualBillingProvider;
 }
 
 export type RequestAccess = "ok" | "inactive" | "limit_reached" | "type_not_allowed";

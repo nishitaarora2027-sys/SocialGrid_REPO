@@ -53,7 +53,17 @@
   "subscription": {
     "pastDue": "Your plan renewal is pending.",
     "blocked": "Your plan is paused right now, so you can't ask for new posts. Your old posts are all still here to download.",
-    "contactUs": "Contact us"
+    "contactUs": "Contact us",
+    "pay": "Pay for this month",
+    "payAmount": "Pay {amount} for this month",
+    "paid": "Payment received. Your plan is active till {date}.",
+    "payCancelled": "Payment cancelled. No money was taken.",
+    "payFailed": "Payment failed. {reason}",
+    "payError": "Couldn't start the payment. Please try again.",
+    "verifyFailed": "We couldn't confirm this payment. If money was taken, please contact us.",
+    "noPlan": "No plan is set for your account yet. Please contact us.",
+    "yourPlan": "Your plan",
+    "activeTill": "Active till {date}"
   },
   "chat": {
     "pause": "Pause",

@@ -16,6 +16,7 @@ import { Composer, type RecentRequest } from "@/components/client/composer";
 import { DeliveryView } from "@/components/client/delivery-view";
 import { CHANGE_CHIPS, OptionsCard } from "@/components/client/options-card";
 import { QuickStartSheet } from "@/components/client/quick-start-sheet";
+import { PayButton } from "@/components/client/pay-button";
 import { FirstPostHero } from "@/components/client/idea-shelf";
 import { useRealtimeRefresh } from "@/components/shared/use-realtime";
 import { chooseOption, markConversationRead, requestChanges } from "@/lib/actions/client";
@@ -355,7 +356,8 @@ function BlockedNotice({ supportWhatsapp }: { supportWhatsapp: string }) {
   return (
     <div className="sticky bottom-[var(--tabbar-h)] mx-3 mb-3 space-y-3 rounded-[16px] border border-line bg-canvas p-4">
       <p className="text-[17px] font-medium text-danger">{t("blocked")}</p>
-      <Button asChild size="lg" className="w-full">
+      <PayButton className="w-full" />
+      <Button asChild size="lg" variant="outline" className="w-full">
         <a href={href} target={supportWhatsapp ? "_blank" : undefined} rel="noreferrer">
           <MessageCircleIcon /> {t("contactUs")}
         </a>
