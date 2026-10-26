@@ -48,7 +48,9 @@
     "brandLong": "My business",
     "planTitle": "This week's plan",
     "light": "Light",
-    "dark": "Dark"
+    "dark": "Dark",
+    "billing": "Pay",
+    "billingLong": "Payments"
   },
   "subscription": {
     "pastDue": "Your plan renewal is pending.",
@@ -62,9 +64,17 @@
     "payError": "Couldn't start the payment. Please try again.",
     "verifyFailed": "We couldn't confirm this payment. If money was taken, please contact us.",
     "noPlan": "No plan is set for your account yet. Please contact us.",
-    "yourPlan": "Your plan",
     "activeTill": "Active till {date}",
-    "noPaidPlan": "Online payment isn't set up for your plan yet. Please contact us."
+    "noPaidPlan": "Online payment isn't set up for your plan yet. Please contact us.",
+    "pageTitle": "Payments",
+    "choosePlan": "Choose a plan",
+    "seePlans": "See plans",
+    "yourPlanBadge": "Your plan",
+    "save": "Save {amount}",
+    "perMonth": "month",
+    "perYear": "year",
+    "renew": "Renew",
+    "payAmountShort": "Pay {amount}"
   },
   "chat": {
     "pause": "Pause",
@@ -895,7 +905,13 @@
         },
         "addTeamTitle": "Add a founder",
         "addTeamHint": "Creates another SocialGrid team login. They log in on the “SocialGrid team” tab."
-      }
+      },
+      "billing": "Billing",
+      "billingHint": "How long one payment lasts: Monthly = 30 days, Yearly = 365 days.",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "perMonth": "month",
+      "perYear": "year"
     }
   },
   "setup": {

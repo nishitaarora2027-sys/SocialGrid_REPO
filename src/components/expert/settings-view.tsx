@@ -19,6 +19,7 @@ import { addTeamMember, changeMyPassword } from "@/lib/actions/password";
 import { TeamMemberForm } from "@/components/shared/team-member-form";
 import { formatDate, formatPrice } from "@/lib/format";
 import {
+  BILLING_PERIODS,
   CONTENT_TYPES,
   INDUSTRIES,
   type ContentType,
@@ -310,7 +311,7 @@ function Plans({ plans }: { plans: Plan[] }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
-        <Button onClick={() => setEdit({ name: "", price_inr: 0, limits: { requests_per_month: null, content_types: null }, active: true })}>
+        <Button onClick={() => setEdit({ name: "", price_inr: 0, limits: { billing: "month", requests_per_month: null, content_types: null }, active: true })}>
           <PlusIcon /> {t("addPlan")}
         </Button>
         <p className="text-sm text-muted-foreground">{t("plansHint")}</p>
@@ -320,7 +321,10 @@ function Plans({ plans }: { plans: Plan[] }) {
           <div key={p.id} className={cn("space-y-2 rounded-[16px] border bg-card p-4", !p.active && "opacity-50")}>
             <div className="flex items-center justify-between">
               <div className="text-lg font-bold">{p.name}</div>
-              <div className="font-bold">{formatPrice(p.price_inr)}</div>
+              <div className="font-bold">
+                {formatPrice(p.price_inr)}
+                <span className="text-sm font-normal text-muted-foreground"> / {t(p.limits.billing === "year" ? "perYear" : "perMonth")}</span>
+              </div>
             </div>
             <div className="text-sm text-muted-foreground">
               {t("requestsPerMonth")}: {p.limits.requests_per_month ?? t("unlimited")}
@@ -351,6 +355,25 @@ function Plans({ plans }: { plans: Plan[] }) {
                   <Label>{t("price")}</Label>
                   <Input type="number" min={0} value={edit.price_inr} onChange={(e) => setEdit({ ...edit, price_inr: Number(e.target.value) })} />
                 </div>
+              </div>
+              <div className="space-y-1">
+                <Label>{t("billing")}</Label>
+                <div className="flex gap-2">
+                  {BILLING_PERIODS.map((b) => {
+                    const on = (edit.limits.billing ?? "month") === b;
+                    return (
+                      <button
+                        key={b}
+                        type="button"
+                        onClick={() => setEdit({ ...edit, limits: { ...edit.limits, billing: b } })}
+                        className={cn("h-10 rounded-full border px-4 text-sm font-semibold", on ? "border-primary bg-secondary" : "bg-card text-muted-foreground")}
+                      >
+                        {t(b === "year" ? "yearly" : "monthly")}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-sm text-muted-foreground">{t("billingHint")}</p>
               </div>
               <div className="space-y-1">
                 <Label>{t("requestsPerMonth")}</Label>
@@ -396,6 +419,7 @@ function Plans({ plans }: { plans: Plan[] }) {
                       savePlan({
                         ...edit,
                         limits: {
+                          billing: edit.limits.billing ?? "month",
                           requests_per_month: edit.limits.requests_per_month ?? null,
                           content_types: (edit.limits.content_types ?? null) as never,
                         },

@@ -1,14 +1,20 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { BillingError, razorpayBillingProvider } from "@/lib/billing/razorpay";
 import { clientBusinessId } from "@/lib/billing/route-auth";
 
-/** Creates a Razorpay order for the signed-in client's monthly plan */
-export async function POST() {
+const schema = z.object({ plan_id: z.string().uuid().nullish() });
+
+/** Creates a Razorpay order for the plan the signed-in client picked (or their current plan) */
+export async function POST(request: Request) {
   const businessId = await clientBusinessId();
   if (!businessId) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
+  const parsed = schema.safeParse((await request.json().catch(() => null)) ?? {});
+  if (!parsed.success) return NextResponse.json({ error: "invalid" }, { status: 400 });
+
   try {
-    const order = await razorpayBillingProvider.createOrder(businessId);
+    const order = await razorpayBillingProvider.createOrder(businessId, parsed.data.plan_id);
     return NextResponse.json({
       order_id: order.orderId,
       amount: order.amount,

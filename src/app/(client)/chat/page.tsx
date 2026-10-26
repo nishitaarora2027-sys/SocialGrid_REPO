@@ -1,5 +1,6 @@
 import { requireClient } from "@/lib/auth/session";
 import { canCreateRequests } from "@/lib/billing";
+import { loadBillingInfo } from "@/lib/billing/plans";
 import { ensureWeekSlots, getConversationId } from "@/lib/domain";
 import { runSuggestions } from "@/lib/suggestions/engine";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -54,6 +55,10 @@ export default async function ChatPage() {
   const { data: team } = teamIds.length
     ? await admin.from("profiles").select("id, display_name").in("id", teamIds)
     : { data: [] as { id: string; display_name: string }[] };
+  // Blocked clients get the plan options in chat, so they only load then
+  const canRequest = canCreateRequests(sub?.status);
+  const billing = canRequest ? null : await loadBillingInfo(supabase, business.id);
+
   const teamNames = Object.fromEntries((team ?? []).map((p) => [p.id, p.display_name as string]));
 
   return (
@@ -67,7 +72,8 @@ export default async function ChatPage() {
       thread={thread}
       teamNames={teamNames}
       recentRequests={(recent ?? []) as Pick<RequestRow, "id" | "summary" | "status" | "due_at" | "quick_start_type">[]}
-      canRequest={canCreateRequests(sub?.status)}
+      canRequest={canRequest}
+      billing={billing}
       supportWhatsapp={SUPPORT_WHATSAPP}
     />
   );

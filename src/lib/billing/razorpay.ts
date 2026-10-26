@@ -2,7 +2,7 @@ import "server-only";
 import Razorpay from "razorpay";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { SubscriptionStatus } from "@/lib/types";
-import { MIN_AMOUNT_PAISE, isValidSignature, nextPeriodEnd } from "./checkout";
+import { MIN_AMOUNT_PAISE, isValidSignature, nextPeriodEnd, periodDays } from "./checkout";
 import type { BillingProvider } from "./types";
 
 export class BillingError extends Error {
@@ -60,12 +60,12 @@ async function upsertSubscription(row: {
 }
 
 /**
- * Monthly plan payments through Razorpay Standard Checkout: the server creates an order for
- * the business's plan, the browser opens the Razorpay modal, and the server verifies the
- * returned signature before marking the plan active for 30 days.
+ * Plan payments through Razorpay Standard Checkout: the server creates an order for the plan
+ * the client picked, the browser opens the Razorpay modal, and the server verifies the
+ * returned signature before marking the plan active for 30 days (monthly) or 365 (yearly).
  */
 export const razorpayBillingProvider: BillingProvider & {
-  createOrder(businessId: string): Promise<{ orderId: string; amount: number; currency: string; planName: string; keyId: string }>;
+  createOrder(businessId: string, planId?: string | null): Promise<{ orderId: string; amount: number; currency: string; planName: string; keyId: string }>;
   verifyPayment(input: {
     businessId: string;
     orderId: string;
@@ -90,12 +90,23 @@ export const razorpayBillingProvider: BillingProvider & {
     return { handled: false };
   },
 
-  /** The amount always comes from the business's plan in the database, never from the browser */
-  async createOrder(businessId) {
+  /**
+   * Pays for the plan the client picked, or their current plan. The amount always comes from
+   * the plan in the database, never from the browser.
+   */
+  async createOrder(businessId, planId) {
     const admin = createAdminClient();
-    const { data: sub } = await admin.from("subscriptions").select("plan_id").eq("business_id", businessId).maybeSingle();
-    if (!sub?.plan_id) throw new BillingError("no_plan", 400);
-    const { data: plan } = await admin.from("plans").select("id, name, price_inr").eq("id", sub.plan_id).maybeSingle();
+    if (!planId) {
+      const { data: sub } = await admin.from("subscriptions").select("plan_id").eq("business_id", businessId).maybeSingle();
+      planId = sub?.plan_id ?? null;
+    }
+    if (!planId) throw new BillingError("no_plan", 400);
+    const { data: plan } = await admin
+      .from("plans")
+      .select("id, name, price_inr")
+      .eq("id", planId)
+      .eq("active", true)
+      .maybeSingle();
     if (!plan) throw new BillingError("no_plan", 400);
     const amount = Math.round(Number(plan.price_inr) * 100);
     if (!(amount >= MIN_AMOUNT_PAISE)) throw new BillingError("amount_too_low", 400);
@@ -134,16 +145,20 @@ export const razorpayBillingProvider: BillingProvider & {
     const admin = createAdminClient();
     const { data: sub } = await admin
       .from("subscriptions")
-      .select("status, current_period_end, provider_ref")
+      .select("status, plan_id, current_period_end, provider_ref")
       .eq("business_id", businessId)
       .maybeSingle();
 
-    // Already applied (e.g. the browser sent it twice): don't add another 30 days
+    // Already applied (e.g. the browser sent it twice): don't add another period
     if (sub?.provider_ref === paymentId && sub.current_period_end) {
       return { currentPeriodEnd: sub.current_period_end };
     }
 
-    const currentPeriodEnd = nextPeriodEnd(sub?.status === "active" ? sub.current_period_end : null);
+    const { data: plan } = await admin.from("plans").select("limits").eq("id", planId).maybeSingle();
+    const days = periodDays((plan?.limits as { billing?: string } | null)?.billing);
+    // Renewing the same plan early adds to the time left; switching plans starts today
+    const keepTimeLeft = sub?.status === "active" && sub.plan_id === planId;
+    const currentPeriodEnd = nextPeriodEnd(keepTimeLeft ? sub.current_period_end : null, days);
     await upsertSubscription({ businessId, planId, status: "active", currentPeriodEnd, providerRef: paymentId });
     return { currentPeriodEnd };
   },

@@ -65,6 +65,7 @@ const planSchema = z.object({
   name: z.string().trim().min(1),
   price_inr: z.number().int().min(0),
   limits: z.object({
+    billing: z.enum(["month", "year"]).nullish(),
     requests_per_month: z.number().int().positive().nullable(),
     content_types: z.array(z.enum(CONTENT_TYPES as [string, ...string[]])).nullable(),
   }),

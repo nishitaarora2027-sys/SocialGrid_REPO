@@ -288,7 +288,12 @@ export interface Suggestion {
   message_id: string | null;
 }
 
+export type BillingPeriod = "month" | "year";
+export const BILLING_PERIODS: BillingPeriod[] = ["month", "year"];
+
 export interface PlanLimits {
+  /** How long one payment lasts. Missing means monthly. */
+  billing?: BillingPeriod | null;
   requests_per_month?: number | null;
   content_types?: ContentType[] | null;
 }

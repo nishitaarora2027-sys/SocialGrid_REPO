@@ -56,17 +56,28 @@ async function postJson<T>(url: string, body?: unknown): Promise<{ ok: boolean; 
   return { ok: res.ok, data };
 }
 
-/** Pays this month's plan with Razorpay Standard Checkout */
+/** Pays for a plan (the client's current one if no planId) with Razorpay Standard Checkout */
 export function PayButton({
+  planId,
   price,
+  label,
   businessName,
   className,
   size = "lg",
+  variant,
+  onPaid,
+  onOpenCheckout,
 }: {
+  planId?: string;
   price?: number | null;
+  label?: string;
   businessName?: string;
   className?: string;
   size?: "default" | "lg";
+  variant?: "default" | "outline";
+  onPaid?: () => void;
+  /** Called just before the Razorpay window opens, e.g. to close a sheet that would sit on top of it */
+  onOpenCheckout?: () => void;
 }) {
   const t = useTranslations("subscription");
   const locale = useLocale() as Locale;
@@ -78,7 +89,7 @@ export function PayButton({
     try {
       const [loaded, order] = await Promise.all([
         loadCheckout(),
-        postJson<{ order_id: string; amount: number; currency: string; plan_name: string; key_id?: string; error?: string }>("/api/create-order"),
+        postJson<{ order_id: string; amount: number; currency: string; plan_name: string; key_id?: string; error?: string }>("/api/create-order", planId ? { plan_id: planId } : undefined),
       ]);
       if (!loaded || !window.Razorpay) throw new Error("script");
       const key = order.data?.key_id || PUBLIC_RAZORPAY_KEY_ID;
@@ -102,6 +113,7 @@ export function PayButton({
           setBusy(false);
           if (res?.ok && res.data?.current_period_end) {
             toast.success(t("paid", { date: formatDate(res.data.current_period_end, locale) }));
+            onPaid?.();
             router.refresh();
           } else {
             toast.error(t("verifyFailed"));
@@ -118,6 +130,7 @@ export function PayButton({
         console.error("razorpay payment.failed", r.error);
         toast.error(t("payFailed", { reason: r.error?.description ?? "" }));
       });
+      onOpenCheckout?.();
       rzp.open();
     } catch {
       setBusy(false);
@@ -126,9 +139,9 @@ export function PayButton({
   }
 
   return (
-    <Button size={size} className={className} onClick={pay} disabled={busy}>
+    <Button size={size} variant={variant} className={className} onClick={pay} disabled={busy}>
       {busy ? <Loader2Icon className="animate-spin" /> : <CreditCardIcon />}
-      {price ? t("payAmount", { amount: formatPrice(price) }) : t("pay")}
+      {label ?? (price ? t("payAmount", { amount: formatPrice(price) }) : t("pay"))}
     </Button>
   );
 }

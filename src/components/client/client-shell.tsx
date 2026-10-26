@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { CalendarDaysIcon, CircleHelpIcon, LayoutGridIcon, LogOutIcon, MessageCircleIcon, StoreIcon } from "lucide-react";
+import { CalendarDaysIcon, CircleHelpIcon, CreditCardIcon, LayoutGridIcon, LogOutIcon, MessageCircleIcon, StoreIcon } from "lucide-react";
 import { LanguageToggle } from "@/components/shared/language-toggle";
 import { Logo, LogoMark } from "@/components/shared/logo";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
@@ -15,10 +15,11 @@ const NAV = [
   { href: "/plan", icon: CalendarDaysIcon, short: "plan", long: "planLong" },
   { href: "/posts", icon: LayoutGridIcon, short: "posts", long: "postsLong" },
   { href: "/brand", icon: StoreIcon, short: "brand", long: "brandLong" },
+  { href: "/billing", icon: CreditCardIcon, short: "billing", long: "billingLong" },
   { href: "/help", icon: CircleHelpIcon, short: "help", long: "help" },
 ] as const;
 
-const TITLES: Record<string, string> = { "/plan": "planTitle", "/posts": "postsLong", "/brand": "brandLong", "/help": "help" };
+const TITLES: Record<string, string> = { "/plan": "planTitle", "/posts": "postsLong", "/brand": "brandLong", "/billing": "billingLong", "/help": "help" };
 
 export function BusinessAvatar({ name, logoUrl, className }: { name: string; logoUrl: string | null; className?: string }) {
   const initials = name
@@ -127,12 +128,20 @@ export function ClientHeader({ businessName }: { businessName: string; logoUrl: 
           </div>
         </div>
       )}
+      {!pathname.startsWith("/billing") && (
+        <Link
+          href="/billing"
+          className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-full border border-line bg-surface px-3 text-[15px] font-semibold"
+        >
+          <CreditCardIcon className="size-4" aria-hidden /> {t("billing")}
+        </Link>
+      )}
       <LanguageToggle className="shrink-0" />
     </header>
   );
 }
 
-/** Phone: five permanent tabs */
+/** Phone: five permanent tabs (Payments lives in the header instead, there's no room for a sixth) */
 export function BottomTabs({ readyCount }: { readyCount: number }) {
   const t = useTranslations("nav");
   const isActive = useActive();
@@ -141,7 +150,7 @@ export function BottomTabs({ readyCount }: { readyCount: number }) {
       aria-label={t("menu")}
       className="glass-bar fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-line/70 px-1 pt-2 pb-[max(10px,env(safe-area-inset-bottom))] lg:hidden"
     >
-      {NAV.map(({ href, icon: Icon, short }) => {
+      {NAV.filter((n) => n.href !== "/billing").map(({ href, icon: Icon, short }) => {
         const active = isActive(href);
         return (
           <Link
