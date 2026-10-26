@@ -65,7 +65,7 @@ async function upsertSubscription(row: {
  * returned signature before marking the plan active for 30 days.
  */
 export const razorpayBillingProvider: BillingProvider & {
-  createOrder(businessId: string): Promise<{ orderId: string; amount: number; currency: string; planName: string }>;
+  createOrder(businessId: string): Promise<{ orderId: string; amount: number; currency: string; planName: string; keyId: string }>;
   verifyPayment(input: {
     businessId: string;
     orderId: string;
@@ -108,7 +108,8 @@ export const razorpayBillingProvider: BillingProvider & {
         receipt: `sg_${businessId.slice(0, 8)}_${Date.now()}`,
         notes: { business_id: businessId, plan_id: plan.id },
       });
-      return { orderId: order.id, amount: Number(order.amount), currency: order.currency, planName: plan.name };
+      // The checkout must open with the same key ID that created the order
+      return { orderId: order.id, amount: Number(order.amount), currency: order.currency, planName: plan.name, keyId: keys().keyId };
     } catch (e) {
       throw gatewayError(e);
     }

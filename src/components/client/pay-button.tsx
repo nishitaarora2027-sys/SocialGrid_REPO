@@ -74,22 +74,22 @@ export function PayButton({
   const [busy, setBusy] = useState(false);
 
   async function pay() {
-    if (!PUBLIC_RAZORPAY_KEY_ID) return toast.error(t("payError"));
     setBusy(true);
     try {
       const [loaded, order] = await Promise.all([
         loadCheckout(),
-        postJson<{ order_id: string; amount: number; currency: string; plan_name: string; error?: string }>("/api/create-order"),
+        postJson<{ order_id: string; amount: number; currency: string; plan_name: string; key_id?: string; error?: string }>("/api/create-order"),
       ]);
       if (!loaded || !window.Razorpay) throw new Error("script");
-      if (!order.ok || !order.data?.order_id) {
+      const key = order.data?.key_id || PUBLIC_RAZORPAY_KEY_ID;
+      if (!order.ok || !order.data?.order_id || !key) {
         toast.error(order.data?.error === "no_plan" ? t("noPlan") : t("payError"));
         setBusy(false);
         return;
       }
 
       const rzp = new window.Razorpay({
-        key: PUBLIC_RAZORPAY_KEY_ID,
+        key,
         order_id: order.data.order_id,
         amount: order.data.amount,
         currency: order.data.currency,
@@ -115,6 +115,7 @@ export function PayButton({
         },
       });
       rzp.on("payment.failed", (r) => {
+        console.error("razorpay payment.failed", r.error);
         toast.error(t("payFailed", { reason: r.error?.description ?? "" }));
       });
       rzp.open();

@@ -14,6 +14,7 @@ export async function POST() {
       amount: order.amount,
       currency: order.currency,
       plan_name: order.planName,
+      key_id: order.keyId,
     });
   } catch (e) {
     if (e instanceof BillingError) return NextResponse.json({ error: e.code }, { status: e.status });
