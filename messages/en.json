@@ -74,7 +74,15 @@
     "perMonth": "month",
     "perYear": "year",
     "renew": "Renew",
-    "payAmountShort": "Pay {amount}"
+    "payAmountShort": "Pay {amount}",
+    "perPost": "post",
+    "perPostHint": "No plan needed. Pay only for the post you ask for.",
+    "postsPaid": "{count, plural, one {# post paid for, ready to ask} other {# posts paid for, ready to ask}}",
+    "postPaid": "Payment received. Your post request is on its way.",
+    "payGateTitle": "Pay for this post",
+    "payGateText": "You don't have an active plan. Pay for just this post, or choose a plan to keep posting.",
+    "payForPost": "Pay {amount} for this post",
+    "orChoosePlan": "Or choose a plan"
   },
   "chat": {
     "pause": "Pause",
@@ -907,11 +915,14 @@
         "addTeamHint": "Creates another SocialGrid team login. They log in on the “SocialGrid team” tab."
       },
       "billing": "Billing",
-      "billingHint": "How long one payment lasts: Monthly = 30 days, Yearly = 365 days.",
+      "billingHint": "Monthly = 30 days, Yearly = 365 days. Per post = clients without a plan pay this for each post they ask for (keep one per-post plan active).",
       "monthly": "Monthly",
       "yearly": "Yearly",
       "perMonth": "month",
-      "perYear": "year"
+      "perYear": "year",
+      "perPostLabel": "Per post",
+      "perPost": "post",
+      "perPostCardHint": "Charged when a client with no active plan asks for a post."
     }
   },
   "setup": {

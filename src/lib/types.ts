@@ -288,11 +288,12 @@ export interface Suggestion {
   message_id: string | null;
 }
 
-export type BillingPeriod = "month" | "year";
-export const BILLING_PERIODS: BillingPeriod[] = ["month", "year"];
+/** month/year plans make the subscription active; "post" pays for a single post */
+export type BillingPeriod = "month" | "year" | "post";
+export const BILLING_PERIODS: BillingPeriod[] = ["month", "year", "post"];
 
 export interface PlanLimits {
-  /** How long one payment lasts. Missing means monthly. */
+  /** What one payment buys. Missing means a month. */
   billing?: BillingPeriod | null;
   requests_per_month?: number | null;
   content_types?: ContentType[] | null;
@@ -314,6 +315,8 @@ export interface Subscription {
   current_period_end: string | null;
   provider: string;
   provider_ref: string | null;
+  /** Paid-for posts not yet asked for (pay-per-post) */
+  post_credits?: number;
 }
 
 export interface Settings {

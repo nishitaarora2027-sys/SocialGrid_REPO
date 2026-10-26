@@ -5,7 +5,7 @@ import { SETUP_SQL } from "./sql.generated";
 // Applies supabase/migrations/*.sql and supabase/seed.sql over a direct Postgres connection.
 // Used once by /setup so nobody has to paste SQL into the Supabase dashboard.
 
-function connectionConfig(url: string): pg.ClientConfig {
+export function connectionConfig(url: string): pg.ClientConfig {
   // Supabase uses its own CA; `sslmode` in the URL would make pg insist on full verification
   const u = new URL(url);
   u.searchParams.delete("sslmode");

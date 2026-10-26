@@ -300,7 +300,7 @@ function AccountPanel({
           <div className="space-y-1">
             <Label>{t("plan")}</Label>
             <NativeSelect value={planId} onChange={(e) => setPlanId(e.target.value)}>
-              {plans.map((p) => (
+              {plans.filter((p) => p.limits.billing !== "post").map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name} (₹{p.price_inr})
                 </option>

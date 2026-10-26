@@ -3,6 +3,7 @@ import Razorpay from "razorpay";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { SubscriptionStatus } from "@/lib/types";
 import { MIN_AMOUNT_PAISE, isValidSignature, nextPeriodEnd, periodDays } from "./checkout";
+import { addPostCredit } from "./credits";
 import type { BillingProvider } from "./types";
 
 export class BillingError extends Error {
@@ -62,7 +63,8 @@ async function upsertSubscription(row: {
 /**
  * Plan payments through Razorpay Standard Checkout: the server creates an order for the plan
  * the client picked, the browser opens the Razorpay modal, and the server verifies the
- * returned signature before marking the plan active for 30 days (monthly) or 365 (yearly).
+ * returned signature before marking the plan active for 30 days (monthly) or 365 (yearly),
+ * or adding one paid-for post (per post).
  */
 export const razorpayBillingProvider: BillingProvider & {
   createOrder(businessId: string, planId?: string | null): Promise<{ orderId: string; amount: number; currency: string; planName: string; keyId: string }>;
@@ -71,7 +73,7 @@ export const razorpayBillingProvider: BillingProvider & {
     orderId: string;
     paymentId: string;
     signature: string;
-  }): Promise<{ currentPeriodEnd: string }>;
+  }): Promise<{ kind: "plan"; currentPeriodEnd: string } | { kind: "post"; postCredits: number }>;
 } = {
   name: "razorpay",
 
@@ -143,23 +145,31 @@ export const razorpayBillingProvider: BillingProvider & {
     if (notes.business_id !== businessId || !planId) throw new BillingError("order_mismatch", 400);
 
     const admin = createAdminClient();
-    const { data: sub } = await admin
-      .from("subscriptions")
-      .select("status, plan_id, current_period_end, provider_ref")
-      .eq("business_id", businessId)
-      .maybeSingle();
+    const [{ data: sub }, { data: plan }] = await Promise.all([
+      admin
+        .from("subscriptions")
+        .select("status, plan_id, current_period_end, provider_ref")
+        .eq("business_id", businessId)
+        .maybeSingle(),
+      admin.from("plans").select("limits").eq("id", planId).maybeSingle(),
+    ]);
+    const billing = (plan?.limits as { billing?: string } | null)?.billing;
 
-    // Already applied (e.g. the browser sent it twice): don't add another period
-    if (sub?.provider_ref === paymentId && sub.current_period_end) {
-      return { currentPeriodEnd: sub.current_period_end };
+    // Already applied (e.g. the browser sent it twice): don't add another period or post
+    if (sub?.provider_ref === paymentId) {
+      return billing === "post"
+        ? { kind: "post", postCredits: 0 }
+        : { kind: "plan", currentPeriodEnd: sub.current_period_end ?? new Date().toISOString() };
     }
 
-    const { data: plan } = await admin.from("plans").select("limits").eq("id", planId).maybeSingle();
-    const days = periodDays((plan?.limits as { billing?: string } | null)?.billing);
+    if (billing === "post") {
+      return { kind: "post", postCredits: await addPostCredit(businessId, paymentId) };
+    }
+
     // Renewing the same plan early adds to the time left; switching plans starts today
     const keepTimeLeft = sub?.status === "active" && sub.plan_id === planId;
-    const currentPeriodEnd = nextPeriodEnd(keepTimeLeft ? sub.current_period_end : null, days);
+    const currentPeriodEnd = nextPeriodEnd(keepTimeLeft ? sub.current_period_end : null, periodDays(billing));
     await upsertSubscription({ businessId, planId, status: "active", currentPeriodEnd, providerRef: paymentId });
-    return { currentPeriodEnd };
+    return { kind: "plan", currentPeriodEnd };
   },
 };

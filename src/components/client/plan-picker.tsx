@@ -7,7 +7,8 @@ import { formatDate, formatPrice } from "@/lib/format";
 import type { Locale, Plan, SubscriptionStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const period = (p: Plan) => (p.limits.billing === "year" ? "year" : "month");
+const period = (p: Plan) => p.limits.billing ?? "month";
+const PER = { month: "perMonth", year: "perYear", post: "perPost" } as const;
 
 /** The client's current plan and a card per paid plan, each with its own Pay button */
 export function PlanPicker({
@@ -15,6 +16,7 @@ export function PlanPicker({
   currentPlanId,
   status,
   periodEnd,
+  postCredits = 0,
   businessName,
   onPaid,
   onOpenCheckout,
@@ -24,6 +26,7 @@ export function PlanPicker({
   currentPlanId: string | null;
   status: SubscriptionStatus | null;
   periodEnd: string | null;
+  postCredits?: number;
   businessName?: string;
   onPaid?: () => void;
   onOpenCheckout?: () => void;
@@ -44,9 +47,10 @@ export function PlanPicker({
           {active ? t("activeTill", { date: formatDate(periodEnd, locale) }) : tStatus(status)}
         </p>
       )}
+      {postCredits > 0 && <p className="text-[17px] font-semibold">{t("postsPaid", { count: postCredits })}</p>}
       <div className="grid gap-3 md:grid-cols-2">
         {plans.map((p) => {
-          const current = p.id === currentPlanId;
+          const current = p.id === currentPlanId && period(p) !== "post";
           const saving = period(p) === "year" && cheapestMonthly ? cheapestMonthly.price_inr * 12 - p.price_inr : 0;
           return (
             <div
@@ -70,8 +74,9 @@ export function PlanPicker({
               </div>
               <p>
                 <span className="text-[28px] font-bold">{formatPrice(p.price_inr)}</span>
-                <span className="text-[16px] text-ink-muted"> / {t(period(p) === "year" ? "perYear" : "perMonth")}</span>
+                <span className="text-[16px] text-ink-muted"> / {t(PER[period(p)])}</span>
               </p>
+              {period(p) === "post" && <p className="text-[15px] text-ink-muted">{t("perPostHint")}</p>}
               <PayButton
                 planId={p.id}
                 price={p.price_inr}

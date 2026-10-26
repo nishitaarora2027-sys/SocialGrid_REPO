@@ -19,6 +19,7 @@ export default async function BillingPage() {
         currentPlanId={subscription?.plan_id ?? null}
         status={subscription?.status ?? null}
         periodEnd={subscription?.current_period_end ?? null}
+        postCredits={subscription?.post_credits ?? 0}
         businessName={business.name}
       />
     </main>

@@ -6,6 +6,7 @@ const files = [
   "supabase/migrations/0001_schema.sql",
   "supabase/migrations/0002_rls.sql",
   "supabase/migrations/0003_storage.sql",
+  "supabase/migrations/0004_post_credits.sql",
   "supabase/seed.sql",
 ];
 const entries = files.map((f) => `  { file: ${JSON.stringify(f)}, sql: ${JSON.stringify(fs.readFileSync(f, "utf8"))} },`);

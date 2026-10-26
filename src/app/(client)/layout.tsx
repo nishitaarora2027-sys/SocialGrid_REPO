@@ -4,19 +4,20 @@ import { requireClient } from "@/lib/auth/session";
 import { signFiles, fileKey } from "@/lib/storage";
 import { BUCKETS } from "@/lib/config";
 import { BottomTabs, ClientHeader, ClientSidebar } from "@/components/client/client-shell";
+import { PayGateProvider } from "@/components/client/pay-gate";
 import { Button } from "@/components/ui/button";
-import type { Subscription } from "@/lib/types";
+import { loadBillingInfo } from "@/lib/billing/plans";
 
 export default async function ClientLayout({ children }: { children: React.ReactNode }) {
   const { supabase, business, profile } = await requireClient();
-  const [{ data: brand }, { count: readyCount }, { data: sub }] = await Promise.all([
+  const [{ data: brand }, { count: readyCount }, billing] = await Promise.all([
     supabase.from("brand_profiles").select("logo_path").eq("business_id", business.id).maybeSingle(),
     supabase
       .from("requests")
       .select("id", { count: "exact", head: true })
       .eq("business_id", business.id)
       .eq("status", "delivered"),
-    supabase.from("subscriptions").select("status").eq("business_id", business.id).maybeSingle<Pick<Subscription, "status">>(),
+    loadBillingInfo(supabase, business.id),
   ]);
   let logoUrl: string | null = null;
   if (brand?.logo_path) {
@@ -34,8 +35,10 @@ export default async function ClientLayout({ children }: { children: React.React
       />
       <div className="flex min-h-dvh min-w-0 flex-col pb-[var(--tabbar-h)]">
         <ClientHeader businessName={business.name} logoUrl={logoUrl} />
-        {sub?.status === "past_due" && <PastDueBanner />}
-        {children}
+        {billing.subscription?.status === "past_due" && <PastDueBanner />}
+        <PayGateProvider plans={billing.plans} subscription={billing.subscription} businessName={business.name}>
+          {children}
+        </PayGateProvider>
       </div>
       <BottomTabs readyCount={readyCount ?? 0} />
     </div>

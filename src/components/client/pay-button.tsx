@@ -109,10 +109,16 @@ export function PayButton({
         notes: businessName ? { business: businessName } : undefined,
         theme: { color: "#17140f" },
         handler: async (response: RazorpaySuccess) => {
-          const res = await postJson<{ current_period_end?: string }>("/api/verify-payment", response).catch(() => null);
+          const res = await postJson<{ kind?: "plan" | "post"; current_period_end?: string }>("/api/verify-payment", response).catch(
+            () => null,
+          );
           setBusy(false);
-          if (res?.ok && res.data?.current_period_end) {
-            toast.success(t("paid", { date: formatDate(res.data.current_period_end, locale) }));
+          if (res?.ok && res.data?.kind) {
+            toast.success(
+              res.data.kind === "post" || !res.data.current_period_end
+                ? t("postPaid")
+                : t("paid", { date: formatDate(res.data.current_period_end, locale) }),
+            );
             onPaid?.();
             router.refresh();
           } else {

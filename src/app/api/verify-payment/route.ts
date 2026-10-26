@@ -10,7 +10,7 @@ const schema = z.object({
   razorpay_signature: z.string().min(1).max(256),
 });
 
-/** Checks the Razorpay signature and, only if it matches, marks the plan active for 30 days */
+/** Checks the Razorpay signature and, only if it matches, activates the plan or adds the paid post */
 export async function POST(request: Request) {
   const businessId = await clientBusinessId();
   if (!businessId) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -20,14 +20,18 @@ export async function POST(request: Request) {
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = parsed.data;
 
   try {
-    const { currentPeriodEnd } = await razorpayBillingProvider.verifyPayment({
+    const result = await razorpayBillingProvider.verifyPayment({
       businessId,
       orderId: razorpay_order_id,
       paymentId: razorpay_payment_id,
       signature: razorpay_signature,
     });
     revalidatePath("/", "layout");
-    return NextResponse.json({ ok: true, current_period_end: currentPeriodEnd });
+    return NextResponse.json(
+      result.kind === "post"
+        ? { ok: true, kind: "post", post_credits: result.postCredits }
+        : { ok: true, kind: "plan", current_period_end: result.currentPeriodEnd },
+    );
   } catch (e) {
     if (e instanceof BillingError) return NextResponse.json({ error: e.code }, { status: e.status });
     console.error("verify-payment failed", e);
