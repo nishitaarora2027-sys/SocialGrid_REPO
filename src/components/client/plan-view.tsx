@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { ArrowLeftIcon, ArrowRightIcon, PlusIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { respondSuggestion } from "@/lib/actions/client";
+import { usePayGate } from "@/components/client/pay-gate";
 import { formatDue } from "@/lib/format";
 import type { Locale, PlanSlot, RequestRow, Suggestion } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -241,6 +242,7 @@ function FestivalCard({ suggestion, canRequest }: { suggestion: Suggestion; canR
   const router = useRouter();
   const [hidden, setHidden] = useState(false);
   const [pending, start] = useTransition();
+  const payGate = usePayGate();
   if (hidden) return null;
   const name = locale === "hi" ? suggestion.payload.title_hi : suggestion.payload.title_en;
 
@@ -248,6 +250,7 @@ function FestivalCard({ suggestion, canRequest }: { suggestion: Suggestion; canR
     start(async () => {
       const res = await respondSuggestion(suggestion.id, accept);
       if (!res.ok) {
+        if (payGate(res.error, () => respond(accept))) return;
         toast.error(tErr.has(res.error as never) ? tErr(res.error as never) : tErr("generic"));
         return;
       }

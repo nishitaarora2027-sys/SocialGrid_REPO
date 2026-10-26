@@ -48,12 +48,41 @@
     "brandLong": "My business",
     "planTitle": "This week's plan",
     "light": "Light",
-    "dark": "Dark"
+    "dark": "Dark",
+    "billing": "Pay",
+    "billingLong": "Payments"
   },
   "subscription": {
     "pastDue": "Your plan renewal is pending.",
     "blocked": "Your plan is paused right now, so you can't ask for new posts. Your old posts are all still here to download.",
-    "contactUs": "Contact us"
+    "contactUs": "Contact us",
+    "pay": "Pay for this month",
+    "payAmount": "Pay {amount} for this month",
+    "paid": "Payment received. Your plan is active till {date}.",
+    "payCancelled": "Payment cancelled. No money was taken.",
+    "payFailed": "Payment failed. {reason}",
+    "payError": "Couldn't start the payment. Please try again.",
+    "verifyFailed": "We couldn't confirm this payment. If money was taken, please contact us.",
+    "noPlan": "No plan is set for your account yet. Please contact us.",
+    "activeTill": "Active till {date}",
+    "noPaidPlan": "Online payment isn't set up for your plan yet. Please contact us.",
+    "pageTitle": "Payments",
+    "choosePlan": "Choose a plan",
+    "seePlans": "See plans",
+    "yourPlanBadge": "Your plan",
+    "save": "Save {amount}",
+    "perMonth": "month",
+    "perYear": "year",
+    "renew": "Renew",
+    "payAmountShort": "Pay {amount}",
+    "perPost": "post",
+    "perPostHint": "No plan needed. Pay only for the post you ask for.",
+    "postsPaid": "{count, plural, one {# post paid for, ready to ask} other {# posts paid for, ready to ask}}",
+    "postPaid": "Payment received. Your post request is on its way.",
+    "payGateTitle": "Pay for this post",
+    "payGateText": "You don't have an active plan. Pay for just this post, or choose a plan to keep posting.",
+    "payForPost": "Pay {amount} for this post",
+    "orChoosePlan": "Or choose a plan"
   },
   "chat": {
     "pause": "Pause",
@@ -884,7 +913,16 @@
         },
         "addTeamTitle": "Add a founder",
         "addTeamHint": "Creates another SocialGrid team login. They log in on the “SocialGrid team” tab."
-      }
+      },
+      "billing": "Billing",
+      "billingHint": "Monthly = 30 days, Yearly = 365 days. Per post = clients without a plan pay this for each post they ask for (keep one per-post plan active).",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "perMonth": "month",
+      "perYear": "year",
+      "perPostLabel": "Per post",
+      "perPost": "post",
+      "perPostCardHint": "Charged when a client with no active plan asks for a post."
     }
   },
   "setup": {

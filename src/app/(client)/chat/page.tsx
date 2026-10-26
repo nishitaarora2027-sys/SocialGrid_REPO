@@ -1,5 +1,5 @@
 import { requireClient } from "@/lib/auth/session";
-import { canCreateRequests } from "@/lib/billing";
+import { loadBillingInfo } from "@/lib/billing/plans";
 import { ensureWeekSlots, getConversationId } from "@/lib/domain";
 import { runSuggestions } from "@/lib/suggestions/engine";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -7,7 +7,7 @@ import { loadThread } from "@/lib/thread";
 import { SUPPORT_WHATSAPP } from "@/lib/config";
 import { isoDaysAgo } from "@/lib/format";
 import { ChatScreen } from "@/components/client/chat-screen";
-import type { PlanSlot, QuickStartCard, RequestRow, Subscription } from "@/lib/types";
+import type { PlanSlot, QuickStartCard, RequestRow } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +23,7 @@ export default async function ChatPage() {
   ]);
 
   const threeDaysAgo = isoDaysAgo(3);
-  const [thread, { data: cards }, { data: slots }, { data: sub }, { data: recent }] = await Promise.all([
+  const [thread, { data: cards }, { data: slots }, billing, { data: recent }] = await Promise.all([
     loadThread(supabase, conversationId),
     supabase
       .from("quick_start_cards")
@@ -38,7 +38,7 @@ export default async function ChatPage() {
       .eq("week_start", weekStart)
       .order("day")
       .order("slot_index"),
-    supabase.from("subscriptions").select("status").eq("business_id", business.id).maybeSingle<Pick<Subscription, "status">>(),
+    loadBillingInfo(supabase, business.id),
     supabase
       .from("requests")
       .select("id, summary, status, due_at, updated_at, quick_start_type")
@@ -54,6 +54,9 @@ export default async function ChatPage() {
   const { data: team } = teamIds.length
     ? await admin.from("profiles").select("id, display_name").in("id", teamIds)
     : { data: [] as { id: string; display_name: string }[] };
+  // With no active plan they can still ask, and pay per post when they send (see PayGateProvider)
+  const { canRequest } = billing;
+
   const teamNames = Object.fromEntries((team ?? []).map((p) => [p.id, p.display_name as string]));
 
   return (
@@ -67,7 +70,8 @@ export default async function ChatPage() {
       thread={thread}
       teamNames={teamNames}
       recentRequests={(recent ?? []) as Pick<RequestRow, "id" | "summary" | "status" | "due_at" | "quick_start_type">[]}
-      canRequest={canCreateRequests(sub?.status)}
+      canRequest={canRequest}
+      billing={canRequest ? null : billing}
       supportWhatsapp={SUPPORT_WHATSAPP}
     />
   );

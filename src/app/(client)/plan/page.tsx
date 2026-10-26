@@ -2,9 +2,9 @@ import { requireClient } from "@/lib/auth/session";
 import { ensureWeekSlots } from "@/lib/domain";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { todayIST, weekStartIST } from "@/lib/format";
-import { canCreateRequests } from "@/lib/billing";
+import { loadBillingInfo } from "@/lib/billing/plans";
 import { PlanView } from "@/components/client/plan-view";
-import type { PlanSlot, RequestRow, Subscription, Suggestion } from "@/lib/types";
+import type { PlanSlot, RequestRow, Suggestion } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,7 @@ export default async function PlanPage({ searchParams }: { searchParams: Promise
   if (offset === 0) await ensureWeekSlots(createAdminClient(), business.id);
   const weekStart = addDays(thisWeek, offset * 7);
 
-  const [{ data: slots }, { data: sub }, { data: festival }] = await Promise.all([
+  const [{ data: slots }, billing, { data: festival }] = await Promise.all([
     supabase
       .from("plan_slots")
       .select("*")
@@ -30,7 +30,7 @@ export default async function PlanPage({ searchParams }: { searchParams: Promise
       .eq("week_start", weekStart)
       .order("day")
       .order("slot_index"),
-    supabase.from("subscriptions").select("status").eq("business_id", business.id).maybeSingle<Pick<Subscription, "status">>(),
+    loadBillingInfo(supabase, business.id),
     supabase
       .from("suggestions")
       .select("*")
@@ -56,7 +56,7 @@ export default async function PlanPage({ searchParams }: { searchParams: Promise
       slots={list}
       requests={Object.fromEntries(((reqs ?? []) as Pick<RequestRow, "id" | "status" | "due_at" | "summary">[]).map((r) => [r.id, r]))}
       festival={festival ?? null}
-      canRequest={canCreateRequests(sub?.status)}
+      canRequest={billing.canRequest}
     />
   );
 }

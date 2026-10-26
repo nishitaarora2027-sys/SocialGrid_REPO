@@ -155,7 +155,7 @@ src/lib/actions/       server actions (all writes)
 src/lib/domain.ts      requests, revisions, messages, weekly plan slots
 src/lib/turnaround.ts  working-hours due-time maths
 src/lib/suggestions/   festival / inactivity / plan-reminder rules (run when the client opens chat)
-src/lib/billing/       BillingProvider interface + ManualBillingProvider; request_access check
+src/lib/billing/       BillingProvider interface, Manual + Razorpay providers; request_access check
 src/lib/ai/            River/OpenRouter providers with fallback, caption + image prompts
 src/lib/auth/          email login (swappable AuthProvider)
 ```
@@ -167,8 +167,10 @@ src/lib/auth/          email login (swappable AuthProvider)
   `ENABLED_AUTONOMY_MODES`. Context to feed it: brand profile, `rules` (client/industry/global)
   and `examples` (every delivered option with tags, chosen flag, brand snapshot, revision notes;
   gold-standard ones first). Voice transcription: implement `Transcriber`.
-- **Razorpay:** add a `BillingProvider` implementation next to `billing/manual.ts` and a webhook
-  route that calls `handleWebhook`. Plan limits are enforced in one place — the
+- **Razorpay:** `billing/razorpay.ts` takes monthly plan payments with Standard Checkout.
+  `POST /api/create-order` makes an order for the client's plan price, the browser opens the
+  Razorpay modal, and `POST /api/verify-payment` checks the signature and sets the plan active
+  for 30 days. A webhook route that calls `handleWebhook` is still to do. Plan limits are enforced in one place — the
   `request_access()` SQL function.
 - **Other login methods (OTP, Google):** replace `emailPasswordAuth` in `src/lib/auth/provider.ts`.
 - **More roles:** roles live in the `roles` table; add a row and extend `ROLE`/RLS helpers.

@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { CardIcon } from "@/components/shared/icons";
 import { submitQuickStart } from "@/lib/actions/client";
+import { usePayGate } from "@/components/client/pay-gate";
 import { compressImage, uploadFile } from "@/lib/browser/media";
 import { BUCKETS, LIMITS } from "@/lib/config";
 import type { Locale, QuickStartCard } from "@/lib/types";
@@ -57,6 +58,7 @@ function Flow({ card, businessId, onClose }: { card: QuickStartCard; businessId:
   const next = () => setStep((s) => s + 1);
   const setAnswer = (id: string, v: string) => setAnswers((a) => ({ ...a, [id]: v }));
 
+  const payGate = usePayGate();
   const send = async () => {
     setSending(true);
     try {
@@ -77,6 +79,11 @@ function Flow({ card, businessId, onClose }: { card: QuickStartCard; businessId:
         urgent,
       });
       if (!res.ok) {
+        // No active plan: close this sheet (the Razorpay window can't sit under it), pay, then resend
+        if (payGate(res.error, send)) {
+          onClose();
+          return;
+        }
         toast.error(tErr.has(res.error as never) ? tErr(res.error as never) : tErr("generic"));
         return;
       }

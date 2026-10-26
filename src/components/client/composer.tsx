@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { VoiceRecorder } from "@/components/client/voice-recorder";
 import { sendChatMessage } from "@/lib/actions/client";
+import { usePayGate } from "@/components/client/pay-gate";
 import { compressImage, uploadFile } from "@/lib/browser/media";
 import { BUCKETS, LIMITS } from "@/lib/config";
 import type { Attachment, RequestRow } from "@/lib/types";
@@ -38,6 +39,7 @@ export function Composer({
   const t = useTranslations("chat");
   const tErr = useTranslations("errors");
   const router = useRouter();
+  const payGate = usePayGate();
   const fileInput = useRef<HTMLInputElement>(null);
   const [text, setText] = useState("");
   const [photos, setPhotos] = useState<File[]>([]);
@@ -79,6 +81,8 @@ export function Composer({
       }
       const res = await sendChatMessage({ text: draft.text, attachments: attachments as never, urgent, intent });
       if (!res.ok) {
+        // No active plan: pay for this post, then it sends itself
+        if (payGate(res.error, () => send(draft, intent))) return;
         toast.error(tErr.has(res.error as never) ? tErr(res.error as never) : tErr("generic"));
         return;
       }

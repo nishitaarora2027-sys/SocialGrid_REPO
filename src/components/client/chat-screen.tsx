@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition, type ComponentProps } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { CheckIcon, Loader2Icon, MessageCircleIcon, PencilIcon, SendIcon } from "lucide-react";
+import { CheckIcon, CreditCardIcon, Loader2Icon, MessageCircleIcon, PencilIcon, SendIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
@@ -16,13 +16,14 @@ import { Composer, type RecentRequest } from "@/components/client/composer";
 import { DeliveryView } from "@/components/client/delivery-view";
 import { CHANGE_CHIPS, OptionsCard } from "@/components/client/options-card";
 import { QuickStartSheet } from "@/components/client/quick-start-sheet";
+import { PlanPicker } from "@/components/client/plan-picker";
 import { FirstPostHero } from "@/components/client/idea-shelf";
 import { useRealtimeRefresh } from "@/components/shared/use-realtime";
 import { chooseOption, markConversationRead, requestChanges } from "@/lib/actions/client";
 import { celebrate } from "@/lib/browser/media";
 import { dayPart, formatDue, isPast } from "@/lib/format";
 import type { ThreadData } from "@/lib/thread";
-import type { Locale, Message, PlanSlot, QuickStartCard } from "@/lib/types";
+import type { Locale, Message, Plan, PlanSlot, QuickStartCard, Subscription } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export function ChatScreen({
@@ -36,6 +37,7 @@ export function ChatScreen({
   teamNames,
   recentRequests,
   canRequest,
+  billing,
   supportWhatsapp,
 }: {
   businessId: string;
@@ -48,6 +50,7 @@ export function ChatScreen({
   teamNames: Record<string, string>;
   recentRequests: RecentRequest[];
   canRequest: boolean;
+  billing: { plans: Plan[]; subscription: Pick<Subscription, "status" | "plan_id" | "current_period_end"> | null } | null;
   supportWhatsapp: string;
 }) {
   const t = useTranslations("chat");
@@ -179,7 +182,7 @@ export function ChatScreen({
             ideas={hasClientMessages ? <IdeaChips cards={cards} onCard={setCard} disabled={!canRequest} /> : null}
           />
         ) : (
-          <BlockedNotice supportWhatsapp={supportWhatsapp} />
+          <BlockedNotice supportWhatsapp={supportWhatsapp} billing={billing} businessName={businessName} />
         )}
 
         <QuickStartSheet card={card} businessId={businessId} onClose={() => setCard(null)} />
@@ -349,17 +352,49 @@ function ChangesSheet({ requestId, onClose }: { requestId: string | null; onClos
   );
 }
 
-function BlockedNotice({ supportWhatsapp }: { supportWhatsapp: string }) {
+/** Shown instead of the composer while the plan is paused or expired; the plans open in a sheet */
+function BlockedNotice({
+  supportWhatsapp,
+  billing,
+  businessName,
+}: {
+  supportWhatsapp: string;
+  billing: ComponentProps<typeof ChatScreen>["billing"];
+  businessName: string;
+}) {
   const t = useTranslations("subscription");
+  const [plansOpen, setPlansOpen] = useState(false);
+  const hasPlans = !!billing?.plans.length;
   const href = supportWhatsapp ? `https://wa.me/${supportWhatsapp.replace(/\D/g, "")}` : "/help";
   return (
     <div className="sticky bottom-[var(--tabbar-h)] mx-3 mb-3 space-y-3 rounded-[16px] border border-line bg-canvas p-4">
       <p className="text-[17px] font-medium text-danger">{t("blocked")}</p>
-      <Button asChild size="lg" className="w-full">
+      {hasPlans && (
+        <Button size="lg" className="w-full" onClick={() => setPlansOpen(true)}>
+          <CreditCardIcon /> {t("choosePlan")}
+        </Button>
+      )}
+      <Button asChild size="lg" variant={hasPlans ? "outline" : "default"} className="w-full">
         <a href={href} target={supportWhatsapp ? "_blank" : undefined} rel="noreferrer">
           <MessageCircleIcon /> {t("contactUs")}
         </a>
       </Button>
+      {billing && (
+        <Sheet open={plansOpen} onOpenChange={setPlansOpen}>
+          <SheetContent className="max-h-[90dvh] overflow-y-auto">
+            <SheetTitle className="text-[22px] font-bold">{t("choosePlan")}</SheetTitle>
+            <SheetDescription className="sr-only">{t("blocked")}</SheetDescription>
+            <PlanPicker
+              plans={billing.plans}
+              currentPlanId={billing.subscription?.plan_id ?? null}
+              status={billing.subscription?.status ?? null}
+              periodEnd={billing.subscription?.current_period_end ?? null}
+              businessName={businessName}
+              onOpenCheckout={() => setPlansOpen(false)}
+            />
+          </SheetContent>
+        </Sheet>
+      )}
     </div>
   );
 }

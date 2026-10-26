@@ -19,6 +19,7 @@ import { addTeamMember, changeMyPassword } from "@/lib/actions/password";
 import { TeamMemberForm } from "@/components/shared/team-member-form";
 import { formatDate, formatPrice } from "@/lib/format";
 import {
+  BILLING_PERIODS,
   CONTENT_TYPES,
   INDUSTRIES,
   type ContentType,
@@ -301,6 +302,9 @@ function Festivals({ festivals }: { festivals: Festival[] }) {
   );
 }
 
+const PER = { month: "perMonth", year: "perYear", post: "perPost" } as const;
+const BILLING_LABEL = { month: "monthly", year: "yearly", post: "perPostLabel" } as const;
+
 function Plans({ plans }: { plans: Plan[] }) {
   const t = useTranslations("expert.settings");
   const tTypes = useTranslations("contentTypes");
@@ -310,7 +314,7 @@ function Plans({ plans }: { plans: Plan[] }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
-        <Button onClick={() => setEdit({ name: "", price_inr: 0, limits: { requests_per_month: null, content_types: null }, active: true })}>
+        <Button onClick={() => setEdit({ name: "", price_inr: 0, limits: { billing: "month", requests_per_month: null, content_types: null }, active: true })}>
           <PlusIcon /> {t("addPlan")}
         </Button>
         <p className="text-sm text-muted-foreground">{t("plansHint")}</p>
@@ -320,14 +324,23 @@ function Plans({ plans }: { plans: Plan[] }) {
           <div key={p.id} className={cn("space-y-2 rounded-[16px] border bg-card p-4", !p.active && "opacity-50")}>
             <div className="flex items-center justify-between">
               <div className="text-lg font-bold">{p.name}</div>
-              <div className="font-bold">{formatPrice(p.price_inr)}</div>
+              <div className="font-bold">
+                {formatPrice(p.price_inr)}
+                <span className="text-sm font-normal text-muted-foreground"> / {t(PER[p.limits.billing ?? "month"])}</span>
+              </div>
             </div>
-            <div className="text-sm text-muted-foreground">
-              {t("requestsPerMonth")}: {p.limits.requests_per_month ?? t("unlimited")}
-            </div>
-            <div className="text-sm text-muted-foreground">
-              {t("contentTypes")}: {p.limits.content_types?.map((c) => tTypes(c)).join(", ") ?? t("all")}
-            </div>
+            {p.limits.billing === "post" ? (
+              <div className="text-sm text-muted-foreground">{t("perPostCardHint")}</div>
+            ) : (
+              <>
+                <div className="text-sm text-muted-foreground">
+                  {t("requestsPerMonth")}: {p.limits.requests_per_month ?? t("unlimited")}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {t("contentTypes")}: {p.limits.content_types?.map((c) => tTypes(c)).join(", ") ?? t("all")}
+                </div>
+              </>
+            )}
             <Button variant="outline" size="sm" onClick={() => setEdit(p)}>
               <PencilIcon /> {t("edit")}
             </Button>
@@ -353,38 +366,61 @@ function Plans({ plans }: { plans: Plan[] }) {
                 </div>
               </div>
               <div className="space-y-1">
-                <Label>{t("requestsPerMonth")}</Label>
-                <Input
-                  type="number"
-                  min={1}
-                  placeholder={t("unlimited")}
-                  value={edit.limits.requests_per_month ?? ""}
-                  onChange={(e) => setEdit({ ...edit, limits: { ...edit.limits, requests_per_month: e.target.value ? Number(e.target.value) : null } })}
-                />
-              </div>
-              <div className="space-y-1">
-                <Label>{t("contentTypes")}</Label>
-                <div className="flex flex-wrap gap-2">
-                  {CONTENT_TYPES.map((c) => {
-                    const list = edit.limits.content_types;
-                    const on = !list || list.includes(c);
+                <Label>{t("billing")}</Label>
+                <div className="flex gap-2">
+                  {BILLING_PERIODS.map((b) => {
+                    const on = (edit.limits.billing ?? "month") === b;
                     return (
                       <button
-                        key={c}
+                        key={b}
                         type="button"
-                        onClick={() => {
-                          const current = list ?? [...CONTENT_TYPES];
-                          const next = on ? current.filter((x) => x !== c) : [...current, c];
-                          setEdit({ ...edit, limits: { ...edit.limits, content_types: next.length === CONTENT_TYPES.length ? null : next } });
-                        }}
-                        className={cn("h-10 rounded-full border px-3 text-sm font-semibold", on ? "border-primary bg-secondary" : "bg-card text-muted-foreground")}
+                        onClick={() => setEdit({ ...edit, limits: { ...edit.limits, billing: b } })}
+                        className={cn("h-10 rounded-full border px-4 text-sm font-semibold", on ? "border-primary bg-secondary" : "bg-card text-muted-foreground")}
                       >
-                        {tTypes(c)}
+                        {t(BILLING_LABEL[b])}
                       </button>
                     );
                   })}
                 </div>
+                <p className="text-sm text-muted-foreground">{t("billingHint")}</p>
               </div>
+              {edit.limits.billing !== "post" && (
+                <>
+                  <div className="space-y-1">
+                    <Label>{t("requestsPerMonth")}</Label>
+                    <Input
+                      type="number"
+                      min={1}
+                      placeholder={t("unlimited")}
+                      value={edit.limits.requests_per_month ?? ""}
+                      onChange={(e) => setEdit({ ...edit, limits: { ...edit.limits, requests_per_month: e.target.value ? Number(e.target.value) : null } })}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label>{t("contentTypes")}</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {CONTENT_TYPES.map((c) => {
+                        const list = edit.limits.content_types;
+                        const on = !list || list.includes(c);
+                        return (
+                          <button
+                            key={c}
+                            type="button"
+                            onClick={() => {
+                              const current = list ?? [...CONTENT_TYPES];
+                              const next = on ? current.filter((x) => x !== c) : [...current, c];
+                              setEdit({ ...edit, limits: { ...edit.limits, content_types: next.length === CONTENT_TYPES.length ? null : next } });
+                            }}
+                            className={cn("h-10 rounded-full border px-3 text-sm font-semibold", on ? "border-primary bg-secondary" : "bg-card text-muted-foreground")}
+                          >
+                            {tTypes(c)}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </>
+              )}
               <label className="flex items-center gap-2 font-semibold">
                 <Switch checked={edit.active} onCheckedChange={(v) => setEdit({ ...edit, active: v })} /> {t("active")}
               </label>
@@ -396,6 +432,7 @@ function Plans({ plans }: { plans: Plan[] }) {
                       savePlan({
                         ...edit,
                         limits: {
+                          billing: edit.limits.billing ?? "month",
                           requests_per_month: edit.limits.requests_per_month ?? null,
                           content_types: (edit.limits.content_types ?? null) as never,
                         },
