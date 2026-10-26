@@ -110,6 +110,15 @@ the client until an expert approves. Text uses River (DeepSeek) and falls back t
 use OpenRouter. Keys and model names are environment variables (see `.env.example`), so models can be
 changed in Vercel without code changes.
 
+## Analytics and Google search
+
+- **Microsoft Clarity** (heatmaps and session recordings): create a project at clarity.microsoft.com,
+  copy its Project ID into the Vercel env var `CLARITY_PROJECT_ID`, redeploy. In Clarity → Settings →
+  Masking, choose **Strict** so client chats and details are hidden in recordings.
+- **Google Search Console**: add a *URL prefix* property for `https://socialgrid.dev`, pick **HTML tag**,
+  put the `content="..."` value in the Vercel env var `GOOGLE_SITE_VERIFICATION`, redeploy, click Verify.
+  Then submit `sitemap.xml` under **Sitemaps**.
+
 ## Day-to-day use
 
 **Onboarding a client (in person, ~10 min):** Expert → Clients → *Create client* → business,
